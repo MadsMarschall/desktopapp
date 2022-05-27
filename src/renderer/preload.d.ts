@@ -1,4 +1,7 @@
 import { Channels } from 'main/preload';
+import IDataOperationChainController from '../shared/domain/IDataOperationController';
+import { IDataBaseController } from '../shared/domain/Interfaces';
+import { Methods } from '../shared/Constants';
 
 declare global {
   interface Window {
