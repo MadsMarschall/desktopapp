@@ -14,6 +14,11 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { Channels } from './preload';
+import DataOperationInvoker from './datahandling/invokers/DataOperationInvoker';
+import DataOperationChainController from './datahandling/datacontrolling/DataOperationChainController';
+import DataOperationChainControllerInvoker from './datahandling/invokers/DataOperationChainControllerInvoker';
+import { Methods } from '../shared/Constants';
 
 export default class AppUpdater {
   constructor() {
@@ -30,6 +35,28 @@ ipcMain.on('ipc-example', async (event, arg) => {
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
+const dataOperationChainController = new DataOperationChainController();
+const dataOperationInvoker = new DataOperationInvoker(
+  dataOperationChainController
+);
+const chainControllerInvoker = new DataOperationChainControllerInvoker(
+  dataOperationChainController
+);
+
+ipcMain.handle(
+  <Channels>'ipc-chain-controller',
+  async (event, id: string, method: Methods, args: unknown[]) => {
+    console.log('ipc-chain-controller', id, method, args);
+    return chainControllerInvoker.handleRequest('SINGLETON', method, args);
+  }
+);
+ipcMain.handle(
+  <Channels>'ipc-data-operation',
+  async (event, id: string, method: Methods, args: unknown[]) => {
+    console.log('ipc-data-operation', id, method, args);
+    return dataOperationInvoker.handleRequest(id, method, args);
+  }
+);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
