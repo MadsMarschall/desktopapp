@@ -3,11 +3,11 @@ import IDataOperation from './IDataOperation';
 import { OperationIds } from '../Constants';
 
 export default interface IDataOperationChainController {
-  createOperationNode(type: OperationIds, id: string): IDataOperation;
+  createOperationNode(type: OperationIds, id: string): Promise<IDataOperation>;
 
-  getOperationByNodeId(id: string): IDataOperation;
+  getOperationByNodeId(id: string): Promise<IDataOperation>;
 
-  removeNodeById(id: string): void;
+  removeNodeById(id: string): Promise<void>;
 
-  connectOperationNodes(sourceId: string, targetId: string): void;
+  connectOperationNodes(sourceId: string, targetId: string): Promise<void>;
 }

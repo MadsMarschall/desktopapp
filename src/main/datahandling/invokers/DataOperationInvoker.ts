@@ -10,13 +10,13 @@ export default class DataOperationInvoker implements IInvoker {
     this.dataOperationChainController = dataOperationChainController;
   }
 
-  public handleRequest(
+  public async handleRequest(
     id: string,
     method: Methods,
     ...args: any[]
   ): Promise<any> {
     const operation =
-      this.dataOperationChainController.getOperationByNodeId(id);
+      await this.dataOperationChainController.getOperationByNodeId(id);
     if (!operation) return Promise.resolve();
 
     let result: any = null;
@@ -24,11 +24,14 @@ export default class DataOperationInvoker implements IInvoker {
       case Methods.DATA_OPERATION_GET_DATA:
         result = operation.getData();
         break;
+      case Methods.DATAOPERATION_GET_TYPE:
+        result = operation.getType();
+        break;
       case Methods.DATA_OPERATION_TRIGGER_OPERATION:
         result = operation.triggerOperation();
         break;
       case Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_BACKWARD:
-        result = operation.retriggerOperationChainBackwards();
+        result = operation.retriggerOperationChainBackward();
         break;
       case Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD:
         result = operation.retriggerOperationChainForward();
@@ -45,13 +48,13 @@ export default class DataOperationInvoker implements IInvoker {
       case Methods.DATA_OPERATION_SET_TARGET:
         // eslint-disable-next-line no-case-declarations
         const targetOperation: IDataOperation =
-          this.dataOperationChainController.getOperationByNodeId(args[0]);
+          await this.dataOperationChainController.getOperationByNodeId(args[0]);
         operation.setTarget(targetOperation);
         break;
       case Methods.DATA_OPERATION_SET_SOURCE:
         // eslint-disable-next-line no-case-declarations
         const sourceOperation: IDataOperation =
-          this.dataOperationChainController.getOperationByNodeId(args[0]);
+          await this.dataOperationChainController.getOperationByNodeId(args[0]);
         operation.setSource(sourceOperation);
         break;
       default:

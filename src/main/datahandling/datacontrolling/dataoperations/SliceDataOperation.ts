@@ -6,34 +6,34 @@ import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 export default class SliceDataOperation implements IDataOperation {
   private inputOperation: IDataOperation;
 
-  private outputData: IDataPointMovement[];
+  private outputData: IDataPointMovement[] = [];
 
   private targetOperation: IDataOperation;
 
   constructor(inputOperation: IDataOperation) {
     this.inputOperation = inputOperation;
-    this.outputData = inputOperation.getData();
     this.targetOperation = new IsNullObject();
   }
 
-  getData(): IDataPointMovement[] {
-    return this.outputData;
+  getData(): Promise<IDataPointMovement[]> {
+    return Promise.resolve(this.outputData);
   }
 
-  setSource(source: IDataOperation): void {
+  setSource(source: IDataOperation): Promise<void> {
     this.inputOperation = source;
+    return Promise.resolve();
   }
 
   triggerOperation(): Promise<void> {
     return new Promise(async (resolve) => {
-      this.outputData = tidy(this.inputOperation.getData(), slice(0, 1));
+      this.outputData = tidy(await this.inputOperation.getData(), slice(0, 1));
       resolve();
     });
   }
 
-  retriggerOperationChainBackwards(): Promise<void> {
+  retriggerOperationChainBackward(): Promise<void> {
     return new Promise<void>(async (resolve) => {
-      await this.inputOperation.retriggerOperationChainBackwards();
+      await this.inputOperation.retriggerOperationChainBackward();
       await this.inputOperation.triggerOperation();
       resolve();
     });
@@ -47,23 +47,24 @@ export default class SliceDataOperation implements IDataOperation {
     });
   }
 
-  getType(): string {
-    return SliceDataOperation.name;
+  getType(): Promise<string> {
+    return Promise.resolve(SliceDataOperation.name);
   }
 
-  getSource(): IDataOperation {
-    return this.inputOperation;
+  getSource(): Promise<IDataOperation> {
+    return Promise.resolve(this.inputOperation);
   }
 
-  setSettings(settings: any[]): boolean {
-    return false;
+  setSettings(settings: any[]): Promise<boolean> {
+    return Promise.resolve(false);
   }
 
-  getTarget(): IDataOperation {
-    return this.targetOperation;
+  getTarget(): Promise<IDataOperation> {
+    return Promise.resolve(this.targetOperation);
   }
 
-  setTarget(target: IDataOperation): void {
+  setTarget(target: IDataOperation): Promise<void> {
     this.targetOperation = target;
+    return Promise.resolve();
   }
 }

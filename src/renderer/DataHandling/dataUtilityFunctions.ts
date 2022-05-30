@@ -1,27 +1,31 @@
 import { Connection } from 'react-flow-renderer';
-import { dataOperationChainControllerProxy } from './DataOperationChainControllerProxy';
+import DataOperationChainControllerProxy from './DataOperationChainControllerProxy';
 import IDataOperation from '../../shared/domain/IDataOperation';
+import IpcRendererImpl from './IpcRendereImpl';
 
-export const handleTargetNodeConnection = (
+const dataOperationChainControllerProxy = new DataOperationChainControllerProxy(
+  new IpcRendererImpl()
+);
+export const handleTargetNodeConnection = async (
   connection: Connection,
   targetOperation: IDataOperation
 ) => {
   targetOperation.setSource(
-    dataOperationChainControllerProxy.getOperationByNodeId(
+    await dataOperationChainControllerProxy.getOperationByNodeId(
       <string>connection.source
     )
   );
   targetOperation.retriggerOperationChainForward();
 };
 
-export const handleSourceNodeConnection = (
+export const handleSourceNodeConnection = async (
   connection: Connection,
   sourceOperation: IDataOperation
 ) => {
   sourceOperation.setTarget(
-    dataOperationChainControllerProxy.getOperationByNodeId(
+    await dataOperationChainControllerProxy.getOperationByNodeId(
       <string>connection.target
     )
   );
-  sourceOperation.retriggerOperationChainForward();
+  await sourceOperation.retriggerOperationChainForward();
 };

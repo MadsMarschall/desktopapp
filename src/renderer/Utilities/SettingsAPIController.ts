@@ -68,7 +68,7 @@ export default class SettingsAPIController {
       .catch(function (error) {
         console.log(error.toJSON());
       });
-    if (result == undefined) throw new Error('no settings with that id');
+    if (result == undefined) throw new Error('no settings with that objectId');
     return result;
   }
 

@@ -7,7 +7,7 @@ import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 export default class TimePlayerOperation implements IDataOperation, ISubject {
   private inputOperation: IDataOperation;
 
-  private outputData: IDataPointMovement[];
+  private outputData: IDataPointMovement[] = [];
 
   private settings: any[] = [0];
 
@@ -18,24 +18,23 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
   constructor(inputOperation: IDataOperation) {
     this.targetOperation = new IsNullObject();
     this.inputOperation = inputOperation;
-    this.outputData = inputOperation.getData();
   }
 
-  getData(): IDataPointMovement[] {
-    return this.outputData;
+  getData(): Promise<IDataPointMovement[]> {
+    return Promise.resolve(this.outputData);
   }
 
-  getSource(): IDataOperation {
-    return this.inputOperation;
+  getSource(): Promise<IDataOperation> {
+    return Promise.resolve(this.inputOperation);
   }
 
-  getType(): string {
-    return TimePlayerOperation.name;
+  getType(): Promise<string> {
+    return Promise.resolve(TimePlayerOperation.name);
   }
 
-  retriggerOperationChainBackwards(): Promise<void> {
+  retriggerOperationChainBackward(): Promise<void> {
     return new Promise<void>(async (resolve) => {
-      await this.inputOperation.retriggerOperationChainBackwards();
+      await this.inputOperation.retriggerOperationChainBackward();
       await this.inputOperation.triggerOperation();
       resolve();
     });
@@ -48,22 +47,24 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
     });
   }
 
-  setSettings(settings: any[]): boolean {
+  setSettings(settings: any[]): Promise<boolean> {
     const settingsPresent: boolean = settings.length === 0;
-    if (!settingsPresent) return false;
-    return true;
+    if (!settingsPresent) return Promise.resolve(false);
+    return Promise.resolve(true);
   }
 
-  setSource(source: IDataOperation): void {
+  async setSource(source: IDataOperation): Promise<void> {
     this.inputOperation = source;
-    if (this.inputOperation.getData().length < 1) return;
+    const data: IDataPointMovement[] = await source.getData();
+    if (data.length < 1) return Promise.resolve();
     this.settings = [this.inputOperation.getData()[0].timestamp.getTime()];
+    return Promise.resolve();
   }
 
   triggerOperation(): Promise<void> {
-    debugger;
     return new Promise<void>(async (resolve) => {
-      const temp = this.inputOperation.getData().filter((e) => {
+      const data = await this.inputOperation.getData();
+      const temp = data.filter((e) => {
         const time = e.timestamp.getTime();
         return time === this.settings[0];
       });
@@ -74,12 +75,13 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
     });
   }
 
-  getTarget(): IDataOperation {
-    return this.targetOperation;
+  getTarget(): Promise<IDataOperation> {
+    return Promise.resolve(this.targetOperation);
   }
 
-  setTarget(target: IDataOperation): void {
+  setTarget(target: IDataOperation): Promise<void> {
     this.targetOperation = target;
+    return Promise.resolve();
   }
 
   addObserver(obs: IObserver): void {

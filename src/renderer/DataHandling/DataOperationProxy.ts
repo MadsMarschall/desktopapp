@@ -3,69 +3,65 @@ import { IDataPointMovement } from '../../shared/domain/Interfaces';
 import { Methods } from '../../shared/Constants';
 import IDataOperation from '../../shared/domain/IDataOperation';
 import { Channels } from '../../main/preload';
+import { IIpcRenderer } from '../preload';
+import IpcRendererImpl from './IpcRendereImpl';
 
 export default class DataOperationProxy implements IDataOperationProxy {
   readonly ID: string;
 
-  constructor(id: string) {
+  readonly channel: Channels = 'ipc-data-operation';
+
+  readonly ipc: IIpcRenderer;
+
+  constructor(id: string, req: IIpcRenderer) {
     this.ID = id;
+    this.ipc = req;
   }
 
-  public getData(): IDataPointMovement[] {
-    let data: any;
-    (async () => {
-      data = await window.electron.ipcRenderer.invoke(
-        'ipc-data-operation',
-        this.ID,
-        Methods.DATA_OPERATION_GET_DATA,
-        []
-      );
-    })();
-    return data;
+  public getData(): Promise<IDataPointMovement[]> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
+      this.ID,
+      Methods.DATA_OPERATION_GET_DATA,
+      []
+    ) as Promise<IDataPointMovement[]>;
   }
 
-  public getSource(): IDataOperation {
-    let source: any;
-    (async () => {
-      source = await window.electron.ipcRenderer.invoke(
-        'ipc-data-operation',
-        this.ID,
-        Methods.DATA_OPERATION_GET_SOURCE,
-        []
-      );
-    })();
-    return source;
+  public getSource(): Promise<IDataOperation> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
+      this.ID,
+      Methods.DATA_OPERATION_GET_SOURCE,
+      []
+    ) as Promise<IDataOperation>;
   }
 
-  public getTarget(): IDataOperation {
-    let target: any;
-    (async () => {
-      target = await window.electron.ipcRenderer.invoke(
-        'ipc-data-operation',
-        this.ID,
-        Methods.DATA_OPERATION_GET_TARGET,
-        []
-      );
-    })();
-    return target;
+  public getTarget(): Promise<IDataOperation> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
+      this.ID,
+      Methods.DATA_OPERATION_GET_TARGET,
+      []
+    ) as Promise<IDataOperation>;
   }
 
-  public getType(): string {
-    let type: any;
-    (async () => {
-      type = await window.electron.ipcRenderer.invoke(
-        'ipc-data-operation',
-        this.ID,
-        Methods.DATAOPERATION_GET_TYPE,
-        []
-      );
-    })();
-    return type;
+  public getType(): Promise<string> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
+      this.ID,
+      Methods.DATAOPERATION_GET_TYPE,
+      []
+    ) as Promise<string>;
   }
 
-  public retriggerOperationChainBackwards(): Promise<void> {
-    return window.electron.ipcRenderer.invoke(
-      'ipc-data-operation',
+  public retriggerOperationChainBackward(): Promise<void> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
       this.ID,
       Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_BACKWARD,
       []
@@ -73,60 +69,54 @@ export default class DataOperationProxy implements IDataOperationProxy {
   }
 
   public retriggerOperationChainForward(): Promise<void> {
-    return window.electron.ipcRenderer.invoke(
-      'ipc-data-operation',
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
       this.ID,
       Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD,
       []
     ) as Promise<void>;
   }
 
-  public setSettings(settings: any[]): boolean {
-    let result: any;
-    (async () => {
-      result = window.electron.ipcRenderer.invoke(
-        'ipc-data-operation',
-        this.ID,
-        Methods.DATA_OPERATION_SET_SETTINGS,
-        settings
-      );
-    })();
-    return result;
+  public setSettings(settings: any[]): Promise<boolean> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
+      this.ID,
+      Methods.DATA_OPERATION_SET_SETTINGS,
+      ...settings
+    ) as Promise<boolean>;
   }
 
-  public setSource(source: IDataOperation): void {
+  public setSource(source: IDataOperation): Promise<void> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
     const s = <IDataOperationProxy>source;
-    const f = async () => {
-      await window.electron.ipcRenderer.invoke(
-        'ipc-data-operation',
-        this.ID,
-        Methods.DATA_OPERATION_SET_SOURCE,
-        s.getId()
-      );
-    };
-    f();
+    return this.ipc.invoke(
+      this.channel,
+      this.ID,
+      Methods.DATA_OPERATION_SET_SOURCE,
+      s.getId()
+    ) as Promise<void>;
   }
 
-  public setTarget(target: IDataOperation): void {
+  public setTarget(target: IDataOperation): Promise<void> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
     const t = <IDataOperationProxy>target;
-    let result;
-    const f = async () => {
-      result = await window.electron.ipcRenderer.invoke(
-        'ipc-data-operation',
-        this.ID,
-        Methods.DATA_OPERATION_SET_SOURCE,
-        t.getId()
-      );
-    };
-    f();
-    return result;
+    return this.ipc.invoke(
+      this.channel,
+      this.ID,
+      Methods.DATA_OPERATION_SET_TARGET,
+      t.getId()
+    ) as Promise<void>;
   }
 
   triggerOperation(): Promise<void> {
-    return window.electron.ipcRenderer.invoke(
-      'ipc-data-operation',
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
       this.ID,
-      Methods.DATA_OPERATION_TRIGGER_OPERATION
+      Methods.DATA_OPERATION_TRIGGER_OPERATION,
+      []
     ) as Promise<void>;
   }
 

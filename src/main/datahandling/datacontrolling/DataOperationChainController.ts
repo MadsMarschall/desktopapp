@@ -18,13 +18,11 @@ export default class DataOperationChainController
     this.dataOperations = new Map<string, IDataOperation>();
   }
 
-  connectOperationNodes(sourceId: string, targetId: string): void {
-    this.getOperationByNodeId(sourceId).setTarget(
-      this.getOperationByNodeId(targetId)
-    );
+  connectOperationNodes(sourceId: string, targetId: string): Promise<void> {
+    this.getOperationByNodeId(sourceId).setTarget(this.getOperationByNodeId(targetId));
   }
 
-  createOperationNode(type: OperationIds, id: string): IDataOperation {
+  createOperationNode(type: OperationIds, id: string): Promise<IDataOperation> {
     let operation: IDataOperation;
     switch (type) {
       case OperationIds.SORT_OPERATION:
@@ -52,7 +50,7 @@ export default class DataOperationChainController
     return operation;
   }
 
-  getOperationByNodeId(id: string): IDataOperation {
+  getOperationByNodeId(id: string): Promise<IDataOperation> {
     const operation = this.dataOperations.get(id);
     if (!operation) {
       return new IsNullObject();
@@ -60,7 +58,7 @@ export default class DataOperationChainController
     return operation;
   }
 
-  removeNodeById(id: string) {
+  removeNodeById(id: string): Promise<void> {
     this.dataOperations.delete(id);
   }
 

@@ -20,6 +20,7 @@ import DataOperationInvoker from './datahandling/invokers/DataOperationInvoker';
 import DataOperationChainController from './datahandling/datacontrolling/DataOperationChainController';
 import DataOperationChainControllerInvoker from './datahandling/invokers/DataOperationChainControllerInvoker';
 import { Methods } from '../shared/Constants';
+import ExpressServer from './remoteControllerServer/ExpressServer';
 
 export default class AppUpdater {
   constructor() {
@@ -28,6 +29,9 @@ export default class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
+// EXPRESS STUFF
+const expressServer = new ExpressServer();
+
 let mainWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {

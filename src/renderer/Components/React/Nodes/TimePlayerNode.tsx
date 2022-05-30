@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { Handle, Position } from 'react-flow-renderer';
 import { Pause, Play, SkipBackward } from 'react-bootstrap-icons';
@@ -7,10 +7,10 @@ import {
   handleSourceNodeConnection,
   handleTargetNodeConnection,
 } from '../../../DataHandling/dataUtilityFunctions';
-import { dataOperationChainControllerProxy } from '../../../DataHandling/DataOperationChainControllerProxy';
 import '../../Sass/SliderStyle.scss';
 import { OperationIds } from '../../../../shared/Constants';
 import ISubject from '../../../../shared/domain/ISubject';
+import { ChainControllerContext } from '../../../context/broker';
 
 let intervalHolder: ReturnType<typeof setInterval> | null;
 const delayBetweenIterations = 50;
@@ -20,6 +20,7 @@ const UPPER_TIME_BOUND: number = new Date('2014-06-08 23:59:59').getTime();
 let timeCounter = LOWER_TIME_BOUND;
 
 export default function TimePlayerNode({ data }: any) {
+  const dataOperationChainControllerProxy = useContext(ChainControllerContext);
   const [timeBoundaries, setTimeBoundaries] = useState<{
     lower: number;
     upper: number;
@@ -30,17 +31,12 @@ export default function TimePlayerNode({ data }: any) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const onMount = () => {
     const subject: ISubject =
-      dataOperationChainControllerProxy.createOperationNode(
-        OperationIds.TIME_PLAYER,
-        data.id
-      ) as unknown as ISubject;
+      dataOperationChainControllerProxy.createOperationNode(OperationIds.TIME_PLAYER, data.id) as unknown as ISubject;
     // subject.addObserver(new Observer(dataUpdate));
   };
-  const dataUpdate = () => {
-    const sourceData = dataOperationChainControllerProxy
-      .createOperationNode(OperationIds.TIME_PLAYER, data.id)
-      .getSource()
-      .getData();
+  const dataUpdate = async () => {
+    const operation = await dataOperationChainControllerProxy.createOperationNode(OperationIds.TIME_PLAYER, data.id);
+    const sourceData = await (await operation.getSource()).getData();
 
     if (sourceData.length === 0) return;
 
@@ -84,10 +80,10 @@ export default function TimePlayerNode({ data }: any) {
         type="source"
         position={Position.Right}
         id="b"
-        onConnect={(params) => {
+        onConnect={async (params) => {
           handleSourceNodeConnection(
             params,
-            dataOperationChainControllerProxy.getOperationByNodeId(data.id)
+            await dataOperationChainControllerProxy.getOperationByNodeId(data.id)
           );
         }}
       />
@@ -117,10 +113,10 @@ export default function TimePlayerNode({ data }: any) {
         type="target"
         position={Position.Left}
         id="b"
-        onConnect={(params) => {
+        onConnect={async (params) => {
           handleTargetNodeConnection(
             params,
-            dataOperationChainControllerProxy.getOperationByNodeId(data.id)
+            await dataOperationChainControllerProxy.getOperationByNodeId(data.id)
           );
         }}
       />

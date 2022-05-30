@@ -6,8 +6,9 @@ import InvokerSpy from '../doubles/InvokerSpy';
 import { Methods } from '../../shared/Constants';
 import IsNullObject from '../../main/datahandling/datacontrolling/dataoperations/IsNullObject';
 import DataOperationSpy from '../doubles/DataOperationSpy';
+import DataOperationErrorLogger from '../../renderer/DataHandling/DataOperationErrorLogger';
 
-let dop: DataOperationProxy;
+let dop: DataOperationErrorLogger;
 let ipc: IPCMock;
 let invokerMock: InvokerSpy
 let spy: unknown[];
@@ -15,7 +16,7 @@ beforeEach(() => {
   spy = [];
   invokerMock = new InvokerSpy(spy);
   ipc = new IPCMock(invokerMock);
-  dop = new DataOperationProxy('test', ipc);
+  dop = new DataOperationErrorLogger(new DataOperationProxy('test', ipc));
 });
 
 test('can get objectId', () => {

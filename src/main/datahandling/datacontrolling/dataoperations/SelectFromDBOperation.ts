@@ -7,7 +7,7 @@ import { dbController } from '../../utilities/DataBaseController';
 export default class SelectFromDBOperation implements IDataOperation {
   private inputOperation: IDataOperation;
 
-  private outputData: IDataPointMovement[];
+  private outputData: IDataPointMovement[] = [];
 
   private settings: string[] | number[] | TableNames[] = [];
 
@@ -15,20 +15,20 @@ export default class SelectFromDBOperation implements IDataOperation {
 
   constructor(inputOperation: IDataOperation) {
     this.inputOperation = inputOperation;
-    this.outputData = inputOperation.getData();
     this.targetOperation = new IsNullObject();
   }
 
-  getData(): IDataPointMovement[] {
-    return this.outputData;
+  getData(): Promise<IDataPointMovement[]> {
+    return Promise.resolve(this.outputData);
   }
 
-  setSource(source: IDataOperation): void {
+  setSource(source: IDataOperation): Promise<void> {
     this.inputOperation = source;
+    return Promise.resolve();
   }
 
   triggerOperation(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
       if (this.settings.length !== 2) return resolve();
       this.outputData = await dbController.getDataByPersonId(
         <TableNames>this.settings[0],
@@ -39,13 +39,13 @@ export default class SelectFromDBOperation implements IDataOperation {
         'triggerOperation',
         this.outputData
       );
-      resolve();
+      return resolve();
     });
   }
 
-  retriggerOperationChainBackwards(): Promise<void> {
+  retriggerOperationChainBackward(): Promise<void> {
     return new Promise<void>(async (resolve) => {
-      await this.inputOperation.retriggerOperationChainBackwards();
+      await this.inputOperation.retriggerOperationChainBackward();
       await this.inputOperation.triggerOperation();
       resolve();
     });
@@ -59,27 +59,29 @@ export default class SelectFromDBOperation implements IDataOperation {
     });
   }
 
-  getType(): string {
-    return SelectFromDBOperation.name;
+  getType(): Promise<string> {
+    return Promise.resolve(SelectFromDBOperation.name);
   }
 
-  getSource(): IDataOperation {
-    return this.inputOperation;
+  getSource(): Promise<IDataOperation> {
+    return Promise.resolve(this.inputOperation);
   }
 
-  setSettings(settings: string[] | number[]): boolean {
-    if (settings.length != 2) return false;
-    if (typeof settings[0] !== typeof TableNames.TEST) return false;
-    if (typeof settings[1] !== 'number') return false;
+  setSettings(settings: any[]): Promise<boolean> {
+    if (settings.length !== 2) return Promise.resolve(false);
+    if (typeof settings[0] !== typeof TableNames.TEST)
+      return Promise.resolve(false);
+    if (typeof settings[1] !== 'number') return Promise.resolve(false);
     this.settings = settings;
-    return true;
+    return Promise.resolve(true);
   }
 
-  getTarget(): IDataOperation {
-    return this.targetOperation;
+  getTarget(): Promise<IDataOperation> {
+    return Promise.resolve(this.targetOperation);
   }
 
-  setTarget(target: IDataOperation): void {
+  setTarget(target: IDataOperation): Promise<void> {
     this.targetOperation = target;
+    return Promise.resolve();
   }
 }

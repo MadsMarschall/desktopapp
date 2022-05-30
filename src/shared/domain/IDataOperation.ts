@@ -1,14 +1,20 @@
 import { IDataPointMovement } from './Interfaces';
 
 export default interface IDataOperation {
-  getData(): IDataPointMovement[];
-  getType(): string;
-  setSettings(settings: any[]): boolean;
+  getData(): Promise<IDataPointMovement[]>;
+
+  getType(): Promise<string>;
+
+  setSettings(settings: any[]): Promise<boolean>;
   triggerOperation(): Promise<void>;
-  retriggerOperationChainBackwards(): Promise<void>;
+  retriggerOperationChainBackward(): Promise<void>;
   retriggerOperationChainForward(): Promise<void>;
-  setSource(source: IDataOperation): void;
-  getSource(): IDataOperation;
-  setTarget(target: IDataOperation): void;
-  getTarget(): IDataOperation;
+
+  setSource(source: IDataOperation): Promise<void>;
+
+  getSource(): Promise<IDataOperation>;
+
+  setTarget(target: IDataOperation): Promise<void>;
+
+  getTarget(): Promise<IDataOperation>;
 }

@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import ReactFlow, {
   addEdge,
   applyEdgeChanges,
@@ -18,6 +24,7 @@ import SelectorNode from '../Nodes/SelectorNode';
 import TimeSliderNode from '../Nodes/TimeSliderNode';
 import TimePlayerNode from '../Nodes/TimePlayerNode';
 import { OperationIds } from '../../../../shared/Constants';
+import { ChainControllerContext } from '../../../context/broker';
 
 const nodeTypes = {
   dataSource: DataSourceNode,
@@ -28,8 +35,8 @@ const nodeTypes = {
 };
 
 const id = 10;
-const chainController = new DataOperationChainController();
 export default function VastChallengeOneView() {
+  const chainController = useContext(ChainControllerContext);
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
@@ -47,9 +54,6 @@ export default function VastChallengeOneView() {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       setNodes((nds: Node) => {
-        changes.forEach((n: any) => {
-          chainController.createOperationNode(OperationIds.DATASOURCE, n.id);
-        });
         // @ts-ignore
         return applyNodeChanges(changes, nds);
       });

@@ -12,27 +12,30 @@ export default class MapDisplayOperation implements IDataOperation {
     this.targetOperation = new IsNullObject();
   }
 
-  getTarget(): IDataOperation {
-    return new IsNullObject();
+  getTarget(): Promise<IDataOperation> {
+    return Promise.resolve(this.targetOperation);
   }
 
-  setTarget(target: IDataOperation): void {}
+  setTarget(target: IDataOperation): Promise<void> {
+    this.targetOperation = target;
+    return Promise.resolve();
+  }
 
-  getData(): IDataPointMovement[] {
+  getData(): Promise<IDataPointMovement[]> {
     return this.inputOperation.getData();
   }
 
-  getSource(): IDataOperation {
-    return this.inputOperation;
+  getSource(): Promise<IDataOperation> {
+    return Promise.resolve(this.inputOperation);
   }
 
-  getType(): string {
-    return MapDisplayOperation.name;
+  getType(): Promise<string> {
+    return Promise.resolve(MapDisplayOperation.name);
   }
 
-  retriggerOperationChainBackwards(): Promise<void> {
+  retriggerOperationChainBackward(): Promise<void> {
     return new Promise<void>(async (resolve) => {
-      await this.inputOperation.retriggerOperationChainBackwards();
+      await this.inputOperation.retriggerOperationChainBackward();
       await this.inputOperation.triggerOperation();
       resolve();
     });
@@ -46,17 +49,18 @@ export default class MapDisplayOperation implements IDataOperation {
     });
   }
 
-  setSettings(settings: any[]): boolean {
-    return false;
+  setSettings(settings: any[]): Promise<boolean> {
+    return Promise.resolve(true);
   }
 
-  setSource(source: IDataOperation): void {
+  setSource(source: IDataOperation): Promise<void> {
     console.log(
       source.getType(),
       ' is connected to:',
       MapDisplayOperation.name
     );
     this.inputOperation = source;
+    return Promise.resolve();
   }
 
   triggerOperation(): Promise<void> {

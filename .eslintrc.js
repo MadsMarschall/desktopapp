@@ -15,7 +15,9 @@ module.exports = {
     'no-plusplus': 'off',
     'react/jsx-no-bind': 'off',
     'no-async-promise-executor': 'off',
-    '@typescript-eslint/no-explicit-any': 'off'
+    '@typescript-eslint/no-explicit-any': 'off',
+    'consistent-return': 'off',
+    'promise/no-return-wrap': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -4,7 +4,6 @@ import { Handle, Position } from 'react-flow-renderer';
 
 import QRCode from 'react-qr-code';
 import { Socket } from 'socket.io-client';
-import { dataOperationChainControllerProxy } from '../../../DataHandling/DataOperationChainControllerProxy';
 import { settingsAPI } from '../../../Utilities/SettingsAPIController';
 import { SocketContext } from '../../../context/socket';
 import { handleSourceNodeConnection } from '../../../DataHandling/dataUtilityFunctions';
@@ -13,6 +12,7 @@ import {
   PHONE_CONTROLLER_BASE_URL,
   TableNames,
 } from '../../../../shared/Constants';
+import { ChainControllerContext } from '../../../context/broker';
 
 type IProps = {
   data: {
@@ -29,6 +29,7 @@ export default function SelectorNode({ data }: IProps) {
   const [StrapiId, setStrapiId] = useState<number>(0);
   const [entriesLoaded, setEntriesLoaded] = useState<number>(0);
   const socket = useContext<Socket>(SocketContext);
+  const dataOperationChainControllerProxy = useContext(ChainControllerContext);
 
   function onMount() {
     dataOperationChainControllerProxy.createOperationNode(
@@ -54,42 +55,35 @@ export default function SelectorNode({ data }: IProps) {
     if (!StrapiId) return;
     if (!SelectedTable) return;
     if (!PersonId) return;
-    const operation = dataOperationChainControllerProxy.getOperationByNodeId(
-      data.id
-    );
-    operation.setSettings([SelectedTable, PersonId]);
+    const operation =
+      await dataOperationChainControllerProxy.getOperationByNodeId(data.id);
+    await operation.setSettings([SelectedTable, PersonId]);
     await dataOperationChainControllerProxy
       .getOperationByNodeId(data.id)
-      .retriggerOperationChainForward()
       .then(() => {
-        setEntriesLoaded(
-          dataOperationChainControllerProxy
-            .getOperationByNodeId(data.id)
-            .getData().length
-        );
+        operation.retriggerOperationChainForward().then(async () => {
+          setEntriesLoaded((await operation.getData()).length);
+        });
       });
   };
 
   const handleGetData = async (strapiId: number) => {
-    await settingsAPI.getSelectorNodeSetting(strapiId).then((res) => {
+    await settingsAPI.getSelectorNodeSetting(strapiId).then(async (res) => {
       setPersonId(parseInt(res.attributes.PersonId, 10));
       setSelectedTable(res.attributes.TableName);
-      dataOperationChainControllerProxy
-        .getOperationByNodeId(data.id)
-        .setSettings([
-          res.attributes.TableName,
-          parseInt(res.attributes.PersonId, 10),
-        ]);
-      dataOperationChainControllerProxy
-        .getOperationByNodeId(data.id)
-        .retriggerOperationChainForward()
-        .then(() => {
-          setEntriesLoaded(
-            dataOperationChainControllerProxy
-              .getOperationByNodeId(data.id)
-              .getData().length
-          );
-        });
+      const operation =
+        await dataOperationChainControllerProxy.getOperationByNodeId(data.id);
+      await operation.setSettings([
+        res.attributes.TableName,
+        parseInt(res.attributes.PersonId, 10),
+      ]);
+      operation.retriggerOperationChainForward().then(async () => {
+        setEntriesLoaded((await operation.getData()).length);
+      });
+
+      operation.retriggerOperationChainForward().then(async () => {
+        setEntriesLoaded((await operation.getData()).length);
+      });
     });
   };
 
@@ -101,10 +95,12 @@ export default function SelectorNode({ data }: IProps) {
         type="source"
         position={Position.Right}
         id="b"
-        onConnect={(params) => {
+        onConnect={async (params) => {
           handleSourceNodeConnection(
             params,
-            dataOperationChainControllerProxy.getOperationByNodeId(data.id)
+            await dataOperationChainControllerProxy.getOperationByNodeId(
+              data.id
+            )
           );
         }}
       />

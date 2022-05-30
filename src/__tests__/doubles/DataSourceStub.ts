@@ -7,15 +7,15 @@ export default class DataSourceStub implements IDataOperation {
     throw new Error('Method not implemented.');
   }
 
-  setTarget(target: IDataOperation): void {
+  setTarget(target: IDataOperation): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  getTarget(): IDataOperation {
+  getTarget(): Promise<IDataOperation> {
     throw new Error('Method not implemented.');
   }
 
-  getData(): IDataPointMovement[] {
+  getData(): Promise<IDataPointMovement[]> {
     return [
       {
         PersonId: 0,
@@ -65,23 +65,23 @@ export default class DataSourceStub implements IDataOperation {
     ];
   }
 
-  getSource(): IDataOperation {
+  getSource(): Promise<IDataOperation> {
     return new IsNullObject();
   }
 
-  getType(): string {
+  getType(): Promise<string> {
     return '';
   }
 
-  retriggerOperationChainBackwards(): Promise<void> {
+  retriggerOperationChainBackward(): Promise<void> {
     return Promise.resolve(undefined);
   }
 
-  setSettings(settings: any[]): boolean {
+  setSettings(settings: any[]): Promise<boolean> {
     return false;
   }
 
-  setSource(source: IDataOperation): void {}
+  setSource(source: IDataOperation): Promise<void> {}
 
   triggerOperation(): Promise<void> {
     return Promise.resolve(undefined);

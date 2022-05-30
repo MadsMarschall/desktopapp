@@ -2,15 +2,15 @@ import IDataOperation from '../../../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 
 export default class IsNullObject implements IDataOperation {
-  getData(): IDataPointMovement[] {
-    return [];
+  getData(): Promise<IDataPointMovement[]> {
+    return Promise.resolve([]);
   }
 
-  getType(): string {
-    return IsNullObject.name;
+  getType(): Promise<string> {
+    return Promise.resolve(IsNullObject.name);
   }
 
-  retriggerOperationChainBackwards(): Promise<void> {
+  retriggerOperationChainBackward(): Promise<void> {
     return Promise.resolve(undefined);
   }
 
@@ -18,23 +18,27 @@ export default class IsNullObject implements IDataOperation {
     return Promise.resolve(undefined);
   }
 
-  setSource(source: IDataOperation): void {}
+  setSource(source: IDataOperation): Promise<void> {
+    return Promise.resolve(undefined);
+  }
 
   triggerOperation(): Promise<void> {
     return Promise.resolve(undefined);
   }
 
-  getSource(): IDataOperation {
-    return new IsNullObject();
+  getSource(): Promise<IDataOperation> {
+    return Promise.resolve(new IsNullObject());
   }
 
-  setSettings(settings: any[]): boolean {
-    return false;
+  setSettings(settings: any[]): Promise<boolean> {
+    return Promise.resolve(false);
   }
 
-  getTarget(): IDataOperation {
-    return new IsNullObject();
+  getTarget(): Promise<IDataOperation> {
+    return Promise.resolve(new IsNullObject());
   }
 
-  setTarget(): void {}
+  setTarget(): Promise<void> {
+    return Promise.resolve(undefined);
+  }
 }

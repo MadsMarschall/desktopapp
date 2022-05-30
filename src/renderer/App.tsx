@@ -3,15 +3,28 @@ import './App.css';
 import { socket, SocketContext } from './context/socket';
 import VastChallengeOneView from './Components/React/VastChallenge1/VastChallengeOneView';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ChainControllerContext } from './context/broker';
+import DataOperationChainControllerProxy from './DataHandling/DataOperationChainControllerProxy';
+import IpcRendererImpl from './DataHandling/IpcRendereImpl';
+import ChainControllerErrorLogger from './DataHandling/ChainControllerErrorLogger';
 
 export default function App() {
+
   return (
     <SocketContext.Provider value={socket}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<VastChallengeOneView />} />
-        </Routes>
-      </Router>
+      <ChainControllerContext.Provider
+        value={
+          new ChainControllerErrorLogger(
+            new DataOperationChainControllerProxy(new IpcRendererImpl())
+          )
+        }
+      >
+        <Router>
+          <Routes>
+            <Route path="/" element={<VastChallengeOneView />} />
+          </Routes>
+        </Router>
+      </ChainControllerContext.Provider>
     </SocketContext.Provider>
   );
 }

@@ -7,6 +7,10 @@ let sac: SettingsAPIController;
 beforeEach(() => {
   sac = new SettingsAPIController();
 });
+
+test.skip('workaround',()=> {
+  expect(true).toBe(true);
+});
 /*
 test('canPostSelectorNodeSettings', async () => {
   expect(
@@ -15,13 +19,13 @@ test('canPostSelectorNodeSettings', async () => {
 });
 
 test('canDeleteSelectorNodeSetting', async () => {
-  const id = await sac.createSelectorSettings(
+  const objectId = await sac.createSelectorSettings(
     'yetAnotherNode',
     1234,
     TableNames.SATURDAY
   );
-  const responseNumber = await sac.deleteSelectorNodeSetting(id);
-  expect(responseNumber).toEqual(id);
+  const responseNumber = await sac.deleteSelectorNodeSetting(objectId);
+  expect(responseNumber).toEqual(objectId);
   expect(responseNumber).toBeGreaterThan(-1);
 });
 
@@ -37,6 +41,6 @@ test('canMocifyExistingSelectorNodeSetting', async () => {
 });
 
 test('canGetSelectorNodeSettingsById', async () => {
-  expect((await sac.getSelectorNodeSetting(21)).id).toEqual(21);
+  expect((await sac.getSelectorNodeSetting(21)).objectId).toEqual(21);
 });
 */

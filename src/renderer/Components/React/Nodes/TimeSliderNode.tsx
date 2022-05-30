@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Handle, Position } from 'react-flow-renderer';
 import ReactSlider from 'react-slider';
 import {
   handleSourceNodeConnection,
-  handleTargetNodeConnection,
+  handleTargetNodeConnection
 } from '../../../DataHandling/dataUtilityFunctions';
-import { dataOperationChainControllerProxy } from '../../../DataHandling/DataOperationChainControllerProxy';
 import '../../Sass/SliderStyle.scss';
 import { OperationIds } from '../../../../shared/Constants';
+import { ChainControllerContext } from '../../../context/broker';
 
 export default function TimeSliderNode({ data }: any) {
+  const dataOperationChainControllerProxy = useContext(ChainControllerContext);
+
   const [TimeOfDay, setTimeOfDay] = useState<Date>(new Date());
   const [StrapiId, setStrapiId] = useState<number>(0);
   const [DataPresent, setDataPresent] = useState<boolean>(false);
@@ -34,31 +36,30 @@ export default function TimeSliderNode({ data }: any) {
     setUpperBound(value[1]);
   };
   const onSliderValueChange = () => {
-    if (!dataOperationChainControllerProxy.getOperationByNodeId(data.id))
-      return;
-    dataOperationChainControllerProxy
-      .getOperationByNodeId(data.id)
-      .setSettings([LowerBound, UpperBound]);
-    dataOperationChainControllerProxy
-      .getOperationByNodeId(data.id)
-      .retriggerOperationChainForward();
+    (async function() {
+      if (!dataOperationChainControllerProxy.getOperationByNodeId(data.id))
+        return;
+      const operation = await dataOperationChainControllerProxy
+        .getOperationByNodeId(data.id);
+      await operation.setSettings([LowerBound, UpperBound]);
+      await operation.retriggerOperationChainForward();
+    })();
   };
 
   useEffect(onSliderValueChange, [LowerBound, UpperBound]);
+
   function onMount() {
-    dataOperationChainControllerProxy.createOperationNode(
-      OperationIds.TIME_SLIDER,
-      data.id
-    );
-    dataOperationChainControllerProxy.getOperationByNodeId(data.id).getData();
+    (async function() {
+      const operation = await dataOperationChainControllerProxy.createOperationNode(OperationIds.TIME_SLIDER, data.id);
+      await operation.getData();
+    })();
   }
 
   useEffect(onMount, []);
 
-  const updateBoundariesOnConnect = () => {
-    const loadedData = dataOperationChainControllerProxy
-      .getOperationByNodeId(data.id)
-      .getData();
+  const updateBoundariesOnConnect = async () => {
+    const operation = await dataOperationChainControllerProxy.getOperationByNodeId(data.id);
+    const loadedData = await operation.getData();
     if (loadedData.length <= 1) return;
     const lower = loadedData[0].timestamp.getTime();
     const upper = loadedData[loadedData.length - 1].timestamp.getTime();
@@ -70,33 +71,33 @@ export default function TimeSliderNode({ data }: any) {
 
   const d = data;
   return (
-    <div className="timeSliderNode">
+    <div className='timeSliderNode'>
       <Handle
-        type="source"
+        type='source'
         position={Position.Right}
-        id="b"
-        onConnect={(params) => {
+        id='b'
+        onConnect={async (params) => {
           handleSourceNodeConnection(
             params,
-            dataOperationChainControllerProxy.getOperationByNodeId(data.id)
+            await dataOperationChainControllerProxy.getOperationByNodeId(data.id)
           );
         }}
       />
-      <Container className="p-5" style={{ backgroundColor: '#e18b71' }}>
+      <Container className='p-5' style={{ backgroundColor: '#e18b71' }}>
         <Row style={{ minWidth: '600px', zIndex: 100 }}>
           <Col sm={12}>
-            <Row className="justify-content-between">
+            <Row className='justify-content-between'>
               <Col sm={3}>{`${new Date(LowerBound).toString()}`}</Col>
-              <Col className="text-right" sm={3}>
+              <Col className='text-right' sm={3}>
                 {`${new Date(UpperBound).toString()}`}
               </Col>
             </Row>
           </Col>
           <Col>
             <ReactSlider
-              className="horizontal-slider"
-              thumbClassName="example-thumb"
-              trackClassName="example-track"
+              className='horizontal-slider'
+              thumbClassName='example-thumb'
+              trackClassName='example-track'
               min={DataBounds.lower}
               max={DataBounds.upper}
               onChange={handlerSliderChange}
@@ -110,13 +111,13 @@ export default function TimeSliderNode({ data }: any) {
         </Row>
       </Container>
       <Handle
-        type="target"
+        type='target'
         position={Position.Left}
-        id="b"
-        onConnect={(params) => {
+        id='b'
+        onConnect={async (params) => {
           handleTargetNodeConnection(
             params,
-            dataOperationChainControllerProxy.getOperationByNodeId(data.id)
+            await dataOperationChainControllerProxy.getOperationByNodeId(data.id)
           );
           updateBoundariesOnConnect();
         }}

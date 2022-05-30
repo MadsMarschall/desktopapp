@@ -1,33 +1,97 @@
 import IDataOperationChainController from 'shared/domain/IDataOperationController';
 import DataOperationProxy from './DataOperationProxy';
 import IDataOperation from '../../shared/domain/IDataOperation';
-import { OperationIds } from '../../shared/Constants';
+import { Methods, OperationIds } from '../../shared/Constants';
+import { Channels } from '../../main/preload';
+import { IIpcRenderer } from '../preload';
+import IpcRendererImpl from './IpcRendereImpl';
+import DataOperationErrorLogger from './DataOperationErrorLogger';
 
 export default class DataOperationChainControllerProxy
   implements IDataOperationChainController
 {
   private dataOperations: Map<string, IDataOperation>;
 
-  constructor() {
+  readonly channel: Channels = <Channels>'ipc-chain-controller';
+
+  readonly ipc: IIpcRenderer;
+
+  readonly objectId: string = 'data-operation-chain-controller';
+
+  constructor(ipc: IIpcRenderer) {
+    this.ipc = ipc;
     this.dataOperations = new Map<string, IDataOperation>();
   }
 
-  createOperationNode(type: OperationIds, id: string): IDataOperation {
-    window.DataOperationChainController.createOperationNode(type, id);
-    return new DataOperationProxy(id);
+  createOperationNode(type: OperationIds, id: string): Promise<IDataOperation> {
+    return new Promise<IDataOperation>((resolve, reject) => {
+      if (!this.ipc) return reject(new Error('IPC not available'));
+      this.ipc
+        .invoke(
+          this.channel,
+          this.objectId,
+          Methods.CHAIN_CONTROLLER_CREATE_OPERATION_NODE,
+          id
+        )
+        .then(() => {
+          resolve(
+            new DataOperationErrorLogger(new DataOperationProxy(id, this.ipc))
+          );
+        });
+    });
   }
 
-  getOperationByNodeId(id: string): IDataOperation {
-    window.DataOperationChainController.getOperationByNodeId(id);
-    return new DataOperationProxy(id);
+  getOperationByNodeId(id: string): Promise<IDataOperation> {
+    // eslint-disable-next-line consistent-return
+    return new Promise<IDataOperation>((resolve, reject) => {
+      if (!this.ipc) return reject(new Error('IPC not available'));
+      this.ipc
+        .invoke(
+          this.channel,
+          this.objectId,
+          Methods.CHAIN_CONTROLLER_GET_OPERATION_BY_NODE_ID,
+          id
+        )
+        .then(() => {
+          resolve(
+            new DataOperationErrorLogger(new DataOperationProxy(id, this.ipc))
+          );
+        });
+    });
   }
 
-  removeNodeById(id: string) {
-    this.dataOperations.delete(id);
+  removeNodeById(id: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (!this.ipc) return reject(new Error('IPC not available'));
+      this.ipc
+        .invoke(
+          this.channel,
+          this.objectId,
+          Methods.CHAIN_CONTROLLER_REMOVE_NODE_BY_ID,
+          id
+        )
+        .then(() => {
+          this.dataOperations.delete(id);
+          resolve();
+        });
+    });
   }
 
-  connectOperationNodes(sourceId: string, targetId: string): void {}
+  connectOperationNodes(sourceId: string, targetId: string): Promise<void> {
+    // eslint-disable-next-line consistent-return
+    return new Promise<void>((resolve, reject) => {
+      if (!this.ipc) return reject(new Error('IPC not available'));
+      this.ipc
+        .invoke(
+          this.channel,
+          this.objectId,
+          Methods.CHAIN_CONTROLLER_CONNECT_OPERATION_NODES,
+          sourceId,
+          targetId
+        )
+        .then(() => {
+          resolve();
+        });
+    });
+  }
 }
-
-export const dataOperationChainControllerProxy =
-  new DataOperationChainControllerProxy();

@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { P5Instance, ReactP5Wrapper } from 'react-p5-wrapper';
 import { Col, Row } from 'react-bootstrap';
 import { Handle, Position } from 'react-flow-renderer';
 import { handleTargetNodeConnection } from '../../../DataHandling/dataUtilityFunctions';
-import { dataOperationChainControllerProxy } from '../../../DataHandling/DataOperationChainControllerProxy';
 import { settingsAPI } from '../../../Utilities/SettingsAPIController';
 import { OperationIds } from '../../../../shared/Constants';
+import IDataOperationChainController from '../../../../shared/domain/IDataOperationController';
+import { ChainControllerContext } from '../../../context/broker';
 
+let dataOperationChainControllerProxy: IDataOperationChainController;
 const canvasX = 1000;
 const canvasY = 1000;
 let operationID: string;
@@ -38,12 +40,13 @@ function sketch(p5: P5Instance) {
     p5.frameRate(5);
   };
 
-  p5.draw = () => {
+  p5.draw = async () => {
     if (!operationID) return;
     p5.background(bg);
-    const data = dataOperationChainControllerProxy
-      .getOperationByNodeId(operationID)
-      .getData();
+    if (!dataOperationChainControllerProxy) return;
+    const operation =
+      await dataOperationChainControllerProxy.getOperationByNodeId(operationID);
+    const data = await operation.getData();
     for (let i = 0; i < data.length; i++) {
       const pos: PositionOnCanvas = getCanvasPosition(data[i].X, data[i].Y);
       p5.ellipse(pos.x, pos.y, canvasX / 100, canvasY / 100);
@@ -52,6 +55,7 @@ function sketch(p5: P5Instance) {
 }
 
 export default function MapNode({ data }: any) {
+  dataOperationChainControllerProxy = useContext(ChainControllerContext);
   const [PersonId, setPersonId] = useState<number>(0);
   // @ts-ignore
   const [StrapiId, setStrapiId] = useState<number>(0);
@@ -80,14 +84,7 @@ export default function MapNode({ data }: any) {
       <div>
         <Row>
           <Col sm={12}>
-            <p>
-              Entries in node:{' '}
-              {
-                dataOperationChainControllerProxy
-                  .getOperationByNodeId(operationID)
-                  .getData().length
-              }
-            </p>
+            <p>Entries in node: {}</p>
           </Col>
           <Col>{mounted ? <ReactP5Wrapper sketch={sketch} /> : <></>}</Col>
         </Row>
@@ -96,10 +93,12 @@ export default function MapNode({ data }: any) {
         type="target"
         position={Position.Left}
         id="b"
-        onConnect={(params) =>
+        onConnect={async (params) =>
           handleTargetNodeConnection(
             params,
-            dataOperationChainControllerProxy.getOperationByNodeId(data.id)
+            await dataOperationChainControllerProxy.getOperationByNodeId(
+              data.id
+            )
           )
         }
       />
