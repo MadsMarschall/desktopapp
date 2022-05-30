@@ -21,6 +21,7 @@ import DataOperationChainController from './datahandling/datacontrolling/DataOpe
 import DataOperationChainControllerInvoker from './datahandling/invokers/DataOperationChainControllerInvoker';
 import { Methods } from '../shared/Constants';
 import ExpressServer from './remoteControllerServer/ExpressServer';
+import ChainControllerLoggerDecorator from './datahandling/datacontrolling/ChainControllerLoggerDecorator';
 
 export default class AppUpdater {
   constructor() {
@@ -39,7 +40,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
-const dataOperationChainController = new DataOperationChainController();
+const dataOperationChainController = new ChainControllerLoggerDecorator(new DataOperationChainController());
 const dataOperationInvoker = new DataOperationInvoker(
   dataOperationChainController
 );
@@ -50,15 +51,13 @@ const chainControllerInvoker = new DataOperationChainControllerInvoker(
 ipcMain.handle(
   <Channels>'ipc-chain-controller',
   async (event, id: string, method: Methods, args: unknown[]) => {
-    console.log('ipc-chain-controller', id, method, args);
-    return chainControllerInvoker.handleRequest('SINGLETON', method, args);
+    return chainControllerInvoker.handleRequest('SINGLETON', method, ...args);
   }
 );
 ipcMain.handle(
   <Channels>'ipc-data-operation',
   async (event, id: string, method: Methods, args: unknown[]) => {
-    console.log('ipc-data-operation', id, method, args);
-    return dataOperationInvoker.handleRequest(id, method, args);
+    return dataOperationInvoker.handleRequest(id, method, ...args);
   }
 );
 

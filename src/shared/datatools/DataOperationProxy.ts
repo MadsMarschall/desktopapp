@@ -1,10 +1,10 @@
-import IDataOperationProxy from '../../shared/domain/IDataOperationProxy';
-import { IDataPointMovement } from '../../shared/domain/Interfaces';
-import { Methods } from '../../shared/Constants';
-import IDataOperation from '../../shared/domain/IDataOperation';
+import IDataOperationProxy from '../domain/IDataOperationProxy';
+import { IDataPointMovement } from '../domain/Interfaces';
+import { Methods } from '../Constants';
+import IDataOperation from '../domain/IDataOperation';
 import { Channels } from '../../main/preload';
-import { IIpcRenderer } from '../preload';
-import IpcRendererImpl from './IpcRendereImpl';
+import { IIpcRenderer } from '../../renderer/preload';
+import IpcRendererImpl from '../../renderer/DataHandling/IpcRendereImpl';
 
 export default class DataOperationProxy implements IDataOperationProxy {
   readonly ID: string;

@@ -4,9 +4,9 @@ import { socket, SocketContext } from './context/socket';
 import VastChallengeOneView from './Components/React/VastChallenge1/VastChallengeOneView';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ChainControllerContext } from './context/broker';
-import DataOperationChainControllerProxy from './DataHandling/DataOperationChainControllerProxy';
+import DataOperationChainControllerProxy from '../shared/datatools/DataOperationChainControllerProxy';
 import IpcRendererImpl from './DataHandling/IpcRendereImpl';
-import ChainControllerErrorLogger from './DataHandling/ChainControllerErrorLogger';
+import ChainControllerErrorLogger from '../shared/datatools/ChainControllerErrorLogger';
 
 export default function App() {
 

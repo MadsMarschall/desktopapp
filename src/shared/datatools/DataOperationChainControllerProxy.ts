@@ -1,10 +1,10 @@
 import IDataOperationChainController from 'shared/domain/IDataOperationController';
 import DataOperationProxy from './DataOperationProxy';
-import IDataOperation from '../../shared/domain/IDataOperation';
-import { Methods, OperationIds } from '../../shared/Constants';
+import IDataOperation from '../domain/IDataOperation';
+import { Methods, OperationIds } from '../Constants';
 import { Channels } from '../../main/preload';
-import { IIpcRenderer } from '../preload';
-import IpcRendererImpl from './IpcRendereImpl';
+import { IIpcRenderer } from '../../renderer/preload';
+import IpcRendererImpl from '../../renderer/DataHandling/IpcRendereImpl';
 import DataOperationErrorLogger from './DataOperationErrorLogger';
 
 export default class DataOperationChainControllerProxy
@@ -31,6 +31,7 @@ export default class DataOperationChainControllerProxy
           this.channel,
           this.objectId,
           Methods.CHAIN_CONTROLLER_CREATE_OPERATION_NODE,
+          type,
           id
         )
         .then(() => {

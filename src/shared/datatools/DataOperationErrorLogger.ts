@@ -1,6 +1,6 @@
-import IDataOperationProxy from '../../shared/domain/IDataOperationProxy';
-import { IDataPointMovement } from '../../shared/domain/Interfaces';
-import IDataOperation from '../../shared/domain/IDataOperation';
+import IDataOperationProxy from '../domain/IDataOperationProxy';
+import { IDataPointMovement } from '../domain/Interfaces';
+import IDataOperation from '../domain/IDataOperation';
 import IsNullObject from '../../main/datahandling/datacontrolling/dataoperations/IsNullObject';
 
 export default class DataOperationErrorLogger implements IDataOperationProxy {

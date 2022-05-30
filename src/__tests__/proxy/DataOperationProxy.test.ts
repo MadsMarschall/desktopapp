@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import DataOperationProxy from '../../renderer/DataHandling/DataOperationProxy';
+import DataOperationProxy from '../../shared/datatools/DataOperationProxy';
 import IPCMock from '../doubles/IPCMock';
 import InvokerSpy from '../doubles/InvokerSpy';
 import { Methods } from '../../shared/Constants';

@@ -8,6 +8,7 @@ import SelectFromDBOperation from './dataoperations/SelectFromDBOperation';
 import IDataOperation from '../../../shared/domain/IDataOperation';
 import SortDataOperation from './dataoperations/SortDataOperation';
 import TimeSliderOperation from './dataoperations/TimeSliderOperation';
+import DataOperationLoggerDecorator from './DataOperationLoggerDecorator';
 
 export default class DataOperationChainController
   implements IDataOperationChainController
@@ -18,8 +19,10 @@ export default class DataOperationChainController
     this.dataOperations = new Map<string, IDataOperation>();
   }
 
-  connectOperationNodes(sourceId: string, targetId: string): Promise<void> {
-    this.getOperationByNodeId(sourceId).setTarget(this.getOperationByNodeId(targetId));
+  async connectOperationNodes(sourceId: string, targetId: string): Promise<void> {
+    const source = await this.getOperationByNodeId(sourceId)
+    const target = await this.getOperationByNodeId(targetId)
+    return await source.setTarget(target);
   }
 
   createOperationNode(type: OperationIds, id: string): Promise<IDataOperation> {
@@ -46,20 +49,22 @@ export default class DataOperationChainController
       default:
         operation = new IsNullObject();
     }
-    this.dataOperations.set(id, operation);
-    return operation;
+    const loggedOperation = new DataOperationLoggerDecorator(operation);
+    this.dataOperations.set(id, loggedOperation);
+    return Promise.resolve(loggedOperation);
   }
 
   getOperationByNodeId(id: string): Promise<IDataOperation> {
     const operation = this.dataOperations.get(id);
     if (!operation) {
-      return new IsNullObject();
+      return Promise.resolve(new IsNullObject());
     }
-    return operation;
+    return Promise.resolve(operation);
   }
 
   removeNodeById(id: string): Promise<void> {
     this.dataOperations.delete(id);
+    return Promise.resolve();
   }
 
   getAllOperationNodes(): IDataOperation[] {

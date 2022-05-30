@@ -4,3 +4,4 @@ if (env === 'production') {
 } else {
   console.log(`API_URL=http://localhost:8000`);
 }
+

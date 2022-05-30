@@ -87,125 +87,6 @@ function $9d939cbc98267846$export$535bd6ca7f90a273() {
 
 /***/ }),
 
-/***/ "./node_modules/@restart/ui/esm/Button.js":
-/*!************************************************!*\
-  !*** ./node_modules/@restart/ui/esm/Button.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   "isTrivialHref": () => (/* binding */ isTrivialHref),
-/* harmony export */   "useButtonProps": () => (/* binding */ useButtonProps)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-const _excluded = ["as", "disabled"];
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-
-
-function isTrivialHref(href) {
-  return !href || href.trim() === '#';
-}
-function useButtonProps({
-  tagName,
-  disabled,
-  href,
-  target,
-  rel,
-  onClick,
-  tabIndex = 0,
-  type
-}) {
-  if (!tagName) {
-    if (href != null || target != null || rel != null) {
-      tagName = 'a';
-    } else {
-      tagName = 'button';
-    }
-  }
-
-  const meta = {
-    tagName
-  };
-
-  if (tagName === 'button') {
-    return [{
-      type: type || 'button',
-      disabled
-    }, meta];
-  }
-
-  const handleClick = event => {
-    if (disabled || tagName === 'a' && isTrivialHref(href)) {
-      event.preventDefault();
-    }
-
-    if (disabled) {
-      event.stopPropagation();
-      return;
-    }
-
-    onClick == null ? void 0 : onClick(event);
-  };
-
-  const handleKeyDown = event => {
-    if (event.key === ' ') {
-      event.preventDefault();
-      handleClick(event);
-    }
-  };
-
-  if (tagName === 'a') {
-    // Ensure there's a href so Enter can trigger anchor button.
-    href || (href = '#');
-
-    if (disabled) {
-      href = undefined;
-    }
-  }
-
-  return [{
-    role: 'button',
-    // explicitly undefined so that it overrides the props disabled in a spread
-    // e.g. <Tag {...props} {...hookProps} />
-    disabled: undefined,
-    tabIndex: disabled ? undefined : tabIndex,
-    href,
-    target: tagName === 'a' ? target : undefined,
-    'aria-disabled': !disabled ? undefined : disabled,
-    rel: tagName === 'a' ? rel : undefined,
-    onClick: handleClick,
-    onKeyDown: handleKeyDown
-  }, meta];
-}
-const Button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((_ref, ref) => {
-  let {
-    as: asProp,
-    disabled
-  } = _ref,
-      props = _objectWithoutPropertiesLoose(_ref, _excluded);
-
-  const [buttonProps, {
-    tagName: Component
-  }] = useButtonProps(Object.assign({
-    tagName: asProp,
-    disabled
-  }, props));
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(Component, Object.assign({}, props, buttonProps, {
-    ref: ref
-  }));
-});
-Button.displayName = 'Button';
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
-
-/***/ }),
-
 /***/ "./node_modules/classnames/index.js":
 /*!******************************************!*\
   !*** ./node_modules/classnames/index.js ***!
@@ -2209,63 +2090,6 @@ if (false) {} else {
   module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/prop-types/node_modules/react-is/cjs/react-is.development.js");
 }
 
-
-/***/ }),
-
-/***/ "./node_modules/react-bootstrap/esm/Button.js":
-/*!****************************************************!*\
-  !*** ./node_modules/react-bootstrap/esm/Button.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _restart_ui_Button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @restart/ui/Button */ "./node_modules/@restart/ui/esm/Button.js");
-/* harmony import */ var _ThemeProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ThemeProvider */ "./node_modules/react-bootstrap/esm/ThemeProvider.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-
-
-
-
-
-const defaultProps = {
-  variant: 'primary',
-  active: false,
-  disabled: false
-};
-const Button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(({
-  as,
-  bsPrefix,
-  variant,
-  size,
-  active,
-  className,
-  ...props
-}, ref) => {
-  const prefix = (0,_ThemeProvider__WEBPACK_IMPORTED_MODULE_3__.useBootstrapPrefix)(bsPrefix, 'btn');
-  const [buttonProps, {
-    tagName
-  }] = (0,_restart_ui_Button__WEBPACK_IMPORTED_MODULE_4__.useButtonProps)({
-    tagName: as,
-    ...props
-  });
-  const Component = tagName;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(Component, { ...buttonProps,
-    ...props,
-    ref: ref,
-    className: classnames__WEBPACK_IMPORTED_MODULE_0___default()(className, prefix, active && 'active', variant && `${prefix}-${variant}`, size && `${prefix}-${size}`, props.href && props.disabled && 'disabled')
-  });
-});
-Button.displayName = 'Button';
-Button.defaultProps = defaultProps;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
 
 /***/ }),
 
@@ -39540,14 +39364,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ SelectorNodeController)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _context_socket__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../context/socket */ "./src/main/remoteControllerServer/client/context/socket.ts");
+/* harmony import */ var _shared_Constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../shared/Constants */ "./src/shared/Constants.ts");
 var __assign = (undefined && undefined.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -39563,12 +39387,19 @@ var __assign = (undefined && undefined.__assign) || function () {
 
 
 
+
 function SelectorNodeController() {
+    var _a = react__WEBPACK_IMPORTED_MODULE_1___default().useState(), PersonId = _a[0], setPersonId = _a[1];
+    var _b = react__WEBPACK_IMPORTED_MODULE_1___default().useState(_shared_Constants__WEBPACK_IMPORTED_MODULE_3__.TableNames.TEST), SelectedTable = _b[0], setSelectedTable = _b[1];
     var socket = (0,react__WEBPACK_IMPORTED_MODULE_1__.useContext)(_context_socket__WEBPACK_IMPORTED_MODULE_2__.RemoteSocketContext);
     socket.on('connect', function () {
         console.log('connected');
     });
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Group, __assign({ className: "mb-3", controlId: "formBasicEmail" }, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Label, { children: "Email address" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Control, { type: "email", placeholder: "Enter email" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Text, __assign({ className: "text-muted" }, { children: "We'll never share your email with anyone else." }))] })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Group, __assign({ className: "mb-3", controlId: "formBasicPassword" }, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Label, { children: "Password" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Control, { type: "password", placeholder: "Password" })] })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Group, __assign({ className: "mb-3", controlId: "formBasicCheckbox" }, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"].Check, { type: "checkbox", label: "Check me out" }) })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"], __assign({ variant: "primary", type: "submit" }, { children: "Submit" }))] }) }) }) }));
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], __assign({ className: "pt-5" }, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", { children: "Selector node control" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"].Group, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"].Label, __assign({ htmlFor: "inputPassword5" }, { children: "Select Person" })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"].Control, { type: "number", id: "PersonIdSelection", placeholder: "Type in PersonId", value: PersonId || '', onChange: function (e) {
+                                        setPersonId(parseInt(e.target.value, 10));
+                                    } }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"].Select, __assign({ required: true, className: "mt-2", "aria-label": "Default select example", onChange: function (e) {
+                                        setSelectedTable(parseInt(e.target.value, 10));
+                                    }, value: SelectedTable }, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", { children: "Please select day" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", __assign({ value: _shared_Constants__WEBPACK_IMPORTED_MODULE_3__.TableNames.FRIDAY }, { children: "Friday" })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", __assign({ value: _shared_Constants__WEBPACK_IMPORTED_MODULE_3__.TableNames.SATURDAY }, { children: "Saturday" })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", __assign({ value: _shared_Constants__WEBPACK_IMPORTED_MODULE_3__.TableNames.SUNDAY }, { children: "Sunday" }))] }))] }) })] })) }) }));
 }
 
 
@@ -39596,6 +39427,66 @@ var remoteSocket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_1__["default"])(
 });
 // @ts-ignore
 var RemoteSocketContext = react__WEBPACK_IMPORTED_MODULE_0___default().createContext(remoteSocket);
+
+
+/***/ }),
+
+/***/ "./src/shared/Constants.ts":
+/*!*********************************!*\
+  !*** ./src/shared/Constants.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Methods": () => (/* binding */ Methods),
+/* harmony export */   "OperationIds": () => (/* binding */ OperationIds),
+/* harmony export */   "PHONE_CONTROLLER_BASE_URL": () => (/* binding */ PHONE_CONTROLLER_BASE_URL),
+/* harmony export */   "SelectorSettingsEvents": () => (/* binding */ SelectorSettingsEvents),
+/* harmony export */   "TableNames": () => (/* binding */ TableNames)
+/* harmony export */ });
+var OperationIds;
+(function (OperationIds) {
+    OperationIds["SORT_OPERATION"] = "SORT_OPERATION";
+    OperationIds["DATASOURCE"] = "DATASOURCE";
+    OperationIds["SLICE_DATA_OPERATION"] = "SLICE_DATA_OPERATION";
+    OperationIds["SELECT_FROM_DB"] = "SELECT_FROM_DB";
+    OperationIds["MAP_DISPLAY"] = "MAP_DISPLAY";
+    OperationIds["TIME_SLIDER"] = "TIME_SLIDER";
+    OperationIds["TIME_PLAYER"] = "TIME_PLAYER";
+})(OperationIds || (OperationIds = {}));
+var DATAOPEARATION_PREFIX = 'DATAOPEARATION_';
+var Methods;
+(function (Methods) {
+    Methods[Methods["DATA_OPERATION_GET_DATA"] = 0] = "DATA_OPERATION_GET_DATA";
+    Methods[Methods["DATAOPERATION_GET_TYPE"] = 1] = "DATAOPERATION_GET_TYPE";
+    Methods[Methods["DATA_OPERATION_SET_SETTINGS"] = 2] = "DATA_OPERATION_SET_SETTINGS";
+    Methods[Methods["DATA_OPERATION_TRIGGER_OPERATION"] = 3] = "DATA_OPERATION_TRIGGER_OPERATION";
+    Methods[Methods["DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD"] = 4] = "DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD";
+    Methods[Methods["DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_BACKWARD"] = 5] = "DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_BACKWARD";
+    Methods[Methods["DATA_OPERATION_SET_SOURCE"] = 6] = "DATA_OPERATION_SET_SOURCE";
+    Methods[Methods["DATA_OPERATION_GET_SOURCE"] = 7] = "DATA_OPERATION_GET_SOURCE";
+    Methods[Methods["DATA_OPERATION_SET_TARGET"] = 8] = "DATA_OPERATION_SET_TARGET";
+    Methods[Methods["DATA_OPERATION_GET_TARGET"] = 9] = "DATA_OPERATION_GET_TARGET";
+    Methods[Methods["CHAIN_CONTROLLER_CREATE_OPERATION_NODE"] = 10] = "CHAIN_CONTROLLER_CREATE_OPERATION_NODE";
+    Methods[Methods["CHAIN_CONTROLLER_GET_OPERATION_BY_NODE_ID"] = 11] = "CHAIN_CONTROLLER_GET_OPERATION_BY_NODE_ID";
+    Methods[Methods["CHAIN_CONTROLLER_REMOVE_NODE_BY_ID"] = 12] = "CHAIN_CONTROLLER_REMOVE_NODE_BY_ID";
+    Methods[Methods["CHAIN_CONTROLLER_CONNECT_OPERATION_NODES"] = 13] = "CHAIN_CONTROLLER_CONNECT_OPERATION_NODES";
+})(Methods || (Methods = {}));
+var TableNames;
+(function (TableNames) {
+    TableNames[TableNames["FRIDAY"] = 0] = "FRIDAY";
+    TableNames[TableNames["SATURDAY"] = 1] = "SATURDAY";
+    TableNames[TableNames["SUNDAY"] = 2] = "SUNDAY";
+    TableNames[TableNames["TEST"] = 3] = "TEST";
+})(TableNames || (TableNames = {}));
+var PHONE_CONTROLLER_BASE_URL = 'http://192.168.2.126:8080';
+var SelectorSettingsEvents = [
+    'selector-node-setting:create',
+    'selector-node-setting:delete',
+    'selector-node-setting:update',
+];
 
 
 /***/ }),

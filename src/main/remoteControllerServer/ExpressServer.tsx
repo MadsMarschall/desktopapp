@@ -68,15 +68,18 @@ export default class ExpressServer {
       //res.send("<!DOCTYPE html>" + html);
       res.render("client", { assets, component });
     });
+    this.socketInit();
+
+    server.listen(PORT, () => {
+      console.log(`Server is listening on port ${PORT}`);
+    });
+  }
+  public socketInit() {
     io.on('connection', (socket) => {
       console.log('a user connected');
       socket.on('disconnect', () => {
         console.log('user disconnected');
       });
-    });
-
-    server.listen(PORT, () => {
-      console.log(`Server is listening on port ${PORT}`);
     });
   }
 }

@@ -34,11 +34,6 @@ export default class SelectFromDBOperation implements IDataOperation {
         <TableNames>this.settings[0],
         <number>this.settings[1]
       );
-      console.log(
-        SelectFromDBOperation.name,
-        'triggerOperation',
-        this.outputData
-      );
       return resolve();
     });
   }

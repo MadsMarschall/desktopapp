@@ -1,4 +1,4 @@
-import DataOperationChainControllerProxy from '../../renderer/DataHandling/DataOperationChainControllerProxy';
+import DataOperationChainControllerProxy from '../../shared/datatools/DataOperationChainControllerProxy';
 import IDataOperationChainController from '../../shared/domain/IDataOperationController';
 import IPCMock from '../doubles/IPCMock';
 import InvokerSpy from '../doubles/InvokerSpy';
@@ -18,11 +18,11 @@ beforeEach(() => {
 });
 
 test('should pass arguments to invoker: createOperationNode', () => {
-  chainControllerProxy.createOperationNode(OperationIds.TIME_SLIDER, 'test-id');
+  chainControllerProxy.createOperationNode(OperationIds.TIME_SLIDER, 'test-id-1');
   expect(spyStoredData).toEqual([
     <Channels>'ipc-chain-controller',
     Methods.CHAIN_CONTROLLER_CREATE_OPERATION_NODE,
-    ['test-id'],
+    [OperationIds.TIME_SLIDER,'test-id-1'],
   ]);
 });
 test('should pass arguments to invoker: getOperationByNodeId', () => {

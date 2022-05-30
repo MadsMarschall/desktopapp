@@ -18,7 +18,7 @@ import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import DataSourceNode from '../Nodes/DataSourceNode';
 import Sidebar from '../UI/Sidebar';
-import DataOperationChainController from '../../../DataHandling/DataOperationChainControllerProxy';
+import DataOperationChainController from '../../../../shared/datatools/DataOperationChainControllerProxy';
 import MapNode from '../Nodes/MapNode';
 import SelectorNode from '../Nodes/SelectorNode';
 import TimeSliderNode from '../Nodes/TimeSliderNode';

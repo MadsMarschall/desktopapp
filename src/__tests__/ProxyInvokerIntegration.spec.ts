@@ -3,9 +3,9 @@ import IInvoker from '../shared/domain/IInvoker';
 import DataOperationInvoker from '../main/datahandling/invokers/DataOperationInvoker';
 import DataOperationChainControllerSpy from './doubles/DataOperationChainControllerSpy';
 import IDataOperationProxy from '../shared/domain/IDataOperationProxy';
-import DataOperationProxy from '../renderer/DataHandling/DataOperationProxy';
+import DataOperationProxy from '../shared/datatools/DataOperationProxy';
 import DataOperationSpy from './doubles/DataOperationSpy';
-import DataOperationErrorLogger from '../renderer/DataHandling/DataOperationErrorLogger';
+import DataOperationErrorLogger from '../shared/datatools/DataOperationErrorLogger';
 
 let ipcStub: IPCMock;
 let invoker: IInvoker;

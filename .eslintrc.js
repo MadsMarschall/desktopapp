@@ -7,7 +7,6 @@ module.exports = {
     // Since React 17 and typescript 4.1 you can safely disable the rule
     'react/react-in-jsx-scope': 'off',
     'promise/always-return': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
     'promise/catch-or-return': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     'class-methods-use-this': 'off',

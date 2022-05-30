@@ -7,11 +7,12 @@ import { settingsAPI } from '../../../Utilities/SettingsAPIController';
 import { OperationIds } from '../../../../shared/Constants';
 import IDataOperationChainController from '../../../../shared/domain/IDataOperationController';
 import { ChainControllerContext } from '../../../context/broker';
+import IDataOperation from '../../../../shared/domain/IDataOperation';
 
 let dataOperationChainControllerProxy: IDataOperationChainController;
 const canvasX = 1000;
 const canvasY = 1000;
-let operationID: string;
+let globalOperation: IDataOperation;
 interface PositionOnCanvas {
   x: number;
   y: number;
@@ -23,7 +24,6 @@ function getCanvasPosition(x: number, y: number): PositionOnCanvas {
     y: canvasY - (canvasY / 100) * y,
   };
 }
-
 function sketch(p5: P5Instance) {
   let bg: any;
 
@@ -33,7 +33,7 @@ function sketch(p5: P5Instance) {
   };
   p5.preload = () => {
     // eslint-disable-next-line global-require
-    bg = p5.loadImage(require('../../../Assets/ParkMap.jpg'));
+    bg = p5.loadImage(require('/src/renderer/Assets/ParkMap.jpg'));
   };
   p5.setup = () => {
     p5.createCanvas(canvasDimensions.x, canvasDimensions.y);
@@ -41,41 +41,33 @@ function sketch(p5: P5Instance) {
   };
 
   p5.draw = async () => {
-    if (!operationID) return;
     p5.background(bg);
-    if (!dataOperationChainControllerProxy) return;
-    const operation =
-      await dataOperationChainControllerProxy.getOperationByNodeId(operationID);
-    const data = await operation.getData();
-    for (let i = 0; i < data.length; i++) {
-      const pos: PositionOnCanvas = getCanvasPosition(data[i].X, data[i].Y);
+    if(!globalOperation) return;
+    let dataPoint = await globalOperation.getData();
+    for (let i = 0; i < dataPoint.length; i++) {
+      const pos: PositionOnCanvas = getCanvasPosition(dataPoint[i].X, dataPoint[i].Y);
       p5.ellipse(pos.x, pos.y, canvasX / 100, canvasY / 100);
     }
   };
 }
 
+
 export default function MapNode({ data }: any) {
   dataOperationChainControllerProxy = useContext(ChainControllerContext);
-  const [PersonId, setPersonId] = useState<number>(0);
-  // @ts-ignore
-  const [StrapiId, setStrapiId] = useState<number>(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [MetaData, setMetaData] = useState<{ entries: number }>();
   const [mounted, setMounted] = useState<boolean>(false);
+  const [operation, setOperation] = useState<IDataOperation>();
 
   function onMount() {
     dataOperationChainControllerProxy.createOperationNode(
       OperationIds.MAP_DISPLAY,
       data.id
-    );
-    operationID = data.id;
-    // eslint-disable-next-line promise/catch-or-return
-    settingsAPI.createMapSettings(data.id).then((strapiId) => {
-      setStrapiId(strapiId);
+    ).then(async (operation) => {
+      await setOperation(operation);
+      await setMounted(true);
+      globalOperation = operation;
+      return operation;
     });
-    setMounted(true);
   }
-
   useEffect(onMount, []);
 
   const d = data;

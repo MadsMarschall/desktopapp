@@ -1,5 +1,5 @@
 import { Connection } from 'react-flow-renderer';
-import DataOperationChainControllerProxy from './DataOperationChainControllerProxy';
+import DataOperationChainControllerProxy from '../../shared/datatools/DataOperationChainControllerProxy';
 import IDataOperation from '../../shared/domain/IDataOperation';
 import IpcRendererImpl from './IpcRendereImpl';
 

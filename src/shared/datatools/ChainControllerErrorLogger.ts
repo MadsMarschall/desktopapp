@@ -1,6 +1,6 @@
-import IDataOperationChainController from '../../shared/domain/IDataOperationController';
-import { OperationIds } from '../../shared/Constants';
-import IDataOperation from '../../shared/domain/IDataOperation';
+import IDataOperationChainController from '../domain/IDataOperationController';
+import { OperationIds } from '../Constants';
+import IDataOperation from '../domain/IDataOperation';
 import IsNullObject from '../../main/datahandling/datacontrolling/dataoperations/IsNullObject';
 
 export default class ChainControllerErrorLogger
