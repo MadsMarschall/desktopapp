@@ -1,6 +1,6 @@
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { useContext } from 'react';
-import { SocketContext } from '../../../../../renderer/context/socket';
+import { SocketContext } from '../../../../renderer/context/socket';
 import { RemoteSocketContext } from '../context/socket';
 
 export default function SelectorNodeController(): JSX.Element {
