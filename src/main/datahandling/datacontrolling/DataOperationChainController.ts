@@ -29,22 +29,22 @@ export default class DataOperationChainController
     let operation: IDataOperation;
     switch (type) {
       case OperationIds.SORT_OPERATION:
-        operation = new SortDataOperation(new IsNullObject());
+        operation = new SortDataOperation(new IsNullObject(),id);
         break;
       case OperationIds.SLICE_DATA_OPERATION:
-        operation = new SliceDataOperation(new IsNullObject());
+        operation = new SliceDataOperation(new IsNullObject(),id);
         break;
       case OperationIds.SELECT_FROM_DB:
-        operation = new SelectFromDBOperation(new IsNullObject());
+        operation = new SelectFromDBOperation(new IsNullObject(),id);
         break;
       case OperationIds.MAP_DISPLAY:
-        operation = new MapDisplayOperation(new IsNullObject());
+        operation = new MapDisplayOperation(new IsNullObject(),id);
         break;
       case OperationIds.TIME_SLIDER:
-        operation = new TimeSliderOperation(new IsNullObject());
+        operation = new TimeSliderOperation(new IsNullObject(),id);
         break;
       case OperationIds.TIME_PLAYER:
-        operation = new TimePlayerOperation(new IsNullObject());
+        operation = new TimePlayerOperation(new IsNullObject(),id);
         break;
       default:
         operation = new IsNullObject();

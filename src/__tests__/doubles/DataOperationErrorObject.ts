@@ -7,8 +7,8 @@ export default class DataOperationErrorObject implements IDataOperationProxy {
     return Promise.reject(new Error('Error'));
   }
 
-  getId(): string {
-    throw new Error('Error');
+  getId(): Promise<string> {
+    return Promise.reject(new Error('Error'));
   }
 
   getSource(): Promise<IDataOperation> {

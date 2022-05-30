@@ -11,7 +11,10 @@ export default class TimeSliderOperation implements IDataOperation {
 
   private targetOperation: IDataOperation;
 
-  constructor(inputOperation: IDataOperation) {
+  private readonly id: string;
+
+  constructor(inputOperation: IDataOperation, id:string) {
+    this.id = id;
     this.targetOperation = new IsNullObject();
     this.inputOperation = inputOperation;
   }
@@ -85,5 +88,9 @@ export default class TimeSliderOperation implements IDataOperation {
   setTarget(target: IDataOperation): Promise<void> {
     this.targetOperation = target;
     return Promise.resolve();
+  }
+
+  getId(): Promise<string> {
+    return Promise.resolve(this.id);
   }
 }

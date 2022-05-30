@@ -69,5 +69,5 @@ test('should call method on remote object: setTarget', async () => {
 
 test('should call method on remote object: getTarget', async () => {
   await operationProxy.getTarget();
-  expect(spyStore).toEqual([operationSpy.getTarget.name]);
+  expect(spyStore).toEqual([operationSpy.getTarget.name, operationSpy.getId.name]);
 });

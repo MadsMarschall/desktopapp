@@ -3,9 +3,9 @@ import DataOperationProxy from './DataOperationProxy';
 import IDataOperation from '../domain/IDataOperation';
 import { Methods, OperationIds } from '../Constants';
 import { Channels } from '../../main/preload';
-import { IIpcRenderer } from '../../renderer/preload';
 import IpcRendererImpl from '../../renderer/DataHandling/IpcRendereImpl';
 import DataOperationErrorLogger from './DataOperationErrorLogger';
+import { ClientRequestor } from '../domain/ClientRequestor';
 
 export default class DataOperationChainControllerProxy
   implements IDataOperationChainController
@@ -14,11 +14,11 @@ export default class DataOperationChainControllerProxy
 
   readonly channel: Channels = <Channels>'ipc-chain-controller';
 
-  readonly ipc: IIpcRenderer;
+  readonly ipc: ClientRequestor;
 
   readonly objectId: string = 'data-operation-chain-controller';
 
-  constructor(ipc: IIpcRenderer) {
+  constructor(ipc: ClientRequestor) {
     this.ipc = ipc;
     this.dataOperations = new Map<string, IDataOperation>();
   }

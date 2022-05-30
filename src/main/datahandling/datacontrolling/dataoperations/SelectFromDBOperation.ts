@@ -10,10 +10,12 @@ export default class SelectFromDBOperation implements IDataOperation {
   private outputData: IDataPointMovement[] = [];
 
   private settings: string[] | number[] | TableNames[] = [];
+  private readonly id: string;
 
   private targetOperation: IDataOperation;
 
-  constructor(inputOperation: IDataOperation) {
+  constructor(inputOperation: IDataOperation, id:string) {
+    this.id = id;
     this.inputOperation = inputOperation;
     this.targetOperation = new IsNullObject();
   }
@@ -78,5 +80,9 @@ export default class SelectFromDBOperation implements IDataOperation {
   setTarget(target: IDataOperation): Promise<void> {
     this.targetOperation = target;
     return Promise.resolve();
+  }
+
+  getId(): Promise<string> {
+    return Promise.resolve(this.id);
   }
 }

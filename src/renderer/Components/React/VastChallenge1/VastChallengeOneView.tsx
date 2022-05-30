@@ -25,6 +25,7 @@ import TimeSliderNode from '../Nodes/TimeSliderNode';
 import TimePlayerNode from '../Nodes/TimePlayerNode';
 import { OperationIds } from '../../../../shared/Constants';
 import { ChainControllerContext } from '../../../context/broker';
+import ConnectionLine from '../edges/ConnectionLine';
 
 const nodeTypes = {
   dataSource: DataSourceNode,
@@ -130,6 +131,7 @@ export default function VastChallengeOneView() {
           onInit={(d) => setReactFlowInstance(d)}
           onDrop={onDrop}
           onDragOver={onDragOver}
+          connectionLineComponent={ConnectionLine}
           className="mainReactFlow"
           fitView
         />

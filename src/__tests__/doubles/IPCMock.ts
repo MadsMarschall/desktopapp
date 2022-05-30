@@ -1,9 +1,9 @@
-import { IIpcRenderer } from '../../renderer/preload';
 import { Methods } from '../../shared/Constants';
 import { Channels } from '../../main/preload';
 import IInvoker from '../../shared/domain/IInvoker';
+import { ClientRequestor } from '../../shared/domain/ClientRequestor';
 
-export default class IPCMock implements IIpcRenderer {
+export default class IPCMock implements ClientRequestor {
   readonly invoker: IInvoker;
   constructor(invoker:IInvoker) {
     this.invoker = invoker;

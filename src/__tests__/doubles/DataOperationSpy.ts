@@ -19,12 +19,12 @@ export default class DataOperationSpy implements IDataOperationProxy {
 
   getSource(): Promise<IDataOperation> {
     this.spyStorage.push(this.getSource.name);
-    return Promise.resolve(new IsNullObject());
+    return Promise.resolve(this);
   }
 
   getTarget(): Promise<IDataOperation> {
     this.spyStorage.push(this.getTarget.name);
-    return Promise.resolve(new IsNullObject());
+    return Promise.resolve(this);
   }
 
   getType(): Promise<string> {
@@ -62,8 +62,9 @@ export default class DataOperationSpy implements IDataOperationProxy {
     return Promise.resolve(undefined);
   }
 
-  getId(): string {
-    return this.id;
+  getId(): Promise<string> {
+    this.spyStorage.push(this.getId.name);
+    return Promise.resolve(this.id);
   }
 
   public setId(id: string): void {

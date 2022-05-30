@@ -10,10 +10,16 @@ export default class SortDataOperation implements IDataOperation {
 
   private targetOperation: IDataOperation;
 
-  constructor(inputOperation: IDataOperation) {
+  private readonly id: string;
+  constructor(inputOperation: IDataOperation, id:string) {
+    this.id = id;
     this.inputOperation = inputOperation;
     this.targetOperation = new IsNullObject();
   }
+
+  getId(): Promise<string> {
+        return Promise.resolve(this.id);
+    }
 
   getData(): Promise<IDataPointMovement[]> {
     return Promise.resolve(this.outputData);

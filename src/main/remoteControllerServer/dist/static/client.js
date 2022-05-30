@@ -39440,6 +39440,7 @@ var RemoteSocketContext = react__WEBPACK_IMPORTED_MODULE_0___default().createCon
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "IPCEvents": () => (/* binding */ IPCEvents),
 /* harmony export */   "Methods": () => (/* binding */ Methods),
 /* harmony export */   "OperationIds": () => (/* binding */ OperationIds),
 /* harmony export */   "PHONE_CONTROLLER_BASE_URL": () => (/* binding */ PHONE_CONTROLLER_BASE_URL),
@@ -39481,6 +39482,9 @@ var TableNames;
     TableNames[TableNames["SUNDAY"] = 2] = "SUNDAY";
     TableNames[TableNames["TEST"] = 3] = "TEST";
 })(TableNames || (TableNames = {}));
+var IPCEvents = {
+    UPDATE: 'UPDATE_',
+};
 var PHONE_CONTROLLER_BASE_URL = 'http://192.168.2.126:8080';
 var SelectorSettingsEvents = [
     'selector-node-setting:create',

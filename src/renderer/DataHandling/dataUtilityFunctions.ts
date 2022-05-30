@@ -10,7 +10,11 @@ export const handleTargetNodeConnection = async (
   connection: Connection,
   targetOperation: IDataOperation
 ) => {
+  console.log(await dataOperationChainControllerProxy.getOperationByNodeId(
+    <string>connection.source
+  ));
   targetOperation.setSource(
+
     await dataOperationChainControllerProxy.getOperationByNodeId(
       <string>connection.source
     )

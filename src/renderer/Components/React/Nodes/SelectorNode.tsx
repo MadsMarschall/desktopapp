@@ -36,15 +36,7 @@ export default function SelectorNode({ data }: IProps) {
       OperationIds.SELECT_FROM_DB,
       data.id
     );
-    settingsAPI
-      .createSelectorSettings(data.id, PersonId, SelectedTable)
-      .then((strapiId) => {
-        setStrapiId(strapiId);
-        socket.on('selector-node-setting:update', () => {});
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
   }
 
   useEffect(onMount, []);

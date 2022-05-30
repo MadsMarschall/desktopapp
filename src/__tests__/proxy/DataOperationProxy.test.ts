@@ -18,8 +18,8 @@ beforeEach(() => {
   dop = new DataOperationProxy('test', ipc);
 });
 
-test('can get objectId', () => {
-  expect(dop.getId()).toBe('test');
+test('can get objectId', async () => {
+  expect(await dop.getId()).toBe('test');
 });
 
 test("should send pass arugments to invoker: getData", () => {
@@ -96,10 +96,11 @@ test("should send pass arugments to invoker: setSettings", () => {
 
 test("should send pass arugments to invoker: setTarget", async () => {
   let dataOperationSpy = new DataOperationSpy(spy);
-  dataOperationSpy.setId("TEST_TEST")
-  await dop.setTarget(dataOperationSpy).then(() => {
+  await dataOperationSpy.setId("TEST_TEST")
+  await dop.setTarget(dataOperationSpy).then(async () => {
     console.log(spy);
-    expect(spy).toEqual([
+    expect(await spy).toEqual([
+      dataOperationSpy.getId.name,
       "ipc-data-operation",
       Methods.DATA_OPERATION_SET_TARGET,
       ["TEST_TEST"]
@@ -109,9 +110,10 @@ test("should send pass arugments to invoker: setTarget", async () => {
 
 test("should send pass arugments to invoker: setSource", async () => {
   let dataOperationSpy = new DataOperationSpy(spy);
-  dataOperationSpy.setId("TEST_TEST_2")
+  dataOperationSpy.setId('TEST_TEST_2');
   await dop.setSource(dataOperationSpy);
-  expect(spy).toEqual([
+  expect(await spy).toEqual([
+    dataOperationSpy.getId.name,
     "ipc-data-operation",
     Methods.DATA_OPERATION_SET_SOURCE,
     ["TEST_TEST_2"]

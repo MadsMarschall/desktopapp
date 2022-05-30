@@ -14,6 +14,7 @@ let dataOperationSpy: DataOperationSpy;
 beforeEach(() => {
     chainControllerSpyStorage = [];
     dataOperationSpyStorage = [];
+
     dataOperationSpy = new DataOperationSpy(dataOperationSpyStorage);
     spy = new DataOperationChainControllerSpy(chainControllerSpyStorage);
     spy.setSpyForOperation(dataOperationSpy);
@@ -71,7 +72,8 @@ test('should invoke setSource', async () => {
 test('should invoke getSource', async () => {
     await dataOperationInvoker.handleRequest("testid",Methods.DATA_OPERATION_GET_SOURCE,"arg1","arg");
     expect(dataOperationSpyStorage).toEqual([
-      dataOperationSpy.getSource.name
+      dataOperationSpy.getSource.name,
+      dataOperationSpy.getId.name
     ]);
 });
 
@@ -85,7 +87,8 @@ test('should invoke setTarget', async () => {
 test('should invoke getTarget', async () => {
     await dataOperationInvoker.handleRequest("testid",Methods.DATA_OPERATION_GET_TARGET,"arg1","arg");
     expect(dataOperationSpyStorage).toEqual([
-      dataOperationSpy.getTarget.name
+      dataOperationSpy.getTarget.name,
+      dataOperationSpy.getId.name
     ]);
 });
 
@@ -97,4 +100,24 @@ test("should reject promise if method is not supported", () => {
       "nodeid",
     );
   }).rejects.toEqual(new Error("Method 0 not found"));
+});
+
+test("should return objectId on getTarget", async () => {
+  dataOperationSpy.setId("testid_123");
+  const result = await dataOperationInvoker.handleRequest(
+    'test',
+    Methods.DATA_OPERATION_GET_TARGET,
+    "nodeid",
+  );
+  expect(result).toEqual("testid_123");
+});
+
+test("should return objectId on getSource", async () => {
+  dataOperationSpy.setId("testid_123");
+  const result = await dataOperationInvoker.handleRequest(
+    'test',
+    Methods.DATA_OPERATION_GET_SOURCE,
+    "nodeid",
+  );
+  expect(result).toEqual("testid_123");
 });

@@ -1,8 +1,8 @@
-import { IIpcRenderer } from '../preload';
 import { Methods } from '../../shared/Constants';
 import { Channels } from '../../main/preload';
+import { ClientRequestor } from '../../shared/domain/ClientRequestor';
 
-export default class IpcRendererImpl implements IIpcRenderer {
+export default class IpcRendererImpl implements ClientRequestor {
   invoke(
     channel: string,
     id: string,

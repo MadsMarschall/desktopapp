@@ -58,4 +58,8 @@ export default class DataOperationLoggerDecorator implements IDataOperation {
     return this.dataOperation.triggerOperation();
   }
 
+  getId(): Promise<string> {
+    return this.dataOperation.getId();
+  }
+
 }

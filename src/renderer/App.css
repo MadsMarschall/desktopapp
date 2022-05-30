@@ -23,8 +23,13 @@ body {
   height: 80vh;
   width: 100vw;
 }
-.react-flow__handle {
-  width: 20px;
-  height: 20px;
+.react-flow .react-flow__handle {
+  width: 3em;
+  height: 3em;
   border-radius: 3px;
+}
+
+.react-flow .react-flow__edge path {
+  stroke: #fff;
+  stroke-width: 10px;
 }

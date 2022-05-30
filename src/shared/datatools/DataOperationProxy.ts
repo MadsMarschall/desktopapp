@@ -3,17 +3,17 @@ import { IDataPointMovement } from '../domain/Interfaces';
 import { Methods } from '../Constants';
 import IDataOperation from '../domain/IDataOperation';
 import { Channels } from '../../main/preload';
-import { IIpcRenderer } from '../../renderer/preload';
 import IpcRendererImpl from '../../renderer/DataHandling/IpcRendereImpl';
+import { ClientRequestor } from '../domain/ClientRequestor';
 
 export default class DataOperationProxy implements IDataOperationProxy {
   readonly ID: string;
 
   readonly channel: Channels = 'ipc-data-operation';
 
-  readonly ipc: IIpcRenderer;
+  readonly ipc: ClientRequestor;
 
-  constructor(id: string, req: IIpcRenderer) {
+  constructor(id: string, req: ClientRequestor) {
     this.ID = id;
     this.ipc = req;
   }
@@ -28,24 +28,27 @@ export default class DataOperationProxy implements IDataOperationProxy {
     ) as Promise<IDataPointMovement[]>;
   }
 
-  public getSource(): Promise<IDataOperation> {
+  public async getSource(): Promise<IDataOperation> {
     if (!this.ipc) return Promise.reject(new Error('IPC not available'));
-    return this.ipc.invoke(
+    const objectId = this.ipc.invoke(
       this.channel,
       this.ID,
       Methods.DATA_OPERATION_GET_SOURCE,
       []
-    ) as Promise<IDataOperation>;
+    ) as Promise<string>;
+
+    return new DataOperationProxy(await objectId, this.ipc)
   }
 
-  public getTarget(): Promise<IDataOperation> {
+  public async getTarget(): Promise<IDataOperation> {
     if (!this.ipc) return Promise.reject(new Error('IPC not available'));
-    return this.ipc.invoke(
+    const objectId = this.ipc.invoke(
       this.channel,
       this.ID,
       Methods.DATA_OPERATION_GET_TARGET,
       []
-    ) as Promise<IDataOperation>;
+    ) as Promise<string>;
+    return new DataOperationProxy(await objectId, this.ipc);
   }
 
   public getType(): Promise<string> {
@@ -88,25 +91,25 @@ export default class DataOperationProxy implements IDataOperationProxy {
     ) as Promise<boolean>;
   }
 
-  public setSource(source: IDataOperation): Promise<void> {
+  public async setSource(source: IDataOperation): Promise<void> {
     if (!this.ipc) return Promise.reject(new Error('IPC not available'));
     const s = <IDataOperationProxy>source;
     return this.ipc.invoke(
       this.channel,
       this.ID,
       Methods.DATA_OPERATION_SET_SOURCE,
-      s.getId()
+      await s.getId()
     ) as Promise<void>;
   }
 
-  public setTarget(target: IDataOperation): Promise<void> {
+  public async setTarget(target: IDataOperation): Promise<void> {
     if (!this.ipc) return Promise.reject(new Error('IPC not available'));
     const t = <IDataOperationProxy>target;
     return this.ipc.invoke(
       this.channel,
       this.ID,
       Methods.DATA_OPERATION_SET_TARGET,
-      t.getId()
+      await t.getId()
     ) as Promise<void>;
   }
 
@@ -120,7 +123,7 @@ export default class DataOperationProxy implements IDataOperationProxy {
     ) as Promise<void>;
   }
 
-  getId(): string {
-    return this.ID;
+  getId(): Promise<string> {
+    return Promise.resolve(this.ID)
   }
 }

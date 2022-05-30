@@ -15,10 +15,17 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
 
   private observers: IObserver[] = [];
 
-  constructor(inputOperation: IDataOperation) {
+  private readonly id: string;
+
+  constructor(inputOperation: IDataOperation, id: string) {
+    this.id = id;
     this.targetOperation = new IsNullObject();
     this.inputOperation = inputOperation;
   }
+
+  getId(): Promise<string> {
+        return Promise.resolve(this.id);
+    }
 
   getData(): Promise<IDataPointMovement[]> {
     return Promise.resolve(this.outputData);

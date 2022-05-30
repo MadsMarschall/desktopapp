@@ -4,12 +4,13 @@ import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 
 export default class GroupDataOperation implements IDataOperation {
   private inputOperation: IDataOperation;
-
+  private readonly id: string;
   private readonly data: IDataPointMovement[] = [];
 
   private readonly targetOperation: IDataOperation;
 
-  constructor(inputData: IDataOperation) {
+  constructor(inputData: IDataOperation,id:string) {
+    this.id = id;
     this.inputOperation = inputData;
     this.targetOperation = new IsNullObject();
   }
@@ -64,5 +65,9 @@ export default class GroupDataOperation implements IDataOperation {
 
   setTarget(): Promise<void> {
     return Promise.resolve();
+  }
+
+  getId(): Promise<string> {
+    return Promise.resolve(this.id);
   }
 }

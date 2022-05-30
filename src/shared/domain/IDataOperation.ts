@@ -1,6 +1,8 @@
 import { IDataPointMovement } from './Interfaces';
 
 export default interface IDataOperation {
+  getId(): Promise<string>;
+
   getData(): Promise<IDataPointMovement[]>;
 
   getType(): Promise<string>;

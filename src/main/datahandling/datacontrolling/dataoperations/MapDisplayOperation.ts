@@ -6,8 +6,9 @@ export default class MapDisplayOperation implements IDataOperation {
   private inputOperation: IDataOperation;
 
   private targetOperation: IDataOperation;
-
-  constructor(inputOperation: IDataOperation) {
+  private readonly id: string;
+  constructor(inputOperation: IDataOperation, id:string) {
+    this.id = id;
     this.inputOperation = inputOperation;
     this.targetOperation = new IsNullObject();
   }
@@ -67,5 +68,9 @@ export default class MapDisplayOperation implements IDataOperation {
     return new Promise<void>((resolve) => {
       resolve();
     });
+  }
+
+  getId(): Promise<string> {
+    return Promise.resolve(this.id);
   }
 }

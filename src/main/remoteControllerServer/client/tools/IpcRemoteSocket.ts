@@ -1,10 +1,10 @@
 
 import { Socket } from 'socket.io-client';
-import { IIpcRenderer } from '../../../../renderer/preload';
 import { Methods } from '../../../../shared/Constants';
 import { Channels } from '../../../preload';
+import { ClientRequestor } from '../../../../shared/domain/ClientRequestor';
 
-export default class IpcRemoteSocket implements IIpcRenderer {
+export default class IpcRemoteSocket implements ClientRequestor {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;
@@ -17,7 +17,7 @@ export default class IpcRemoteSocket implements IIpcRenderer {
     ...args: unknown[]
   ): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      this.socket.emit(channel, { id, method, args }, (err, result) => {
+      this.socket.emit(channel, { id, method, args }, (err: any, result: unknown) => {
         if (err) {
           reject(err);
         } else {

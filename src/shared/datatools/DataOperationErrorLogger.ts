@@ -22,12 +22,12 @@ export default class DataOperationErrorLogger implements IDataOperationProxy {
     );
   }
 
-  getId(): string {
+  getId(): Promise<string> {
     try {
       return this.dataOperationProxy.getId();
     } catch (error) {
       console.error(error);
-      return '';
+      return Promise.resolve('');
     }
   }
 

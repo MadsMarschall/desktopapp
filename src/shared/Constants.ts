@@ -33,6 +33,10 @@ export enum TableNames {
   TEST,
 }
 
+export const IPCEvents = {
+  UPDATE: 'UPDATE_',
+}
+
 export const PHONE_CONTROLLER_BASE_URL = 'http://192.168.2.126:8080';
 
 export const SelectorSettingsEvents = [

@@ -4,15 +4,19 @@ import { Col, Row } from 'react-bootstrap';
 import { Handle, Position } from 'react-flow-renderer';
 import { handleTargetNodeConnection } from '../../../DataHandling/dataUtilityFunctions';
 import { settingsAPI } from '../../../Utilities/SettingsAPIController';
-import { OperationIds } from '../../../../shared/Constants';
+import { IPCEvents, OperationIds } from '../../../../shared/Constants';
 import IDataOperationChainController from '../../../../shared/domain/IDataOperationController';
 import { ChainControllerContext } from '../../../context/broker';
 import IDataOperation from '../../../../shared/domain/IDataOperation';
+import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
+import IpcRendererImpl from '../../../DataHandling/IpcRendereImpl';
 
 let dataOperationChainControllerProxy: IDataOperationChainController;
 const canvasX = 1000;
 const canvasY = 1000;
 let globalOperation: IDataOperation;
+let dataPoints: IDataPointMovement[];
+
 interface PositionOnCanvas {
   x: number;
   y: number;
@@ -42,10 +46,9 @@ function sketch(p5: P5Instance) {
 
   p5.draw = async () => {
     p5.background(bg);
-    if(!globalOperation) return;
-    let dataPoint = await globalOperation.getData();
-    for (let i = 0; i < dataPoint.length; i++) {
-      const pos: PositionOnCanvas = getCanvasPosition(dataPoint[i].X, dataPoint[i].Y);
+    if(!dataPoints) return;
+    for (let i = 0; i < dataPoints.length; i++) {
+      const pos: PositionOnCanvas = getCanvasPosition(dataPoints[i].X, dataPoints[i].Y);
       p5.ellipse(pos.x, pos.y, canvasX / 100, canvasY / 100);
     }
   };
@@ -64,13 +67,25 @@ export default function MapNode({ data }: any) {
     ).then(async (operation) => {
       await setOperation(operation);
       await setMounted(true);
+      dataPoints = await operation.getData();
       globalOperation = operation;
+
+      window.electron.ipcRenderer.on(IPCEvents.UPDATE, async (event: any, data: any) => {
+        console.log("something Updated")
+        operation.getSource().then(async (e)=>{
+          console.log(await e.getType())
+        })
+        if (!operation) return;
+        dataPoints = await operation.getData();
+      });
+
       return operation;
     });
   }
   useEffect(onMount, []);
 
   const d = data;
+  if(!operation) return <></>;
   return (
     <div className="text-updater-node">
       <div>
@@ -88,10 +103,8 @@ export default function MapNode({ data }: any) {
         onConnect={async (params) =>
           handleTargetNodeConnection(
             params,
-            await dataOperationChainControllerProxy.getOperationByNodeId(
-              data.id
+            operation
             )
-          )
         }
       />
     </div>

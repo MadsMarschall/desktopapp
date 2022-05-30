@@ -1,7 +1,9 @@
 import IDataOperationChainController from '../../../shared/domain/IDataOperationController';
 import IInvoker from '../../../shared/domain/IInvoker';
 import IDataOperation from '../../../shared/domain/IDataOperation';
-import { Methods } from '../../../shared/Constants';
+import {ipcMain} from 'electron';
+import { IPCEvents, Methods } from '../../../shared/Constants';
+import {BrowserWindow} from 'electron';
 
 export default class DataOperationInvoker implements IInvoker {
   private dataOperationChainController: IDataOperationChainController;
@@ -15,11 +17,10 @@ export default class DataOperationInvoker implements IInvoker {
     method: Methods,
     ...args: any[]
   ): Promise<any> {
-    const operation =
-      await this.dataOperationChainController.getOperationByNodeId(id);
+    const operation = await this.dataOperationChainController.getOperationByNodeId(id);
     if (!operation) return Promise.resolve();
 
-    let result: any = null;
+    let result: Promise<unknown> = Promise.resolve();
     switch (method) {
       case Methods.DATA_OPERATION_GET_DATA:
         result = operation.getData();
@@ -37,10 +38,12 @@ export default class DataOperationInvoker implements IInvoker {
         result = operation.retriggerOperationChainForward();
         break;
       case Methods.DATA_OPERATION_GET_SOURCE:
-        result = operation.getSource();
+        let sourceOperationId = operation.getSource().then(source => source.getId())
+        result = sourceOperationId;
         break;
       case Methods.DATA_OPERATION_GET_TARGET:
-        result = operation.getTarget();
+        let targetOperationId = operation.getTarget().then(target => target.getId())
+        result = targetOperationId;
         break;
       case Methods.DATA_OPERATION_SET_SETTINGS:
         operation.setSettings(args);
@@ -58,9 +61,19 @@ export default class DataOperationInvoker implements IInvoker {
         operation.setSource(sourceOperation);
         break;
       default:
-        result = new Error(`Method ${method} is not supported`);
+        result = Promise.reject(new Error(`Method ${method} is not supported`));
         break;
     }
+    await result.then(()=>{
+      let isFowrdTriggerMethod:boolean = Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD === method
+      if(!isFowrdTriggerMethod) return;
+
+      if(BrowserWindow && BrowserWindow.getFocusedWindow()){
+        console.log('sending update');
+        BrowserWindow.getFocusedWindow()!.webContents.send(IPCEvents.UPDATE);
+      }
+    })
+
     return result;
   }
 }

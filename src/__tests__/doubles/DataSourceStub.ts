@@ -16,7 +16,7 @@ export default class DataSourceStub implements IDataOperation {
   }
 
   getData(): Promise<IDataPointMovement[]> {
-    return [
+    return Promise.resolve( [
       {
         PersonId: 0,
         X: 0,
@@ -62,15 +62,15 @@ export default class DataSourceStub implements IDataOperation {
         timestamp: new Date('2014-06-07 00:03:01'),
         type: '',
       },
-    ];
+    ])
   }
 
   getSource(): Promise<IDataOperation> {
-    return new IsNullObject();
+    return Promise.resolve(new IsNullObject());
   }
 
   getType(): Promise<string> {
-    return '';
+    return Promise.resolve('DataSourceStub');
   }
 
   retriggerOperationChainBackward(): Promise<void> {
@@ -78,12 +78,18 @@ export default class DataSourceStub implements IDataOperation {
   }
 
   setSettings(settings: any[]): Promise<boolean> {
-    return false;
+    return Promise.resolve(true);
   }
 
-  setSource(source: IDataOperation): Promise<void> {}
+  setSource(source: IDataOperation): Promise<void> {
+    return Promise.resolve(undefined);
+  }
 
   triggerOperation(): Promise<void> {
     return Promise.resolve(undefined);
+  }
+
+  getId(): Promise<string> {
+    return Promise.resolve('');
   }
 }
