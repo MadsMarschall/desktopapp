@@ -1,7 +1,7 @@
 import React, { Context } from 'react';
 import io from 'socket.io-client';
 
-export const remoteSocket = io(<string>'http://localhost:80', {
+export const remoteSocket = io(<string>'http://settings-controller.local', {
   transports: ['websocket'],
 });
 // @ts-ignore
