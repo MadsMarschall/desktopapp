@@ -17,6 +17,10 @@ export default class SortDataOperation implements IDataOperation {
     this.targetOperation = new IsNullObject();
   }
 
+  getSettings(): Promise<any[]> {
+        throw new Error('Method not implemented.');
+    }
+
   getId(): Promise<string> {
         return Promise.resolve(this.id);
     }

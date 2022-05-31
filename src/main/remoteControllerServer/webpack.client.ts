@@ -8,6 +8,7 @@ const webpackConfigClient ={
   entry: {
     client: path.resolve(__dirname, "client/index.tsx"),
   },
+  watch: true,
   mode: "production",
   output: {
     path: path.resolve(__dirname + "/dist/static"),

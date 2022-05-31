@@ -74,4 +74,8 @@ export default class SliceDataOperation implements IDataOperation {
     this.targetOperation = target;
     return Promise.resolve();
   }
+
+  getSettings(): Promise<any[]> {
+    return Promise.resolve([]);
+  }
 }

@@ -22,6 +22,7 @@ import DataOperationChainControllerInvoker from './datahandling/invokers/DataOpe
 import { Methods } from '../shared/Constants';
 import ExpressServer from './remoteControllerServer/ExpressServer';
 import ChainControllerLoggerDecorator from './datahandling/datacontrolling/ChainControllerLoggerDecorator';
+import { reject } from 'lodash';
 
 export default class AppUpdater {
   constructor() {
@@ -60,6 +61,28 @@ ipcMain.handle(
     return dataOperationInvoker.handleRequest(id, method, ...args);
   }
 );
+
+const io = expressServer.getSocket();
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+  socket.on(<Channels>'ipc-chain-controller', async (id: string, method: Methods, args: unknown[], callback: (result: unknown) => unknown) => {
+    if (!method) return;
+    if (!id) return;
+    if (!args) return;
+    const result = await chainControllerInvoker.handleRequest('SINGLETON', method, ...args);
+    callback(result);
+  });
+  socket.on(<Channels>'ipc-data-operation', async (id: string, method: Methods, args: unknown[], callback: (result: unknown) => unknown) => {
+    if (!method) return;
+    if (!id) return;
+    if (!args) return;
+    const result = await dataOperationInvoker.handleRequest(id, method, ...args);
+    callback(result);
+  });
+});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -108,8 +131,8 @@ const createWindow = async () => {
       nodeIntegration: true,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
-    },
+        : path.join(__dirname, '../../.erb/dll/preload.js')
+    }
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));

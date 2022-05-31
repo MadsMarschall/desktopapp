@@ -126,4 +126,14 @@ export default class DataOperationProxy implements IDataOperationProxy {
   getId(): Promise<string> {
     return Promise.resolve(this.ID)
   }
+
+  getSettings(): Promise<any[]> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
+      this.ID,
+      Methods.DATA_OPERATION_GET_SETTINGS,
+      []
+    ) as Promise<any[]>;
+  }
 }

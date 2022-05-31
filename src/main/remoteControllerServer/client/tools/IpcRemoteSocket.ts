@@ -17,14 +17,12 @@ export default class IpcRemoteSocket implements ClientRequestor {
     ...args: unknown[]
   ): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      this.socket.emit(channel, { id, method, args }, (err: any, result: unknown) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+      const callback = (data: unknown) => {
+        this.socket.off(id, callback);
+        resolve(data);
+      };
+      this.socket.emit(channel,  id, method, args, callback);
+    })
   }
 
   on(

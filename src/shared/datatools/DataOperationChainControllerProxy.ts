@@ -8,8 +8,7 @@ import DataOperationErrorLogger from './DataOperationErrorLogger';
 import { ClientRequestor } from '../domain/ClientRequestor';
 
 export default class DataOperationChainControllerProxy
-  implements IDataOperationChainController
-{
+  implements IDataOperationChainController {
   private dataOperations: Map<string, IDataOperation>;
 
   readonly channel: Channels = <Channels>'ipc-chain-controller';
@@ -24,23 +23,20 @@ export default class DataOperationChainControllerProxy
   }
 
   createOperationNode(type: OperationIds, id: string): Promise<IDataOperation> {
-    return new Promise<IDataOperation>((resolve, reject) => {
+    return new Promise<IDataOperation>(async (resolve, reject) => {
       if (!this.ipc) return reject(new Error('IPC not available'));
-      this.ipc
-        .invoke(
-          this.channel,
-          this.objectId,
-          Methods.CHAIN_CONTROLLER_CREATE_OPERATION_NODE,
-          type,
-          id
-        )
-        .then(() => {
-          resolve(
-            new DataOperationErrorLogger(new DataOperationProxy(id, this.ipc))
-          );
-        });
+      await this.ipc.invoke(
+        this.channel,
+        this.objectId,
+        Methods.CHAIN_CONTROLLER_CREATE_OPERATION_NODE,
+        type,
+        id
+      );
+      resolve(
+        new DataOperationErrorLogger(new DataOperationProxy(id, this.ipc))
+      );
     });
-  }
+  };
 
   getOperationByNodeId(id: string): Promise<IDataOperation> {
     // eslint-disable-next-line consistent-return

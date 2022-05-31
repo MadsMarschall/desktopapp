@@ -98,4 +98,8 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
   notifyObservers(): void {
     this.observers.forEach((obs) => obs.update());
   }
+
+  getSettings(): Promise<any[]> {
+    return Promise.resolve(this.settings);
+  }
 }

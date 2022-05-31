@@ -8,11 +8,15 @@ import { settingsAPI } from '../../../Utilities/SettingsAPIController';
 import { SocketContext } from '../../../context/socket';
 import { handleSourceNodeConnection } from '../../../DataHandling/dataUtilityFunctions';
 import {
+  IPCEvents, Methods,
   OperationIds,
-  PHONE_CONTROLLER_BASE_URL,
-  TableNames,
+  PHONE_CONTROLLER_BASE_URL, RemoteUrls,
+  TableNames
 } from '../../../../shared/Constants';
 import { ChainControllerContext } from '../../../context/broker';
+import IDataOperation from '../../../../shared/domain/IDataOperation';
+import IsNullObject from '../../../../main/datahandling/datacontrolling/dataoperations/IsNullObject';
+import DataOperationProxy from '../../../../shared/datatools/DataOperationProxy';
 
 type IProps = {
   data: {
@@ -26,8 +30,8 @@ export default function SelectorNode({ data }: IProps) {
   const [SelectedTable, setSelectedTable] = useState<TableNames>(
     TableNames.TEST
   );
-  const [StrapiId, setStrapiId] = useState<number>(0);
   const [entriesLoaded, setEntriesLoaded] = useState<number>(0);
+  const [operation, setOperation] = useState<IDataOperation>();
   const socket = useContext<Socket>(SocketContext);
   const dataOperationChainControllerProxy = useContext(ChainControllerContext);
 
@@ -35,8 +39,21 @@ export default function SelectorNode({ data }: IProps) {
     dataOperationChainControllerProxy.createOperationNode(
       OperationIds.SELECT_FROM_DB,
       data.id
-    );
-
+    ).then((operation) => {
+      setOperation(operation);
+    });
+    const settingsChannel = IPCEvents.UPDATE_BY_ID_AND_METHOD+data.id+Methods.DATA_OPERATION_SET_SETTINGS
+    window.electron.ipcRenderer.on(settingsChannel, ()=>{
+      if(!operation) {
+        console.log("Operation not found");
+        return;
+      }
+      operation.getSettings().then((settings:any[])=>{
+        setPersonId(settings[1]);
+        setSelectedTable(settings[0]);
+        console.log("settings",settings);
+      })
+    })
   }
 
   useEffect(onMount, []);
@@ -44,7 +61,6 @@ export default function SelectorNode({ data }: IProps) {
   const d = data;
 
   const handleClick = async () => {
-    if (!StrapiId) return;
     if (!SelectedTable) return;
     if (!PersonId) return;
     const operation =
@@ -59,25 +75,6 @@ export default function SelectorNode({ data }: IProps) {
       });
   };
 
-  const handleGetData = async (strapiId: number) => {
-    await settingsAPI.getSelectorNodeSetting(strapiId).then(async (res) => {
-      setPersonId(parseInt(res.attributes.PersonId, 10));
-      setSelectedTable(res.attributes.TableName);
-      const operation =
-        await dataOperationChainControllerProxy.getOperationByNodeId(data.id);
-      await operation.setSettings([
-        res.attributes.TableName,
-        parseInt(res.attributes.PersonId, 10),
-      ]);
-      operation.retriggerOperationChainForward().then(async () => {
-        setEntriesLoaded((await operation.getData()).length);
-      });
-
-      operation.retriggerOperationChainForward().then(async () => {
-        setEntriesLoaded((await operation.getData()).length);
-      });
-    });
-  };
 
   const parametersAreSelected =
     PersonId === undefined && SelectedTable === undefined;
@@ -102,7 +99,7 @@ export default function SelectorNode({ data }: IProps) {
             <div style={{ background: 'white', padding: '16px' }}>
               {/* @ts-ignore */}
               <QRCode
-                value={`${PHONE_CONTROLLER_BASE_URL}/selectornode?StrapiId=${StrapiId}`}
+                value={`${PHONE_CONTROLLER_BASE_URL}${RemoteUrls.SELECTOR_NODE}?nodeId=${data.id}`}
               />
             </div>
           </Col>

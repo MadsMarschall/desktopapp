@@ -138,4 +138,16 @@ export default class DataOperationErrorLogger implements IDataOperationProxy {
       }
     );
   }
+
+  getSettings(): Promise<any[]> {
+    return this.dataOperationProxy.getSettings().then(
+      (data: any[]) => {
+        return data;
+      },
+      (error: Error) => {
+        console.error(error);
+        return Promise.resolve([]);
+      }
+    );
+  }
 }

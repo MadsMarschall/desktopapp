@@ -73,4 +73,8 @@ export default class MapDisplayOperation implements IDataOperation {
   getId(): Promise<string> {
     return Promise.resolve(this.id);
   }
+
+  getSettings(): Promise<any[]> {
+    return Promise.resolve([]);
+  }
 }

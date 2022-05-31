@@ -14,7 +14,7 @@ export default class SelectFromDBOperation implements IDataOperation {
 
   private targetOperation: IDataOperation;
 
-  constructor(inputOperation: IDataOperation, id:string) {
+  constructor(inputOperation: IDataOperation, id: string) {
     this.id = id;
     this.inputOperation = inputOperation;
     this.targetOperation = new IsNullObject();
@@ -31,7 +31,8 @@ export default class SelectFromDBOperation implements IDataOperation {
 
   triggerOperation(): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this.settings.length !== 2) return resolve();
+
+      if (this.verifySettings()) return resolve();
       this.outputData = await dbController.getDataByPersonId(
         <TableNames>this.settings[0],
         <number>this.settings[1]
@@ -65,10 +66,7 @@ export default class SelectFromDBOperation implements IDataOperation {
   }
 
   setSettings(settings: any[]): Promise<boolean> {
-    if (settings.length !== 2) return Promise.resolve(false);
-    if (typeof settings[0] !== typeof TableNames.TEST)
-      return Promise.resolve(false);
-    if (typeof settings[1] !== 'number') return Promise.resolve(false);
+
     this.settings = settings;
     return Promise.resolve(true);
   }
@@ -84,5 +82,16 @@ export default class SelectFromDBOperation implements IDataOperation {
 
   getId(): Promise<string> {
     return Promise.resolve(this.id);
+  }
+
+  getSettings(): Promise<any[]> {
+    return Promise.resolve(this.settings);
+  }
+
+  private verifySettings(): boolean {
+    if (this.settings.length !== 2) return false;
+    if (typeof this.settings[0] !== typeof TableNames.TEST) return false;
+    if (typeof this.settings[1] !== 'number') return false;
+    return true;
   }
 }

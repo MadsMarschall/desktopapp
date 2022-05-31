@@ -2,6 +2,9 @@ import IDataOperation from '../../../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 
 export default class IsNullObject implements IDataOperation {
+  getSettings(): Promise<any[]> {
+      return Promise.resolve([])
+  }
   getId(): Promise<string> {
       return Promise.resolve('IsNullObject');
   }

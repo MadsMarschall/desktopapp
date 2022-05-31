@@ -8,6 +8,7 @@ export default interface IDataOperation {
   getType(): Promise<string>;
 
   setSettings(settings: any[]): Promise<boolean>;
+  getSettings(): Promise<any[]>;
   triggerOperation(): Promise<void>;
   retriggerOperationChainBackward(): Promise<void>;
   retriggerOperationChainForward(): Promise<void>;

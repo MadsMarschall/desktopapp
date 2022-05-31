@@ -2424,6 +2424,13 @@
   dependencies:
     "@types/ms" "*"
 
+"@types/dns-packet@*":
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/@types/dns-packet/-/dns-packet-5.2.4.tgz#0de4ee48f900a62b014ce61a3c9ab5d33dc06b0d"
+  integrity sha512-OAruArypdNxR/tzbmrtoyEuXeNTLaZCpO19BXaNC10T5ACIbvjmvhmV2RDEy2eLc3w8IjK7SY3cvUCcAW+sfoQ==
+  dependencies:
+    "@types/node" "*"
+
 "@types/eslint-scope@^3.7.3":
   version "3.7.3"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.3.tgz#125b88504b61e3c8bc6f870882003253005c3224"
@@ -2605,6 +2612,14 @@
   version "0.7.31"
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
+
+"@types/multicast-dns@^7.2.1":
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/@types/multicast-dns/-/multicast-dns-7.2.1.tgz#6527b28ce62bcdc08a38f6a329a3d23145c99d95"
+  integrity sha512-A2PmB8MRcNVEkw6wzGT5rtBHqyHOVjiRMkJH+zpJKXipSi+GGkHg6JjNFApDiYK9WefJqkVG0taln1VMl4TGfw==
+  dependencies:
+    "@types/dns-packet" "*"
+    "@types/node" "*"
 
 "@types/node@*":
   version "17.0.35"
@@ -4276,7 +4291,7 @@ body-parser@1.20.0:
     type-is "~1.6.18"
     unpipe "1.0.0"
 
-bonjour-service@^1.0.11:
+bonjour-service@^1.0.11, bonjour-service@^1.0.12:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/bonjour-service/-/bonjour-service-1.0.12.tgz#28fbd4683f5f2e36feedb833e24ba661cac960c3"
   integrity sha512-pMmguXYCu63Ug37DluMKEHdxc+aaIf/ay4YbF8Gxtba+9d3u+rmEWy61VK3Z3hp8Rskok3BunHYnG0dUHAsblw==
@@ -8608,7 +8623,7 @@ http-proxy-middleware@0.19.1:
     lodash "^4.17.11"
     micromatch "^3.1.10"
 
-http-proxy-middleware@^2.0.3:
+http-proxy-middleware@^2.0.3, http-proxy-middleware@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-2.0.6.tgz#e1a4dd6979572c7ab5a4e4b55095d1f32a74963f"
   integrity sha512-ya/UeJ6HVBYxrgYotAZo1KvPWlgB48kUJLDePFeneHsVujFaW5WNj2NgWCAE//B1Dl02BIfYlpNgBy8Kf8Rjmw==

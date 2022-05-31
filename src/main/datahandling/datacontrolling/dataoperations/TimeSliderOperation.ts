@@ -19,6 +19,10 @@ export default class TimeSliderOperation implements IDataOperation {
     this.inputOperation = inputOperation;
   }
 
+  getSettings(): Promise<any[]> {
+        return Promise.resolve(this.settings);
+    }
+
   getData(): Promise<IDataPointMovement[]> {
     return Promise.resolve(this.outputData);
   }

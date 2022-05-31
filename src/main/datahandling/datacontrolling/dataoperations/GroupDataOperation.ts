@@ -70,4 +70,8 @@ export default class GroupDataOperation implements IDataOperation {
   getId(): Promise<string> {
     return Promise.resolve(this.id);
   }
+
+  getSettings(): Promise<any[]> {
+    return Promise.resolve([]);
+  }
 }

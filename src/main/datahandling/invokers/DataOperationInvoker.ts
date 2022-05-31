@@ -60,11 +60,21 @@ export default class DataOperationInvoker implements IInvoker {
           await this.dataOperationChainController.getOperationByNodeId(args[0]);
         operation.setSource(sourceOperation);
         break;
+      case Methods.DATA_OPERATION_GET_SETTINGS:
+        result = operation.getSettings();
+        break;
       default:
         result = Promise.reject(new Error(`Method ${method} is not supported`));
         break;
     }
     await result.then(()=>{
+      if(BrowserWindow){
+        console.log('sending update');
+        BrowserWindow.getAllWindows().forEach(win => {
+          win.webContents.send(IPCEvents.UPDATE_BY_ID_AND_METHOD+id+method, id, method);
+        });
+      }
+
       let isFowrdTriggerMethod:boolean = Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD === method
       if(!isFowrdTriggerMethod) return;
 

@@ -39325,10 +39325,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ RemoteApp)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_bootstrap_SSRProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap/SSRProvider */ "./node_modules/react-bootstrap/esm/SSRProvider.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
+/* harmony import */ var react_bootstrap_SSRProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap/SSRProvider */ "./node_modules/react-bootstrap/esm/SSRProvider.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
 /* harmony import */ var _context_socket__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./context/socket */ "./src/main/remoteControllerServer/client/context/socket.ts");
 /* harmony import */ var _components_SelectorNodeController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/SelectorNodeController */ "./src/main/remoteControllerServer/client/components/SelectorNodeController.tsx");
+/* harmony import */ var _tools_IpcRemoteSocket__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tools/IpcRemoteSocket */ "./src/main/remoteControllerServer/client/tools/IpcRemoteSocket.ts");
+/* harmony import */ var _context_ipcsocket__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./context/ipcsocket */ "./src/main/remoteControllerServer/client/context/ipcsocket.ts");
 var __assign = (undefined && undefined.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -39345,8 +39347,10 @@ var __assign = (undefined && undefined.__assign) || function () {
 
 
 
+
+
 function RemoteApp() {
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap_SSRProvider__WEBPACK_IMPORTED_MODULE_3__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_context_socket__WEBPACK_IMPORTED_MODULE_1__.RemoteSocketContext.Provider, __assign({ value: _context_socket__WEBPACK_IMPORTED_MODULE_1__.remoteSocket }, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Routes, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, { path: "/", element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { children: "Home" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, { path: "/selector-node-controller", element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_SelectorNodeController__WEBPACK_IMPORTED_MODULE_2__["default"], {}) })] }) })) }));
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap_SSRProvider__WEBPACK_IMPORTED_MODULE_5__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_context_socket__WEBPACK_IMPORTED_MODULE_1__.RemoteSocketContext.Provider, __assign({ value: _context_socket__WEBPACK_IMPORTED_MODULE_1__.remoteSocket }, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_context_ipcsocket__WEBPACK_IMPORTED_MODULE_4__.IpcSocketContext.Provider, __assign({ value: new _tools_IpcRemoteSocket__WEBPACK_IMPORTED_MODULE_3__["default"](_context_socket__WEBPACK_IMPORTED_MODULE_1__.remoteSocket) }, { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Routes, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, { path: "/", element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", { children: "Home" }) }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, { path: "/selector-node-controller", element: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_SelectorNodeController__WEBPACK_IMPORTED_MODULE_2__["default"], {}) })] }) })) })) }));
 }
 
 
@@ -39364,14 +39368,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ SelectorNodeController)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _context_socket__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../context/socket */ "./src/main/remoteControllerServer/client/context/socket.ts");
 /* harmony import */ var _shared_Constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../shared/Constants */ "./src/shared/Constants.ts");
+/* harmony import */ var _context_ipcsocket__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../context/ipcsocket */ "./src/main/remoteControllerServer/client/context/ipcsocket.ts");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/index.js");
+/* harmony import */ var _shared_datatools_DataOperationProxy__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../shared/datatools/DataOperationProxy */ "./src/shared/datatools/DataOperationProxy.ts");
 var __assign = (undefined && undefined.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -39383,24 +39390,111 @@ var __assign = (undefined && undefined.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+
+
 
 
 
 
 
 function SelectorNodeController() {
+    var _this = this;
     var _a = react__WEBPACK_IMPORTED_MODULE_1___default().useState(), PersonId = _a[0], setPersonId = _a[1];
     var _b = react__WEBPACK_IMPORTED_MODULE_1___default().useState(_shared_Constants__WEBPACK_IMPORTED_MODULE_3__.TableNames.TEST), SelectedTable = _b[0], setSelectedTable = _b[1];
+    var _c = react__WEBPACK_IMPORTED_MODULE_1___default().useState(), operation = _c[0], setOperation = _c[1];
     var socket = (0,react__WEBPACK_IMPORTED_MODULE_1__.useContext)(_context_socket__WEBPACK_IMPORTED_MODULE_2__.RemoteSocketContext);
-    socket.on('connect', function () {
-        console.log('connected');
-    });
-    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], __assign({ className: "pt-5" }, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", { children: "Selector node control" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"].Group, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"].Label, __assign({ htmlFor: "inputPassword5" }, { children: "Select Person" })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"].Control, { type: "number", id: "PersonIdSelection", placeholder: "Type in PersonId", value: PersonId || '', onChange: function (e) {
+    var ipc = (0,react__WEBPACK_IMPORTED_MODULE_1__.useContext)(_context_ipcsocket__WEBPACK_IMPORTED_MODULE_4__.IpcSocketContext);
+    var query;
+    function useQuery() {
+        var search = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.useLocation)().search;
+        return react__WEBPACK_IMPORTED_MODULE_1___default().useMemo(function () { return new URLSearchParams(search); }, [search]);
+    }
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
+        if (!operation)
+            return;
+        operation.setSettings([SelectedTable, PersonId]);
+    }, [PersonId, SelectedTable]);
+    query = useQuery();
+    socket.on('connect', function () { return __awaiter(_this, void 0, void 0, function () {
+        var operationTemp, _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    if (!query.get('nodeId')) return [3 /*break*/, 2];
+                    operationTemp = new _shared_datatools_DataOperationProxy__WEBPACK_IMPORTED_MODULE_5__["default"](query.get('nodeId'), ipc);
+                    setOperation(operationTemp);
+                    _b = (_a = console).log;
+                    return [4 /*yield*/, operationTemp.getType()];
+                case 1:
+                    _b.apply(_a, [_c.sent(), "proxy"]);
+                    _c.label = 2;
+                case 2: return [2 /*return*/];
+            }
+        });
+    }); });
+    return ((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__["default"], __assign({ className: "pt-5" }, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", { children: "Selector node control" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__["default"], { children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__["default"].Group, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__["default"].Label, __assign({ htmlFor: "inputPassword5" }, { children: "Select Person" })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__["default"].Control, { type: "number", id: "PersonIdSelection", placeholder: "Type in PersonId", value: PersonId || '', onChange: function (e) {
                                         setPersonId(parseInt(e.target.value, 10));
-                                    } }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"].Select, __assign({ required: true, className: "mt-2", "aria-label": "Default select example", onChange: function (e) {
+                                    } }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__["default"].Select, __assign({ required: true, className: "mt-2", "aria-label": "Default select example", onChange: function (e) {
                                         setSelectedTable(parseInt(e.target.value, 10));
                                     }, value: SelectedTable }, { children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", { children: "Please select day" }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", __assign({ value: _shared_Constants__WEBPACK_IMPORTED_MODULE_3__.TableNames.FRIDAY }, { children: "Friday" })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", __assign({ value: _shared_Constants__WEBPACK_IMPORTED_MODULE_3__.TableNames.SATURDAY }, { children: "Saturday" })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", __assign({ value: _shared_Constants__WEBPACK_IMPORTED_MODULE_3__.TableNames.SUNDAY }, { children: "Sunday" }))] }))] }) })] })) }) }));
 }
+
+
+/***/ }),
+
+/***/ "./src/main/remoteControllerServer/client/context/ipcsocket.ts":
+/*!*********************************************************************!*\
+  !*** ./src/main/remoteControllerServer/client/context/ipcsocket.ts ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "IpcSocketContext": () => (/* binding */ IpcSocketContext)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+// @ts-ignore
+var IpcSocketContext = react__WEBPACK_IMPORTED_MODULE_0___default().createContext();
 
 
 /***/ }),
@@ -39422,11 +39516,57 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/build/esm/index.js");
 
 
-var remoteSocket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_1__["default"])('http://localhost:1337', {
+var remoteSocket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_1__["default"])('http://localhost:80', {
     transports: ['websocket'],
 });
 // @ts-ignore
 var RemoteSocketContext = react__WEBPACK_IMPORTED_MODULE_0___default().createContext(remoteSocket);
+
+
+/***/ }),
+
+/***/ "./src/main/remoteControllerServer/client/tools/IpcRemoteSocket.ts":
+/*!*************************************************************************!*\
+  !*** ./src/main/remoteControllerServer/client/tools/IpcRemoteSocket.ts ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var IpcRemoteSocket = /** @class */ (function () {
+    function IpcRemoteSocket(socket) {
+        this.socket = socket;
+    }
+    IpcRemoteSocket.prototype.invoke = function (channel, id, method) {
+        var _this = this;
+        var args = [];
+        for (var _i = 3; _i < arguments.length; _i++) {
+            args[_i - 3] = arguments[_i];
+        }
+        return new Promise(function (resolve, reject) {
+            var callback = function (data) {
+                _this.socket.off(id, callback);
+                resolve(data);
+            };
+            _this.socket.emit(channel, id, method, args, callback);
+        });
+    };
+    IpcRemoteSocket.prototype.on = function (channel, func) {
+        this.socket.on(channel, func);
+        return;
+    };
+    IpcRemoteSocket.prototype.once = function (channel, func) {
+        this.socket.once(channel, func);
+    };
+    IpcRemoteSocket.prototype.sendMessage = function (channel, args) {
+        this.socket.emit(channel, args);
+    };
+    return IpcRemoteSocket;
+}());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IpcRemoteSocket);
 
 
 /***/ }),
@@ -39444,6 +39584,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "Methods": () => (/* binding */ Methods),
 /* harmony export */   "OperationIds": () => (/* binding */ OperationIds),
 /* harmony export */   "PHONE_CONTROLLER_BASE_URL": () => (/* binding */ PHONE_CONTROLLER_BASE_URL),
+/* harmony export */   "RemoteUrls": () => (/* binding */ RemoteUrls),
 /* harmony export */   "SelectorSettingsEvents": () => (/* binding */ SelectorSettingsEvents),
 /* harmony export */   "TableNames": () => (/* binding */ TableNames)
 /* harmony export */ });
@@ -39474,6 +39615,7 @@ var Methods;
     Methods[Methods["CHAIN_CONTROLLER_GET_OPERATION_BY_NODE_ID"] = 11] = "CHAIN_CONTROLLER_GET_OPERATION_BY_NODE_ID";
     Methods[Methods["CHAIN_CONTROLLER_REMOVE_NODE_BY_ID"] = 12] = "CHAIN_CONTROLLER_REMOVE_NODE_BY_ID";
     Methods[Methods["CHAIN_CONTROLLER_CONNECT_OPERATION_NODES"] = 13] = "CHAIN_CONTROLLER_CONNECT_OPERATION_NODES";
+    Methods[Methods["DATA_OPERATION_GET_SETTINGS"] = 14] = "DATA_OPERATION_GET_SETTINGS";
 })(Methods || (Methods = {}));
 var TableNames;
 (function (TableNames) {
@@ -39483,14 +39625,199 @@ var TableNames;
     TableNames[TableNames["TEST"] = 3] = "TEST";
 })(TableNames || (TableNames = {}));
 var IPCEvents = {
-    UPDATE: 'UPDATE_',
+    UPDATE: 'UPDATE_', UPDATE_BY_ID_AND_METHOD: 'UPDATE_BY_ID_AND_METHOD_',
 };
-var PHONE_CONTROLLER_BASE_URL = 'http://192.168.2.126:8080';
+var RemoteUrls = {
+    SELECTOR_NODE: "/selector-node-controller"
+};
+var PHONE_CONTROLLER_BASE_URL = 'http://192.168.1.140:80';
 var SelectorSettingsEvents = [
     'selector-node-setting:create',
     'selector-node-setting:delete',
     'selector-node-setting:update',
 ];
+
+
+/***/ }),
+
+/***/ "./src/shared/datatools/DataOperationProxy.ts":
+/*!****************************************************!*\
+  !*** ./src/shared/datatools/DataOperationProxy.ts ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Constants */ "./src/shared/Constants.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+
+var DataOperationProxy = /** @class */ (function () {
+    function DataOperationProxy(id, req) {
+        this.channel = 'ipc-data-operation';
+        this.ID = id;
+        this.ipc = req;
+    }
+    DataOperationProxy.prototype.getData = function () {
+        if (!this.ipc)
+            return Promise.reject(new Error('IPC not available'));
+        return this.ipc.invoke(this.channel, this.ID, _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_GET_DATA, []);
+    };
+    DataOperationProxy.prototype.getSource = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var objectId, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!this.ipc)
+                            return [2 /*return*/, Promise.reject(new Error('IPC not available'))];
+                        objectId = this.ipc.invoke(this.channel, this.ID, _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_GET_SOURCE, []);
+                        _a = DataOperationProxy.bind;
+                        return [4 /*yield*/, objectId];
+                    case 1: return [2 /*return*/, new (_a.apply(DataOperationProxy, [void 0, _b.sent(), this.ipc]))()];
+                }
+            });
+        });
+    };
+    DataOperationProxy.prototype.getTarget = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var objectId, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!this.ipc)
+                            return [2 /*return*/, Promise.reject(new Error('IPC not available'))];
+                        objectId = this.ipc.invoke(this.channel, this.ID, _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_GET_TARGET, []);
+                        _a = DataOperationProxy.bind;
+                        return [4 /*yield*/, objectId];
+                    case 1: return [2 /*return*/, new (_a.apply(DataOperationProxy, [void 0, _b.sent(), this.ipc]))()];
+                }
+            });
+        });
+    };
+    DataOperationProxy.prototype.getType = function () {
+        if (!this.ipc)
+            return Promise.reject(new Error('IPC not available'));
+        return this.ipc.invoke(this.channel, this.ID, _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATAOPERATION_GET_TYPE, []);
+    };
+    DataOperationProxy.prototype.retriggerOperationChainBackward = function () {
+        if (!this.ipc)
+            return Promise.reject(new Error('IPC not available'));
+        return this.ipc.invoke(this.channel, this.ID, _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_BACKWARD, []);
+    };
+    DataOperationProxy.prototype.retriggerOperationChainForward = function () {
+        if (!this.ipc)
+            return Promise.reject(new Error('IPC not available'));
+        return this.ipc.invoke(this.channel, this.ID, _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD, []);
+    };
+    DataOperationProxy.prototype.setSettings = function (settings) {
+        var _a;
+        if (!this.ipc)
+            return Promise.reject(new Error('IPC not available'));
+        return (_a = this.ipc).invoke.apply(_a, __spreadArray([this.channel,
+            this.ID,
+            _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_SET_SETTINGS], settings, false));
+    };
+    DataOperationProxy.prototype.setSource = function (source) {
+        return __awaiter(this, void 0, void 0, function () {
+            var s, _a, _b, _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        if (!this.ipc)
+                            return [2 /*return*/, Promise.reject(new Error('IPC not available'))];
+                        s = source;
+                        _b = (_a = this.ipc).invoke;
+                        _c = [this.channel,
+                            this.ID,
+                            _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_SET_SOURCE];
+                        return [4 /*yield*/, s.getId()];
+                    case 1: return [2 /*return*/, _b.apply(_a, _c.concat([_d.sent()]))];
+                }
+            });
+        });
+    };
+    DataOperationProxy.prototype.setTarget = function (target) {
+        return __awaiter(this, void 0, void 0, function () {
+            var t, _a, _b, _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        if (!this.ipc)
+                            return [2 /*return*/, Promise.reject(new Error('IPC not available'))];
+                        t = target;
+                        _b = (_a = this.ipc).invoke;
+                        _c = [this.channel,
+                            this.ID,
+                            _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_SET_TARGET];
+                        return [4 /*yield*/, t.getId()];
+                    case 1: return [2 /*return*/, _b.apply(_a, _c.concat([_d.sent()]))];
+                }
+            });
+        });
+    };
+    DataOperationProxy.prototype.triggerOperation = function () {
+        if (!this.ipc)
+            return Promise.reject(new Error('IPC not available'));
+        return this.ipc.invoke(this.channel, this.ID, _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_TRIGGER_OPERATION, []);
+    };
+    DataOperationProxy.prototype.getId = function () {
+        return Promise.resolve(this.ID);
+    };
+    DataOperationProxy.prototype.getSettings = function () {
+        if (!this.ipc)
+            return Promise.reject(new Error('IPC not available'));
+        return this.ipc.invoke(this.channel, this.ID, _Constants__WEBPACK_IMPORTED_MODULE_0__.Methods.DATA_OPERATION_GET_SETTINGS, []);
+    };
+    return DataOperationProxy;
+}());
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DataOperationProxy);
 
 
 /***/ }),

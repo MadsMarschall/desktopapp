@@ -1,16 +1,35 @@
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import React, { useContext } from 'react';
-import { SocketContext } from '../../../../renderer/context/socket';
+import React, { useContext, useEffect } from 'react';
 import { RemoteSocketContext } from '../context/socket';
 import { TableNames } from '../../../../shared/Constants';
+import { IpcSocketContext } from '../context/ipcsocket';
+import { useLocation } from 'react-router-dom';
+import { ClientRequestor } from '../../../../shared/domain/ClientRequestor';
+import IDataOperation from '../../../../shared/domain/IDataOperation';
+import DataOperationProxy from '../../../../shared/datatools/DataOperationProxy';
 
 export default function SelectorNodeController(): JSX.Element {
   const [PersonId, setPersonId] = React.useState<number>();
   const [SelectedTable, setSelectedTable] = React.useState(TableNames.TEST);
+  const [operation, setOperation] = React.useState<IDataOperation>();
   const socket = useContext(RemoteSocketContext);
-  socket.on('connect', () => {
-    console.log('connected');
-
+  const ipc = useContext<ClientRequestor>(IpcSocketContext);
+  let query: URLSearchParams;
+  function useQuery() {
+    const {search} = useLocation();
+    return React.useMemo(() => new URLSearchParams(search), [search]);
+  }
+  useEffect(()=>{
+    if(!operation) return;
+    operation.setSettings([SelectedTable,PersonId]);
+  },[PersonId,SelectedTable])
+  query = useQuery();
+  socket.on('connect',async () => {
+    if (query.get('nodeId')){
+      let operationTemp = new DataOperationProxy(query.get('nodeId') as string,ipc)
+      setOperation(operationTemp);
+      console.log(await operationTemp.getType(),"proxy");
+    }
   });
   return (
     <Container>

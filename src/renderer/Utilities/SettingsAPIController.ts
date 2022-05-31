@@ -19,7 +19,7 @@ export default class SettingsAPIController {
     // const currentIP = window.myAPI.getNetworkInfo.Ethernet[0]
     const currentIP = '192.168.2.126';
     this.api = axios.create({
-      baseURL: `http://${currentIP}:1337`,
+      baseURL: `http://${currentIP}:80`,
       timeout: 2000,
     });
   }

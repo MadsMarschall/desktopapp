@@ -24,6 +24,7 @@ export enum Methods {
   CHAIN_CONTROLLER_GET_OPERATION_BY_NODE_ID,
   CHAIN_CONTROLLER_REMOVE_NODE_BY_ID,
   CHAIN_CONTROLLER_CONNECT_OPERATION_NODES,
+  DATA_OPERATION_GET_SETTINGS,
 }
 
 export enum TableNames {
@@ -34,10 +35,15 @@ export enum TableNames {
 }
 
 export const IPCEvents = {
-  UPDATE: 'UPDATE_',
+  UPDATE: 'UPDATE_', UPDATE_BY_ID_AND_METHOD: 'UPDATE_BY_ID_AND_METHOD_',
+
 }
 
-export const PHONE_CONTROLLER_BASE_URL = 'http://192.168.2.126:8080';
+export const RemoteUrls = {
+  SELECTOR_NODE:"/selector-node-controller"
+}
+
+export const PHONE_CONTROLLER_BASE_URL = 'http://192.168.1.140:80';
 
 export const SelectorSettingsEvents = [
   'selector-node-setting:create',
