@@ -46,4 +46,8 @@ export default class DataOperationErrorObject implements IDataOperationProxy {
   triggerOperation(): Promise<void> {
     return Promise.reject(new Error('Error'));
   }
+
+  getSettings(): Promise<any[]> {
+    return Promise.resolve([]);
+  }
 }

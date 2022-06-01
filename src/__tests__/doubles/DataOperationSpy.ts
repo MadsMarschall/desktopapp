@@ -70,4 +70,9 @@ export default class DataOperationSpy implements IDataOperationProxy {
   public setId(id: string): void {
     this.id = id;
   }
+
+  getSettings(): Promise<any[]> {
+    this.spyStorage.push(this.getSettings.name);
+    return Promise.resolve([]);
+  }
 }
