@@ -1,12 +1,9 @@
 const path = require('path');
-const nodeExternals = require('webpack-node-externals');
+
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const htmlWebpackPlugin = new HtmlWebpackPlugin({
-  template: path.join(__dirname, "public/index.html"),
-  filename: "./index.html"
-});
+const nodeExternals = require('webpack-node-externals');
+
 const webpackConfigClient ={
   name: "client",
   entry: {
@@ -44,8 +41,10 @@ const webpackConfigClient ={
     ],
   },
   target: "web",
-  externals: [nodeExternals()],
-  plugins: [new CleanWebpackPlugin(), new WebpackManifestPlugin(),htmlWebpackPlugin]
+  externals: [nodeExternals({
+    allowlist: ['uglify-js']
+  })],
+  plugins: [new CleanWebpackPlugin(), new WebpackManifestPlugin()]
 };
 
 export default webpackConfigClient;

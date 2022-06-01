@@ -9,6 +9,7 @@ import IDataOperation from '../../../../shared/domain/IDataOperation';
 import DataOperationProxy from '../../../../shared/datatools/DataOperationProxy';
 
 export default function SelectorNodeController(): JSX.Element {
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
   const [PersonId, setPersonId] = React.useState<number>();
   const [SelectedTable, setSelectedTable] = React.useState(TableNames.TEST);
   const [operation, setOperation] = React.useState<IDataOperation>();
@@ -30,6 +31,9 @@ export default function SelectorNodeController(): JSX.Element {
       setOperation(operationTemp);
       console.log(await operationTemp.getType(),"proxy");
     }
+  });
+  socket.on('disconnect', () => {
+    setErrorMessage('Disconnected from server');
   });
   return (
     <Container>
@@ -64,8 +68,24 @@ export default function SelectorNodeController(): JSX.Element {
                 <option value={TableNames.SATURDAY}>Saturday</option>
                 <option value={TableNames.SUNDAY}>Sunday</option>
               </Form.Select>
+              <br/>
+              <Button
+                variant="primary"
+                type="submit"
+                className="w-100"
+                size={'lg'}
+                onClick={async () => {
+                  if(!operation) {
+                    setErrorMessage('No operation was found selected');
+                    return;
+                  }
+                  await operation.setSettings([SelectedTable,PersonId]);
+                  await operation.retriggerOperationChainForward();
+                }}
+              >Trigger</Button>
             </Form.Group>
           </Form>
+          <p>{errorMessage}</p>
         </Col>
       </Row>
     </Container>

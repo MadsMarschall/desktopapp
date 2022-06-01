@@ -9,27 +9,15 @@ import React from 'react';
 import RemoteApp from './client/RemoteApp';
 import multicastdns from 'multicast-dns';
 import fs from 'fs';
-import webpack from 'webpack';
-import webpackConfigClient from './webpack.client';
+
 import httpProxy from 'http-proxy';
 import cors from 'cors';
 
 const PROXY_PORT = process.env.PROXY_PORT || 1337;
 const HTTP_PORT = process.env.REMOTE_PORT || 80;
-const HTTPS_PORT = process.env.REMOTE_HTTPS_PORT || 443;
-
-const { createProxyMiddleware } = require('http-proxy-middleware');
-
-const httpServer80 = http.createServer();
 
 
 const httpsApp = express();
-const httpsServer443 = https.createServer({
-  key: fs.readFileSync(path.resolve(__dirname, '../../../certs/selfsigned.key')),
-  cert: fs.readFileSync(path.resolve(__dirname, '../../../certs/selfsigned.crt')),
-  requestCert: false,
-  rejectUnauthorized: false,
-}, httpsApp);
 
 const app = express();
 const server = http.createServer(app);
@@ -67,15 +55,9 @@ export default class ExpressServer {
 
 
     this.setupMulticastService();
-    this.webpackServerInit();
     this.setupExpress();
     this.socketInit();
 
-    /*server.listen(SERVER_PORT, () => {
-      console.log(`Server is listening on port ${SERVER_PORT}`);
-    });
-
-     */
     server.listen(PROXY_PORT, () => {
       console.log(`Server is listening on port ${PROXY_PORT}`);
     });
@@ -101,11 +83,16 @@ export default class ExpressServer {
     const assets = JSON.parse(manifest);
 
     app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, "dist/static", "index.html"));
 
+
+      /*
       const component = ReactDOMServer.renderToString(<StaticRouter location={req.url}><RemoteApp /></StaticRouter>);
       res.setHeader('Content-Type', 'text/html');
       //res.send("<!DOCTYPE html>" + html);
       res.render('client', { assets, component });
+
+       */
     });
   }
 
@@ -122,64 +109,6 @@ export default class ExpressServer {
     return io;
   }
 
-  public webpackServerInit() {
-    const compiler = webpack([
-      {
-        ...webpackConfigClient,
-        mode: 'development',
-        devtool: 'source-map',
-        output: {
-          ...webpackConfigClient.output,
-          filename: '[name].js'
-        }
-      }
-    ]);
-    /*
-    compiler.run((err, stats) => {
-      if (err) {
-        console.error(err.stack || err);
-        return;
-      }
-      if(!stats) {
-        console.error("No stats");
-        return;
-      }
-      const info = stats.toJson();
-      if (stats.hasErrors()) {
-        console.error(info.errors);
-      }
-      if (stats.hasWarnings()) {
-        console.warn(info.warnings);
-      }
-    });
-     */
-    const watching = compiler.watch({}, (err, stats) => {
-      if (err) {
-        console.error(err.stack || err);
-        return;
-      }
-      if (!stats) {
-        console.error('No stats');
-        return;
-      }
-      const info = stats.toJson();
-      if (stats.hasErrors()) {
-        console.error(info.errors);
-      }
-      if (stats.hasWarnings()) {
-        console.warn(info.warnings);
-      }
-      if (stats) {
-        console.log(stats.toString({
-          colors: true,
-          modules: false,
-          children: false,
-          chunks: false,
-          chunkModules: false
-        }));
-      }
-    });
-  }
 
   private setupMulticastService() {
     mdns.on('warning', function(err) {

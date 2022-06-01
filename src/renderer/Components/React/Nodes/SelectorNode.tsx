@@ -3,20 +3,10 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { Handle, Position } from 'react-flow-renderer';
 
 import QRCode from 'react-qr-code';
-import { Socket } from 'socket.io-client';
-import { settingsAPI } from '../../../Utilities/SettingsAPIController';
-import { SocketContext } from '../../../context/socket';
-import { handleSourceNodeConnection } from '../../../DataHandling/dataUtilityFunctions';
-import {
-  IPCEvents, Methods,
-  OperationIds,
-  PHONE_CONTROLLER_BASE_URL, RemoteUrls,
-  TableNames
-} from '../../../../shared/Constants';
+import { handleSourceNodeConnection, listenForMethods } from '../../../DataHandling/dataUtilityFunctions';
+import { Methods, OperationIds, PHONE_CONTROLLER_BASE_URL, RemoteUrls, TableNames } from '../../../../shared/Constants';
 import { ChainControllerContext } from '../../../context/broker';
 import IDataOperation from '../../../../shared/domain/IDataOperation';
-import IsNullObject from '../../../../main/datahandling/datacontrolling/dataoperations/IsNullObject';
-import DataOperationProxy from '../../../../shared/datatools/DataOperationProxy';
 
 type IProps = {
   data: {
@@ -32,7 +22,6 @@ export default function SelectorNode({ data }: IProps) {
   );
   const [entriesLoaded, setEntriesLoaded] = useState<number>(0);
   const [operation, setOperation] = useState<IDataOperation>();
-  const socket = useContext<Socket>(SocketContext);
   const dataOperationChainControllerProxy = useContext(ChainControllerContext);
 
   function onMount() {
@@ -40,8 +29,30 @@ export default function SelectorNode({ data }: IProps) {
       OperationIds.SELECT_FROM_DB,
       data.id
     ).then((operation) => {
+      listenForMethods(
+        data.id,
+        [Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD],
+        (data) => {
+          operation.getData().then((data) => {
+            setEntriesLoaded(data.length);
+          });
+        })
+
+      listenForMethods(data.id,[Methods.DATA_OPERATION_SET_SETTINGS],(data)=>{
+        if(!operation) {
+          console.log("Operation not found");
+          return;
+        }
+        operation.getSettings().then((settings:any[])=>{
+          setPersonId(settings[1]);
+          setSelectedTable(settings[0]);
+          console.log("settings",settings);
+        })
+      })
       setOperation(operation);
     });
+
+    /*
     const settingsChannel = IPCEvents.UPDATE_BY_ID_AND_METHOD+data.id+Methods.DATA_OPERATION_SET_SETTINGS
     window.electron.ipcRenderer.on(settingsChannel, ()=>{
       if(!operation) {
@@ -54,6 +65,8 @@ export default function SelectorNode({ data }: IProps) {
         console.log("settings",settings);
       })
     })
+
+     */
   }
 
   useEffect(onMount, []);
@@ -63,16 +76,11 @@ export default function SelectorNode({ data }: IProps) {
   const handleClick = async () => {
     if (!SelectedTable) return;
     if (!PersonId) return;
-    const operation =
-      await dataOperationChainControllerProxy.getOperationByNodeId(data.id);
+    if (!operation) return;
     await operation.setSettings([SelectedTable, PersonId]);
-    await dataOperationChainControllerProxy
-      .getOperationByNodeId(data.id)
-      .then(() => {
-        operation.retriggerOperationChainForward().then(async () => {
+    await operation.retriggerOperationChainForward().then(async () => {
           setEntriesLoaded((await operation.getData()).length);
-        });
-      });
+    });
   };
 
 

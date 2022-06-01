@@ -43,7 +43,7 @@ export const RemoteUrls = {
   SELECTOR_NODE:"/selector-node-controller"
 }
 
-export const PHONE_CONTROLLER_BASE_URL = 'http://192.168.1.140:80';
+export const PHONE_CONTROLLER_BASE_URL = 'http://settings-controller.local';
 
 export const SelectorSettingsEvents = [
   'selector-node-setting:create',

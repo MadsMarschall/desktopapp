@@ -2,6 +2,7 @@ import { Connection } from 'react-flow-renderer';
 import DataOperationChainControllerProxy from '../../shared/datatools/DataOperationChainControllerProxy';
 import IDataOperation from '../../shared/domain/IDataOperation';
 import IpcRendererImpl from './IpcRendereImpl';
+import { IPCEvents, Methods } from '../../shared/Constants';
 
 const dataOperationChainControllerProxy = new DataOperationChainControllerProxy(
   new IpcRendererImpl()
@@ -33,3 +34,15 @@ export const handleSourceNodeConnection = async (
   );
   await sourceOperation.retriggerOperationChainForward();
 };
+
+export const listenForMethods = (id:string,methods:Methods[], callback:(data)=>void) => {
+  methods.forEach(method => {
+    const settingsChannel = IPCEvents.UPDATE_BY_ID_AND_METHOD+id+method
+    window.electron.ipcRenderer.on(settingsChannel,
+      (event:any, data:any) => {
+        callback(data);
+      }
+    );
+  });
+
+}
