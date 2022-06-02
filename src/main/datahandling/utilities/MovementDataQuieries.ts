@@ -7,10 +7,10 @@ export const MovementDataQuieries = {
     sunday: `INSERT parkmovementsun (timestamp, PersonId, type, X,Y, Id) VALUES (STR_TO_DATE( ? ,'%Y-%m-%d %H:%i:%s'), ? , ? , ? , ? , uuid());`,
   },
   GET_ALL: {
-    friday: 'SELECT * FROM parkmovementfri;',
-    saturday: 'SELECT * FROM parkmovementsat;',
-    sunday: 'SELECT * FROM parkmovementsun;',
-    test: 'SELECT * FROM testdata;',
+    friday: 'SELECT * FROM parkmovementfri',
+    saturday: 'SELECT * FROM parkmovementsat',
+    sunday: 'SELECT * FROM parkmovementsun',
+    test: 'SELECT * FROM testdata',
   },
   GET_BY_PERSON_ID: {
     friday:

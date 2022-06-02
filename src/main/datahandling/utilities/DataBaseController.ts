@@ -9,6 +9,7 @@ import { DATA_SOURCES } from './vars.config';
 import { MovementDataQuieries } from './MovementDataQuieries';
 import { TableNames } from '../../../shared/Constants';
 import { IDataPointMovement } from '../../../shared/domain/Interfaces';
+import IDataBaseController from '../../../shared/domain/IDataBaseController';
 
 export interface ICSVInputObject {
   Timestamp: string;
@@ -18,24 +19,7 @@ export interface ICSVInputObject {
   Y: string;
 }
 
-interface IDataBaseController {
-  getDataByPersonId(
-    SQLTableName: TableNames,
-    PersonId: number
-  ): Promise<IDataPointMovement[]>;
 
-  loadDataIntoDatabase(
-    pathToCSV: string,
-    SQLTableName: TableNames
-  ): Promise<void>;
-
-  insertInDatabase(
-    object: ICSVInputObject,
-    SQLTableName: TableNames
-  ): Promise<boolean>;
-
-  getAllDataFromTable(SQLTableName: TableNames): Promise<IDataPointMovement[]>;
-}
 
 export default class DataBaseController implements IDataBaseController {
   private readonly connectionPool: Pool;
@@ -147,7 +131,8 @@ export default class DataBaseController implements IDataBaseController {
   }
 
   async getAllDataFromTable(
-    SQLTableName: TableNames
+    SQLTableName: TableNames,
+    sortBy?: string,
   ): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
       let q = '';
@@ -159,6 +144,9 @@ export default class DataBaseController implements IDataBaseController {
         q = MovementDataQuieries.GET_ALL.sunday;
       if (SQLTableName === TableNames.TEST)
         q = MovementDataQuieries.GET_ALL.test;
+      if(sortBy){
+        q += ` ORDER BY ${sortBy}`;
+      }
 
       const result = (await this.execute<{ affectedRows: number }>(
         q,

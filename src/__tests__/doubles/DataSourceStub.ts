@@ -3,6 +3,9 @@ import IDataOperation from '../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../shared/domain/Interfaces';
 
 export default class DataSourceStub implements IDataOperation {
+  getSettings(): Promise<any[]> {
+      throw new Error('Method not implemented.');
+  }
   retriggerOperationChainForward(): Promise<void> {
     throw new Error('Method not implemented.');
   }

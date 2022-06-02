@@ -76,12 +76,6 @@ export default class ExpressServer {
 
     app.use(express.static(path.resolve(__dirname, './dist/static')));
 
-    const manifest = fs.readFileSync(
-      path.join(__dirname, 'dist/static/manifest.json'),
-      'utf-8'
-    );
-    const assets = JSON.parse(manifest);
-
     app.get('*', (req, res) => {
       res.sendFile(path.join(__dirname, "dist/static", "index.html"));
 
