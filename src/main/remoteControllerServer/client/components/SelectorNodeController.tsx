@@ -29,6 +29,10 @@ export default function SelectorNodeController(): JSX.Element {
     if (query.get('nodeId')){
       let operationTemp = new DataOperationProxy(query.get('nodeId') as string,ipc)
       setOperation(operationTemp);
+      (await operationTemp.getSettings()).forEach((value,index)=>{
+        if(index===0) setSelectedTable(value);
+        if(index===1) setPersonId(value);
+      })
       console.log(await operationTemp.getType(),"proxy");
     }
   });

@@ -18,7 +18,7 @@ export default class DataOperationInvoker implements IInvoker {
     ...args: any[]
   ): Promise<any> {
     const operation = await this.dataOperationChainController.getOperationByNodeId(id);
-    if (!operation) return Promise.resolve();
+    if (!operation) return Promise.reject(new Error('Operation not found'));
 
     let result: Promise<unknown> = Promise.resolve();
     switch (method) {

@@ -1,9 +1,10 @@
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
-import { TableNames } from '../../../../shared/Constants';
 import IsNullObject from './IsNullObject';
+import { TableNames } from '../../../../shared/Constants';
+import { dbController } from '../../utilities/DataBaseController';
 
-export default class DBScanDataOperation implements IDataOperation {
+export default class SelectByDayOperation implements IDataOperation {
   private inputOperation: IDataOperation;
 
   private outputData: IDataPointMovement[] = [];
@@ -18,28 +19,23 @@ export default class DBScanDataOperation implements IDataOperation {
     this.inputOperation = inputOperation;
     this.targetOperation = new IsNullObject();
   }
+
   getData(): Promise<IDataPointMovement[]> {
     return Promise.resolve(this.outputData);
   }
 
-  getId(): Promise<string> {
-    return Promise.resolve(this.id);
+  setSource(source: IDataOperation): Promise<void> {
+    this.inputOperation = source;
+    return Promise.resolve();
   }
 
-  getSettings(): Promise<any[]> {
-    return Promise.resolve(this.settings);
-  }
+  async triggerOperation(): Promise<void> {
+    return new Promise(async (resolve,reject) => {
 
-  getSource(): Promise<IDataOperation> {
-    return Promise.resolve(this.inputOperation);
-  }
-
-  getTarget(): Promise<IDataOperation> {
-    return Promise.resolve(this.targetOperation);
-  }
-
-  getType(): Promise<string> {
-    return Promise.resolve(DBScanDataOperation.name);
+      if (!this.verifySettings()) return reject(new Error('Settings are not set correctly'));
+      this.outputData = await dbController.getAllDataFromTable(this.settings[0] as TableNames, "PersonId");
+      return resolve();
+    });
   }
 
   retriggerOperationChainBackward(): Promise<void> {
@@ -58,12 +54,22 @@ export default class DBScanDataOperation implements IDataOperation {
     });
   }
 
-  setSettings(settings: any[]): Promise<boolean> {
-    return Promise.resolve(false);
+  getType(): Promise<string> {
+    return Promise.resolve(SelectByDayOperation.name);
   }
 
-  setSource(source: IDataOperation): Promise<void> {
-    return Promise.resolve();
+  getSource(): Promise<IDataOperation> {
+    return Promise.resolve(this.inputOperation);
+  }
+
+  setSettings(settings: any[]): Promise<boolean> {
+
+    this.settings = settings;
+    return Promise.resolve(true);
+  }
+
+  getTarget(): Promise<IDataOperation> {
+    return Promise.resolve(this.targetOperation);
   }
 
   setTarget(target: IDataOperation): Promise<void> {
@@ -71,9 +77,16 @@ export default class DBScanDataOperation implements IDataOperation {
     return Promise.resolve();
   }
 
-  triggerOperation(): Promise<void> {
-
-    return Promise.resolve();
+  getId(): Promise<string> {
+    return Promise.resolve(this.id);
   }
 
+  getSettings(): Promise<any[]> {
+    return Promise.resolve(this.settings);
+  }
+
+  private verifySettings(): boolean {
+    if (this.settings.length > 0) return false;
+    return true;
+  }
 }

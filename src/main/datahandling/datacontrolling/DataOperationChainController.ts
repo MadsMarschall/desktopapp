@@ -46,6 +46,9 @@ export default class DataOperationChainController
       case OperationIds.TIME_PLAYER:
         operation = new TimePlayerOperation(new IsNullObject(),id);
         break;
+      case OperationIds.SELECT_BY_DAY:
+        operation = new SelectFromDBOperation(new IsNullObject(),id);
+        break;
       default:
         operation = new IsNullObject();
     }

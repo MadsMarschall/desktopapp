@@ -7,7 +7,7 @@ import { DATA_SOURCES } from './vars.config';
 
 // the following lines are necessary for JEST to be able to unit test
 import { MovementDataQuieries } from './MovementDataQuieries';
-import { TableNames } from '../../../shared/Constants';
+import { SortBy, TableIndexing, TableNames } from '../../../shared/Constants';
 import { IDataPointMovement } from '../../../shared/domain/Interfaces';
 import IDataBaseController from '../../../shared/domain/IDataBaseController';
 
@@ -132,7 +132,7 @@ export default class DataBaseController implements IDataBaseController {
 
   async getAllDataFromTable(
     SQLTableName: TableNames,
-    sortBy?: string,
+    sortBy: string,
   ): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
       let q = '';
@@ -144,9 +144,9 @@ export default class DataBaseController implements IDataBaseController {
         q = MovementDataQuieries.GET_ALL.sunday;
       if (SQLTableName === TableNames.TEST)
         q = MovementDataQuieries.GET_ALL.test;
-      if(sortBy){
-        q += ` ORDER BY ${sortBy}`;
-      }
+      q += ` use index (${this.getIndexingByRequest(SQLTableName, sortBy)})`;
+      q += ` ORDER BY ${sortBy}`;
+
 
       const result = (await this.execute<{ affectedRows: number }>(
         q,
@@ -158,6 +158,27 @@ export default class DataBaseController implements IDataBaseController {
       }
       resolve(result as unknown as IDataPointMovement[]);
     });
+  }
+  private getIndexingByRequest(
+    SQLTableName: TableNames,
+    sortBy: SortBy,
+  ): string {
+    if (SQLTableName === TableNames.FRIDAY && sortBy === SortBy.Timestamp)
+      return TableIndexing.FRIDAY_Timestamp;
+    if (SQLTableName === TableNames.FRIDAY && sortBy === SortBy.PersonId)
+      return TableIndexing.FRIDAY_PersonId
+    if (SQLTableName === TableNames.SATURDAY && sortBy === SortBy.Timestamp)
+      return TableIndexing.SATURDAY_Timestamp;
+    if (SQLTableName === TableNames.SATURDAY && sortBy === SortBy.PersonId)
+      return TableIndexing.SATURDAY_PersonId;
+    if (SQLTableName === TableNames.SUNDAY && sortBy === SortBy.Timestamp)
+      return TableIndexing.SUNDAY_Timestamp;
+    if (SQLTableName === TableNames.SUNDAY && sortBy === SortBy.PersonId)
+      return TableIndexing.SUNDAY_PersonId;
+    else {
+      return ""
+    }
+
   }
 }
 

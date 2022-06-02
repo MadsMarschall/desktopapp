@@ -29,10 +29,10 @@ export default class SelectFromDBOperation implements IDataOperation {
     return Promise.resolve();
   }
 
-  triggerOperation(): Promise<void> {
-    return new Promise(async (resolve) => {
+  async triggerOperation(): Promise<void> {
+    return new Promise(async (resolve,reject) => {
 
-      if (this.verifySettings()) return resolve();
+      if (!this.verifySettings()) return reject(new Error('Settings are not set correctly'));
       this.outputData = await dbController.getDataByPersonId(
         <TableNames>this.settings[0],
         <number>this.settings[1]

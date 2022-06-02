@@ -26,6 +26,7 @@ import TimePlayerNode from '../Nodes/TimePlayerNode';
 import { OperationIds } from '../../../../shared/Constants';
 import { ChainControllerContext } from '../../../context/broker';
 import ConnectionLine from '../edges/ConnectionLine';
+import SelectByDayNode from '../Nodes/SelectByDayNode';
 
 const nodeTypes = {
   dataSource: DataSourceNode,
@@ -33,6 +34,7 @@ const nodeTypes = {
   selector: SelectorNode,
   timeSlider: TimeSliderNode,
   timePlayer: TimePlayerNode,
+  selectByDay:SelectByDayNode
 };
 
 const id = 10;

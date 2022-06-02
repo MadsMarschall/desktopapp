@@ -6,6 +6,7 @@ export enum OperationIds {
   MAP_DISPLAY = 'MAP_DISPLAY',
   TIME_SLIDER = 'TIME_SLIDER',
   TIME_PLAYER = 'TIME_PLAYER',
+  SELECT_BY_DAY = 'SELECT_BY_DAY',
 }
 const DATAOPEARATION_PREFIX = 'DATAOPEARATION_';
 
@@ -50,3 +51,16 @@ export const SelectorSettingsEvents = [
   'selector-node-setting:delete',
   'selector-node-setting:update',
 ];
+
+export class TableIndexing {
+  static readonly FRIDAY_PersonId = "idx_parkmovementfri_PersonId";
+  static readonly FRIDAY_Timestamp = "idx_parkmovementfri_timestamp";
+  static readonly SATURDAY_PersonId = "idx_parkmovementsat_PersonId";
+  static readonly SATURDAY_Timestamp = "idx_parkmovementsat_timestamp";
+  static readonly SUNDAY_PersonId = "idx_parkmovementsun_PersonId";
+  static readonly SUNDAY_Timestamp = "idx_parkmovementsun_timestamp";
+}
+export class SortBy {
+  static readonly PersonId = "PersonId";
+  static readonly Timestamp = "Timestamp";
+}

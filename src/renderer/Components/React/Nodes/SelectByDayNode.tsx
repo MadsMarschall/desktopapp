@@ -15,8 +15,7 @@ type IProps = {
   };
 };
 
-export default function SelectorNode({ data }: IProps) {
-  const [PersonId, setPersonId] = useState<number>(0);
+export default function SelectByDayNode({ data }: IProps) {
   const [SelectedTable, setSelectedTable] = useState<TableNames>(
     TableNames.TEST
   );
@@ -26,7 +25,7 @@ export default function SelectorNode({ data }: IProps) {
 
   function onMount() {
     dataOperationChainControllerProxy.createOperationNode(
-      OperationIds.SELECT_FROM_DB,
+      OperationIds.SELECT_BY_DAY,
       data.id
     ).then((operation) => {
       listenForMethods(
@@ -44,29 +43,12 @@ export default function SelectorNode({ data }: IProps) {
           return;
         }
         operation.getSettings().then((settings:any[])=>{
-          setPersonId(settings[1]);
           setSelectedTable(settings[0]);
           console.log("settings",settings);
         })
       })
       setOperation(operation);
     });
-
-    /*
-    const settingsChannel = IPCEvents.UPDATE_BY_ID_AND_METHOD+data.id+Methods.DATA_OPERATION_SET_SETTINGS
-    window.electron.ipcRenderer.on(settingsChannel, ()=>{
-      if(!operation) {
-        console.log("Operation not found");
-        return;
-      }
-      operation.getSettings().then((settings:any[])=>{
-        setPersonId(settings[1]);
-        setSelectedTable(settings[0]);
-        console.log("settings",settings);
-      })
-    })
-
-     */
   }
 
   useEffect(onMount, []);
@@ -75,9 +57,8 @@ export default function SelectorNode({ data }: IProps) {
 
   const handleClick = async () => {
     if (!SelectedTable) return;
-    if (!PersonId) return;
     if (!operation) return;
-    await operation.setSettings([SelectedTable, PersonId]);
+    await operation.setSettings([SelectedTable]);
     await operation.retriggerOperationChainForward().then(async () => {
       console.log((await operation.getData()).length)
           setEntriesLoaded((await operation.getData()).length);
@@ -85,8 +66,7 @@ export default function SelectorNode({ data }: IProps) {
   };
 
 
-  const parametersAreSelected =
-    PersonId === undefined && SelectedTable === undefined;
+  const parametersAreSelected = SelectedTable === undefined;
   return (
     <div className="selectorNode">
       <Handle
@@ -115,16 +95,7 @@ export default function SelectorNode({ data }: IProps) {
           <Col>
             <>
               <Form.Group>
-                <Form.Label htmlFor="inputPassword5">Select Person</Form.Label>
-                <Form.Control
-                  type="number"
-                  id="PersonIdSelection"
-                  placeholder="Type in PersonId"
-                  value={PersonId || ''}
-                  onChange={(e) => {
-                    setPersonId(parseInt(e.target.value, 10));
-                  }}
-                />
+                <Form.Label htmlFor="inputPassword5">Select Day</Form.Label>
                 <Form.Select
                   required
                   className="mt-2"

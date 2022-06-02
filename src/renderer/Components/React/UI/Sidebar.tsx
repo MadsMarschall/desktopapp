@@ -70,6 +70,13 @@ export default () => {
       >
         Time Player Node
       </div>
+      <div
+        className="node"
+        onDragStart={(event) => onDragStart(event, 'selectByDay')}
+        draggable
+      >
+        Select by Day Node
+      </div>
     </aside>
   );
 };

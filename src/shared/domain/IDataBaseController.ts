@@ -1,4 +1,4 @@
-import { TableNames } from '../Constants';
+import { SortBy, TableIndexing, TableNames } from '../Constants';
 import { IDataPointMovement } from './Interfaces';
 import { ICSVInputObject } from '../../main/datahandling/utilities/DataBaseController';
 
@@ -18,5 +18,5 @@ export default interface IDataBaseController {
     SQLTableName: TableNames
   ): Promise<boolean>;
 
-  getAllDataFromTable(SQLTableName: TableNames,sortBy:string): Promise<IDataPointMovement[]>;
+  getAllDataFromTable(SQLTableName: TableNames,sortBy:SortBy): Promise<IDataPointMovement[]>;
 }
