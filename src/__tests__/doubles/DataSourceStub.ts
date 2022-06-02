@@ -1,6 +1,7 @@
 import IsNullObject from '../../main/datahandling/datacontrolling/dataoperations/IsNullObject';
 import IDataOperation from '../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../shared/domain/Interfaces';
+import { IOperationMeta } from '../../shared/domain/IOperationMetaData';
 
 export default class DataSourceStub implements IDataOperation {
   getSettings(): Promise<any[]> {
@@ -94,5 +95,9 @@ export default class DataSourceStub implements IDataOperation {
 
   getId(): Promise<string> {
     return Promise.resolve('');
+  }
+
+  getMetaData(): Promise<IOperationMeta> {
+    throw new Error('Method not implemented.');
   }
 }

@@ -3,7 +3,6 @@ import { P5Instance, ReactP5Wrapper } from 'react-p5-wrapper';
 import { Col, Row } from 'react-bootstrap';
 import { Handle, Position } from 'react-flow-renderer';
 import { handleTargetNodeConnection } from '../../../DataHandling/dataUtilityFunctions';
-import { settingsAPI } from '../../../Utilities/SettingsAPIController';
 import { IPCEvents, OperationIds } from '../../../../shared/Constants';
 import IDataOperationChainController from '../../../../shared/domain/IDataOperationController';
 import { ChainControllerContext } from '../../../context/broker';

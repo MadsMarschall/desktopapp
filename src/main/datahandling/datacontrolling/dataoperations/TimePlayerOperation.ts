@@ -3,6 +3,7 @@ import IDataOperation from '../../../../shared/domain/IDataOperation';
 import IObserver from '../../../../shared/domain/IObserver';
 import ISubject from '../../../../shared/domain/ISubject';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
+import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
 
 export default class TimePlayerOperation implements IDataOperation, ISubject {
   private inputOperation: IDataOperation;
@@ -101,5 +102,16 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
 
   getSettings(): Promise<any[]> {
     return Promise.resolve(this.settings);
+  }
+  async getMetaData(): Promise<IOperationMeta> {
+    const result: IOperationMeta = {
+      entries: this.outputData.length,
+      id: this.id,
+      name: await this.getType(),
+      sourceOperationId: await this.inputOperation.getId(),
+      targetOperationId: await this.targetOperation.getId(),
+      settings: this.settings
+    };
+    return Promise.resolve(result);
   }
 }

@@ -2,6 +2,7 @@ import IDataOperationProxy from '../domain/IDataOperationProxy';
 import { IDataPointMovement } from '../domain/Interfaces';
 import IDataOperation from '../domain/IDataOperation';
 import IsNullObject from '../../main/datahandling/datacontrolling/dataoperations/IsNullObject';
+import { IOperationMeta } from '../domain/IOperationMetaData';
 
 export default class DataOperationErrorLogger implements IDataOperationProxy {
   private readonly dataOperationProxy: IDataOperationProxy;
@@ -147,6 +148,18 @@ export default class DataOperationErrorLogger implements IDataOperationProxy {
       (error: Error) => {
         console.error(error);
         return Promise.resolve([]);
+      }
+    );
+  }
+
+  getMetaData(): Promise<IOperationMeta> {
+    return this.dataOperationProxy.getMetaData().then(
+      (data: IOperationMeta) => {
+        return data;
+      },
+      (error: Error) => {
+        console.error(error);
+        return Promise.resolve(new IsNullObject().getMetaData());
       }
     );
   }

@@ -21,7 +21,7 @@ import DataOperationChainController from './datahandling/datacontrolling/DataOpe
 import DataOperationChainControllerInvoker from './datahandling/invokers/DataOperationChainControllerInvoker';
 import { Methods } from '../shared/Constants';
 import ExpressServer from './remoteControllerServer/ExpressServer';
-import ChainControllerLoggerDecorator from './datahandling/datacontrolling/ChainControllerLoggerDecorator';
+import ChainControllerLoggerDecorator from './datahandling/datacontrolling/decorators/ChainControllerLoggerDecorator';
 import { reject } from 'lodash';
 
 export default class AppUpdater {

@@ -121,7 +121,7 @@ export default function VastChallengeOneView() {
 
   return (
     <div className="ReactFlowDataTool vw-100 vh-100">
-      <div className="reactflow-wrapper h-75" ref={reactFlowWrapper}>
+      <div className="reactflow-wrapper h-100" ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -138,7 +138,9 @@ export default function VastChallengeOneView() {
           fitView
         />
       </div>
-      <Sidebar />
+      <div className="position-absolute nodeControlPanel">
+        <Sidebar />
+      </div>
     </div>
   );
 }

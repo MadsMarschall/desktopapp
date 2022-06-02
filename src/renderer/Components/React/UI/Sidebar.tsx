@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { DragEventHandler } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
 
 export default () => {
   const onDragStart = (
@@ -10,73 +11,81 @@ export default () => {
   };
 
   return (
-    <aside>
-      <div className="description">
-        You can drag these nodes to the pane on the right.
-      </div>
-      <div
-        className="dndnode input"
-        onDragStart={(event) => onDragStart(event, 'input')}
+    <Container >
+      <Row>
+        <Col xs={12}>
+          <div className="p-2 m-2 description">
+           <h2> Drag and drop nodes to use them</h2>
+          </div>
+        </Col>
+      </Row>
+      <Row>
+
+
+      <Col xs={3}
+        className="bg-light p-2 m-2 dndnode input"
+        onDragStart={(event:any) => onDragStart(event, 'input')}
         draggable
       >
         Input Node
-      </div>
-      <div
-        className="dndnode"
-        onDragStart={(event) => onDragStart(event, 'default')}
+      </Col>
+      <Col xs={3}
+        className="bg-light p-2 m-2 dndnode"
+        onDragStart={(event:any) => onDragStart(event, 'default')}
         draggable
       >
         Default Node
-      </div>
-      <div
-        className="dndnode output"
-        onDragStart={(event) => onDragStart(event, 'output')}
+      </Col>
+      <Col xs={3}
+        className="bg-light p-2 m-2 dndnode output"
+        onDragStart={(event:any) => onDragStart(event, 'output')}
         draggable
       >
         Output Node
-      </div>
-      <div
-        className="node"
-        onDragStart={(event) => onDragStart(event, 'dataSource')}
+      </Col>
+      <Col xs={3}
+        className="bg-light p-2 m-2 node"
+        onDragStart={(event:any) => onDragStart(event, 'dataSource')}
         draggable
       >
         Data Source Node
-      </div>
-      <div
-        className="node"
-        onDragStart={(event) => onDragStart(event, 'map')}
+      </Col>
+      <Col xs={3}
+        className="bg-light p-2 m-2 node"
+        onDragStart={(event:any) => onDragStart(event, 'map')}
         draggable
       >
         Map Node
-      </div>
-      <div
-        className="node"
-        onDragStart={(event) => onDragStart(event, 'selector')}
+      </Col>
+      <Col xs={3}
+        className="bg-light p-2 m-2 node"
+        onDragStart={(event:any) => onDragStart(event, 'selector')}
         draggable
       >
         Selector Node
-      </div>
-      <div
-        className="node"
-        onDragStart={(event) => onDragStart(event, 'timeSlider')}
+      </Col>
+      <Col xs={3}
+        className="bg-light p-2 m-2 node"
+        onDragStart={(event:any) => onDragStart(event, 'timeSlider')}
         draggable
       >
         Time Slider Node
-      </div>
-      <div
-        className="node"
-        onDragStart={(event) => onDragStart(event, 'timePlayer')}
+      </Col>
+      <Col xs={3}
+        className="bg-light p-2 m-2 node"
+        onDragStart={(event:any) => onDragStart(event, 'timePlayer')}
         draggable
       >
         Time Player Node
-      </div>
-      <div
-        className="node"
-        onDragStart={(event) => onDragStart(event, 'selectByDay')}
+      </Col>
+      <Col xs={3}
+        className="bg-light p-2 m-2 node"
+        onDragStart={(event:any) => onDragStart(event, 'selectByDay')}
         draggable
       >
         Select by Day Node
-      </div>
-    </aside>
+      </Col>
+      </Row>
+    </Container>
   );
 };

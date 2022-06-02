@@ -1,13 +1,15 @@
 import IsNullObject from './IsNullObject';
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
+import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
 
 export default class GroupDataOperation implements IDataOperation {
   private inputOperation: IDataOperation;
   private readonly id: string;
-  private readonly data: IDataPointMovement[] = [];
+  private readonly outputData: IDataPointMovement[] = [];
 
   private readonly targetOperation: IDataOperation;
+  private settings: unknown[] = [];
 
   constructor(inputData: IDataOperation,id:string) {
     this.id = id;
@@ -16,7 +18,7 @@ export default class GroupDataOperation implements IDataOperation {
   }
 
   getData(): Promise<IDataPointMovement[]> {
-    return Promise.resolve(this.data);
+    return Promise.resolve(this.outputData);
   }
 
   setSource(source: IDataOperation): Promise<void> {
@@ -73,5 +75,16 @@ export default class GroupDataOperation implements IDataOperation {
 
   getSettings(): Promise<any[]> {
     return Promise.resolve([]);
+  }
+  async getMetaData(): Promise<IOperationMeta> {
+    const result: IOperationMeta = {
+      entries: this.outputData.length,
+      id: this.id,
+      name: await this.getType(),
+      sourceOperationId: await this.inputOperation.getId(),
+      targetOperationId: await this.targetOperation.getId(),
+      settings: this.settings
+    };
+    return Promise.resolve(result);
   }
 }

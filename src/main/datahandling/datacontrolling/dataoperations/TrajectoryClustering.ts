@@ -2,6 +2,7 @@ import IDataOperation from '../../../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 import { TableNames } from '../../../../shared/Constants';
 import IsNullObject from './IsNullObject';
+import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
 
 export default class TrajectoryClustering implements IDataOperation {
   private inputOperation: IDataOperation;
@@ -74,6 +75,18 @@ export default class TrajectoryClustering implements IDataOperation {
   triggerOperation(): Promise<void> {
 
     return Promise.resolve();
+  }
+
+  async getMetaData(): Promise<IOperationMeta> {
+    const result: IOperationMeta = {
+      entries: this.outputData.length,
+      id: this.id,
+      name: await this.getType(),
+      sourceOperationId: await this.inputOperation.getId(),
+      targetOperationId: await this.targetOperation.getId(),
+      settings: this.settings
+    };
+    return Promise.resolve(result);
   }
 
 }

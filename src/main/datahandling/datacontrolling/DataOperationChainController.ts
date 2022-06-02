@@ -8,7 +8,8 @@ import SelectFromDBOperation from './dataoperations/SelectFromDBOperation';
 import IDataOperation from '../../../shared/domain/IDataOperation';
 import SortDataOperation from './dataoperations/SortDataOperation';
 import TimeSliderOperation from './dataoperations/TimeSliderOperation';
-import DataOperationLoggerDecorator from './DataOperationLoggerDecorator';
+import DataOperationLoggerDecorator from './decorators/DataOperationLoggerDecorator';
+import SelectByDayOperation from './dataoperations/SelectByDayOperation';
 
 export default class DataOperationChainController
   implements IDataOperationChainController
@@ -47,7 +48,7 @@ export default class DataOperationChainController
         operation = new TimePlayerOperation(new IsNullObject(),id);
         break;
       case OperationIds.SELECT_BY_DAY:
-        operation = new SelectFromDBOperation(new IsNullObject(),id);
+        operation = new SelectByDayOperation(new IsNullObject(),id);
         break;
       default:
         operation = new IsNullObject();

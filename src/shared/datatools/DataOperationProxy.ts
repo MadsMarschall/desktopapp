@@ -5,6 +5,7 @@ import IDataOperation from '../domain/IDataOperation';
 import { Channels } from '../../main/preload';
 import IpcRendererImpl from '../../renderer/DataHandling/IpcRendereImpl';
 import { ClientRequestor } from '../domain/ClientRequestor';
+import { IOperationMeta } from '../domain/IOperationMetaData';
 
 export default class DataOperationProxy implements IDataOperationProxy {
   readonly ID: string;
@@ -135,5 +136,15 @@ export default class DataOperationProxy implements IDataOperationProxy {
       Methods.DATA_OPERATION_GET_SETTINGS,
       []
     ) as Promise<any[]>;
+  }
+
+  getMetaData(): Promise<IOperationMeta> {
+    if (!this.ipc) return Promise.reject(new Error('IPC not available'));
+    return this.ipc.invoke(
+      this.channel,
+      this.ID,
+      Methods.DATA_OPERATION_GET_META_DATA,
+      []
+    ) as Promise<IOperationMeta>;
   }
 }

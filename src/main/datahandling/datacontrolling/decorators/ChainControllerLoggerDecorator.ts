@@ -1,6 +1,6 @@
 import IDataOperationChainController from "shared/domain/IDataOperationController";
-import { OperationIds } from '../../../shared/Constants';
-import IDataOperation from '../../../shared/domain/IDataOperation';
+import { OperationIds } from '../../../../shared/Constants';
+import IDataOperation from '../../../../shared/domain/IDataOperation';
 
 export default class ChainControllerLoggerDecorator implements IDataOperationChainController {
   private chainController: IDataOperationChainController;

@@ -59,9 +59,10 @@ export default function SelectByDayNode({ data }: IProps) {
     if (!SelectedTable) return;
     if (!operation) return;
     await operation.setSettings([SelectedTable]);
-    await operation.retriggerOperationChainForward().then(async () => {
-      console.log((await operation.getData()).length)
-          setEntriesLoaded((await operation.getData()).length);
+    operation.retriggerOperationChainForward().then(async () => {
+      operation.getMetaData().then((metaData) => {
+        setEntriesLoaded(metaData.entries);
+      });
     });
   };
 

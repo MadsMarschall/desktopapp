@@ -3,6 +3,7 @@ import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 import IsNullObject from './IsNullObject';
 import { TableNames } from '../../../../shared/Constants';
 import { dbController } from '../../utilities/DataBaseController';
+import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
 
 export default class SelectFromDBOperation implements IDataOperation {
   private inputOperation: IDataOperation;
@@ -93,5 +94,16 @@ export default class SelectFromDBOperation implements IDataOperation {
     if (typeof this.settings[0] !== typeof TableNames.TEST) return false;
     if (typeof this.settings[1] !== 'number') return false;
     return true;
+  }
+  async getMetaData(): Promise<IOperationMeta> {
+    const result: IOperationMeta = {
+      entries: this.outputData.length,
+      id: this.id,
+      name: await this.getType(),
+      sourceOperationId: await this.inputOperation.getId(),
+      targetOperationId: await this.targetOperation.getId(),
+      settings: this.settings
+    };
+    return Promise.resolve(result);
   }
 }

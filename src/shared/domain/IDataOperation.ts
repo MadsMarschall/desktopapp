@@ -20,4 +20,6 @@ export default interface IDataOperation {
   setTarget(target: IDataOperation): Promise<void>;
 
   getTarget(): Promise<IDataOperation>;
+
+  getMetaData(): Promise<IOperationMeta>;
 }

@@ -63,6 +63,9 @@ export default class DataOperationInvoker implements IInvoker {
       case Methods.DATA_OPERATION_GET_SETTINGS:
         result = operation.getSettings();
         break;
+      case Methods.DATA_OPERATION_GET_META_DATA:
+        result = operation.getMetaData();
+        break;
       default:
         result = Promise.reject(new Error(`Method ${method} is not supported`));
         break;

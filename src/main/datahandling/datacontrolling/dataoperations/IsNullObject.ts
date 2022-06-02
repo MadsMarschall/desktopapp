@@ -1,5 +1,6 @@
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
+import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
 
 export default class IsNullObject implements IDataOperation {
   getSettings(): Promise<any[]> {
@@ -46,5 +47,16 @@ export default class IsNullObject implements IDataOperation {
 
   setTarget(): Promise<void> {
     return Promise.resolve(undefined);
+  }
+  async getMetaData(): Promise<IOperationMeta> {
+    const result: IOperationMeta = {
+      entries: 0,
+      id: "IsNullObject",
+      name: await this.getType(),
+      sourceOperationId: "IsNullObject",
+      targetOperationId: "IsNullObject",
+      settings: []
+    };
+    return Promise.resolve(result);
   }
 }

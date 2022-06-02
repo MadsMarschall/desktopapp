@@ -2,6 +2,7 @@ import { arrange, tidy } from '@tidyjs/tidy';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import IsNullObject from './IsNullObject';
+import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
 
 export default class SortDataOperation implements IDataOperation {
   private inputOperation: IDataOperation;
@@ -11,6 +12,7 @@ export default class SortDataOperation implements IDataOperation {
   private targetOperation: IDataOperation;
 
   private readonly id: string;
+  private settings: unknown[] = [];
   constructor(inputOperation: IDataOperation, id:string) {
     this.id = id;
     this.inputOperation = inputOperation;
@@ -79,5 +81,16 @@ export default class SortDataOperation implements IDataOperation {
   setTarget(target: IDataOperation): Promise<void> {
     this.targetOperation = target;
     return Promise.resolve();
+  }
+  async getMetaData(): Promise<IOperationMeta> {
+    const result: IOperationMeta = {
+      entries: this.outputData.length,
+      id: this.id,
+      name: await this.getType(),
+      sourceOperationId: await this.inputOperation.getId(),
+      targetOperationId: await this.targetOperation.getId(),
+      settings: this.settings
+    };
+    return Promise.resolve(result);
   }
 }

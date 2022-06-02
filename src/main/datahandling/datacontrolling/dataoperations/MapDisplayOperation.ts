@@ -1,12 +1,15 @@
 import IsNullObject from './IsNullObject';
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
+import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
 
 export default class MapDisplayOperation implements IDataOperation {
   private inputOperation: IDataOperation;
 
   private targetOperation: IDataOperation;
   private readonly id: string;
+  private outputData: IDataPointMovement[]=[];
+  private settings: unknown[] = [];
   constructor(inputOperation: IDataOperation, id:string) {
     this.id = id;
     this.inputOperation = inputOperation;
@@ -76,5 +79,16 @@ export default class MapDisplayOperation implements IDataOperation {
 
   getSettings(): Promise<any[]> {
     return Promise.resolve([]);
+  }
+  async getMetaData(): Promise<IOperationMeta> {
+    const result: IOperationMeta = {
+      entries: this.outputData.length,
+      id: this.id,
+      name: await this.getType(),
+      sourceOperationId: await this.inputOperation.getId(),
+      targetOperationId: await this.targetOperation.getId(),
+      settings: this.settings
+    };
+    return Promise.resolve(result);
   }
 }
