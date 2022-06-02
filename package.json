@@ -115,12 +115,25 @@
     ]
   },
   "dependencies": {
+    "@tidyjs/tidy": "^2.4.5",
+    "bootstrap": "^5.1.3",
+    "dotenv": "^16.0.1",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.7",
     "electron-updater": "^5.0.1",
+    "mysql2": "^2.3.3",
+    "papaparse": "^5.3.2",
     "react": "^18.1.0",
+    "react-bootstrap": "^2.4.0",
+    "react-bootstrap-icons": "^1.8.2",
     "react-dom": "^18.1.0",
-    "react-router-dom": "^6.3.0"
+    "react-flow-renderer": "^10.3.5",
+    "react-p5-wrapper": "^3.3.0",
+    "react-qr-code": "^2.0.7",
+    "react-router-dom": "^6.3.0",
+    "react-slider": "^2.0.1",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.6",
