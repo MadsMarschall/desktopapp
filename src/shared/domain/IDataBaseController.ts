@@ -15,8 +15,9 @@ export default interface IDataBaseController {
 
   insertInDatabase(
     object: ICSVInputObject,
-    SQLTableName: TableNames
+    SQLTableName: TableNames,
+    ...otherArgs:string[]
   ): Promise<boolean>;
 
-  getAllDataFromTable(SQLTableName: TableNames,sortBy:SortBy): Promise<IDataPointMovement[]>;
+  getAllDataFromTable(SQLTableName: TableNames,sortBy:SortBy,indexing:TableIndexing): Promise<IDataPointMovement[]>;
 }

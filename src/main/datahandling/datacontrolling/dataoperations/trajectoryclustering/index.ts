@@ -1,8 +1,6 @@
-import Cluster from "./boliu/Cluster";
 import ClusterGen, { Parameter } from "./boliu/ClusterGen";
-import Trajectory from "./boliu/Trajectory";
-import CMDPoint from "./boliu/CMDPoint";
 import { TraClusterDoc } from './boliu/TraClusterDoc';
+import dotenv from 'dotenv';
 
 export function logCaller (){
 	var callerName;
@@ -27,13 +25,28 @@ function onEstimateParameter() {
 
 
 let tcd = new TraClusterDoc();
-tcd.loadData();
+tcd.loadDataFromDB().then((data)=>{
+  tcd.divideDataIntoTrajectories(data).then((formattedTrajectories)=>{
+    console.log("Trajectories: " + formattedTrajectories.length);
+    console.log("Trajectory sample orginals: " + formattedTrajectories[0].length);
+    formattedTrajectories.forEach((trajectory)=>{
+     trajectory.forEach((point)=>{
+       if(point.m_coordinate.length != 2) throw new Error("Invalid coordinate");
+     });
+    });
+    tcd.simplifyTrajectories(formattedTrajectories).then((simplifiedTrajectories)=>{
+      console.log("Trajectory sample after simplyfying: " + simplifiedTrajectories[0].length);
+      tcd.addTrajectionsToTraculus(simplifiedTrajectories).then(()=>{
+        console.log("Trajectory added");
+        let p: Parameter = tcd.onEstimateParameter();
+        console.log("found parameter: " + p.toString());
+        tcd.onClusterGenerate(p.epsParam||20, p.minLnsParam || 100);
+        console.log("Clustered");
+      });
+    });
 
-let p: Parameter = tcd.onEstimateParameter();
+  })
 
-tcd.onClusterGenerate(20, 100);
+})
 
-if (p != null) {
-	console.log("Based on the algorithm, the suggested parameters are:\n" + "eps:" + p.epsParam + "  minLns:" + p.minLnsParam);
-}
 //tcd.onClusterGenerate(args[1], p.epsParam, p.minLnsParam);

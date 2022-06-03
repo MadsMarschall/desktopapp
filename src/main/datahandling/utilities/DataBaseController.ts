@@ -132,7 +132,9 @@ export default class DataBaseController implements IDataBaseController {
 
   async getAllDataFromTable(
     SQLTableName: TableNames,
-    sortBy: string,
+    sortBy: string[],
+    indexing:TableIndexing,
+      ...otherArgs
   ): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
       let q = '';
@@ -144,9 +146,14 @@ export default class DataBaseController implements IDataBaseController {
         q = MovementDataQuieries.GET_ALL.sunday;
       if (SQLTableName === TableNames.TEST)
         q = MovementDataQuieries.GET_ALL.test;
-      q += ` use index (${this.getIndexingByRequest(SQLTableName, sortBy)})`;
-      q += ` ORDER BY ${sortBy}`;
+      q += ` use index (${indexing})`;
 
+      q += ` ORDER BY ${sortBy.join(',')}`;
+
+      otherArgs.forEach((arg) => {
+        q += ` ${arg}`;
+      });
+      console.log("query: ", q);
 
       const result = (await this.execute<{ affectedRows: number }>(
         q,

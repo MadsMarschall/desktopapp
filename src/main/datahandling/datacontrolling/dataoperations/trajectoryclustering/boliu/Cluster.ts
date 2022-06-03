@@ -1,26 +1,26 @@
-import CMDPoint from "./CMDPoint";
+import ICMDPoint from './ICMDPoint';
 
 export default class Cluster {
 
 	private m_clusterId: number;		// the identifier of this cluster
 	private m_nDimensions: number;		// the dimensionality of this cluster
 	private m_nTrajectories: number;	// the number of trajectories belonging to this cluster
-	private m_nPoints: number;			// the number of points constituting a cluster 
-	private m_pointArray: CMDPoint[]	// the array of the cluster points
+	private m_nPoints: number;			// the number of points constituting a cluster
+	private m_pointArray: ICMDPoint[]	// the array of the cluster points
 	public constructor(id?: number, nDimensions?: number) {
 		if (!id || !nDimensions) {
 			this.m_clusterId = -1;
 			this.m_nDimensions = 2;
 			this.m_nTrajectories = 0;
 			this.m_nPoints = 0;
-			this.m_pointArray = new Array<CMDPoint>();
+			this.m_pointArray = new Array<ICMDPoint>();
 			return
         }
 		this.m_clusterId = id;
 		this.m_nDimensions = nDimensions;
 		this.m_nTrajectories = 0;
 		this.m_nPoints = 0;
-		this.m_pointArray = new Array<CMDPoint>();
+		this.m_pointArray = new Array<ICMDPoint>();
 	}
 
 	public setM_clusterId(m_clusterId: number): void {
@@ -30,7 +30,7 @@ export default class Cluster {
 	public getM_clusterId(): number {
 		return this.m_clusterId;
 	}
-	
+
 	/**
 	 * set m_nTrajectories --the number of trajectories belonging to this cluster
 	 * @param density
@@ -45,17 +45,17 @@ export default class Cluster {
 	public getDensity():number {
 		return this.m_nTrajectories;
 	}
-	
-	public addPointToArray(point: CMDPoint):void {
+
+	public addPointToArray(point: ICMDPoint):void {
 		this.m_pointArray.push(point);
-		this.m_nPoints++;				
+		this.m_nPoints++;
 	}
-	
-	public getM_PointArray(): CMDPoint[] {
+
+	public getM_PointArray(): ICMDPoint[] {
 		return this.m_pointArray;
 	}
 
 	public writeCluster(outfile: unknown): boolean {
-		return true;	
+		return true;
 	}
 }

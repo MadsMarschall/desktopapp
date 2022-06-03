@@ -32,8 +32,8 @@ export default function SelectByDayNode({ data }: IProps) {
         data.id,
         [Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD],
         (data) => {
-          operation.getData().then((data) => {
-            setEntriesLoaded(data.length);
+          operation.getMetaData().then((data) => {
+            setEntriesLoaded(data.entries);
           });
         })
 

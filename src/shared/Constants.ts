@@ -56,10 +56,14 @@ export const SelectorSettingsEvents = [
 export class TableIndexing {
   static readonly FRIDAY_PersonId = "idx_parkmovementfri_PersonId";
   static readonly FRIDAY_Timestamp = "idx_parkmovementfri_timestamp";
+  static readonly FRIDAY_PersonId_Timestamp = "idx_parkmovementfri_timestamp_PersonId";
   static readonly SATURDAY_PersonId = "idx_parkmovementsat_PersonId";
   static readonly SATURDAY_Timestamp = "idx_parkmovementsat_timestamp";
+  static readonly SATURDAY_PersonId_Timestamp = "idx_parkmovementsat_PersonId_timestamp";
   static readonly SUNDAY_PersonId = "idx_parkmovementsun_PersonId";
   static readonly SUNDAY_Timestamp = "idx_parkmovementsun_timestamp";
+  static readonly SUNDAY_PersonId_Timestamp = "idx_parkmovementsun_timestamp_PersonId";
+
 }
 export class SortBy {
   static readonly PersonId = "PersonId";

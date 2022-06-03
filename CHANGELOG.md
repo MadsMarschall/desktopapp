@@ -68,7 +68,7 @@
 # 1.1.0
 
 - Fix #2402
-- Simplify configs (https://github.com/electron-react-boilerplate/electron-react-boilerplate/pull/2406)
+- SimplifyTrajectory configs (https://github.com/electron-react-boilerplate/electron-react-boilerplate/pull/2406)
 
 # 1.0.0
 
@@ -396,7 +396,7 @@ Here's the most notable changes since `v0.10.0`. Its been about a year since a r
 
 #### Improvements
 
-- **Simplify webpack config** see [#50](https://github.com/electron-react-boilerplate/electron-react-boilerplate/pull/50).
+- **SimplifyTrajectory webpack config** see [#50](https://github.com/electron-react-boilerplate/electron-react-boilerplate/pull/50).
 
 #### Breaking Changes
 
