@@ -7,11 +7,18 @@ import { ChainControllerContext } from './context/broker';
 import DataOperationChainControllerProxy from '../shared/datatools/DataOperationChainControllerProxy';
 import IpcRendererImpl from './DataHandling/IpcRendereImpl';
 import ChainControllerErrorLogger from '../shared/datatools/ChainControllerErrorLogger';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import momentTimezone from "moment-timezone";
+import { LocalizationProvider } from '@mui/x-date-pickers';
 
 export default function App() {
-
+  const timeZoneFromServer = "Europe/Copenhagen";
+  const { moment } = new AdapterMoment({ instance: momentTimezone });
+  const dateWithTimeZone = moment().tz(timeZoneFromServer);
   return (
     <SocketContext.Provider value={socket}>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+
       <ChainControllerContext.Provider
         value={
           new ChainControllerErrorLogger(
@@ -25,6 +32,7 @@ export default function App() {
           </Routes>
         </Router>
       </ChainControllerContext.Provider>
+      </LocalizationProvider>
     </SocketContext.Provider>
   );
 }
