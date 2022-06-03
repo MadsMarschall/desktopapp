@@ -4,6 +4,8 @@ import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 import { IClusterPosition, IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
 import jDBSCAN from './dbscan/DBScan';
 import { ChartDataset } from 'chart.js';
+import { spawn, Thread,Worker } from 'threads';
+import { FilterWorker } from './workers/timeFilterWorker';
 
 
 export default class TimeFilteringOperation implements IDataOperation {
@@ -77,11 +79,13 @@ export default class TimeFilteringOperation implements IDataOperation {
       console.log('TimeFilteringOperation triggered');
       let lowerBound = this.settings[0];
       let upperBound = this.settings[1];
+      const filterWorker = await spawn<FilterWorker>(new Worker('./workers/timeFilterWorker'));
 
-      await this.inputOperation.getData().then((data) => {
-
+      await this.inputOperation.getData().then(async (data) => {
+        this.outputData = await filterWorker.filterByTime(data, lowerBound, upperBound);
       });
       console.log('TimeFilteringOperation finished');
+      await Thread.terminate(filterWorker)
 
       resolve();
     });
