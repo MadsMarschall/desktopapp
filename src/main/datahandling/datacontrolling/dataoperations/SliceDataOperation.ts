@@ -2,7 +2,7 @@ import { slice, tidy } from '@tidyjs/tidy';
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import IsNullObject from './IsNullObject';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
-import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
+import { IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
 
 export default class SliceDataOperation implements IDataOperation {
   private inputOperation: IDataOperation;
@@ -80,8 +80,8 @@ export default class SliceDataOperation implements IDataOperation {
   getSettings(): Promise<any[]> {
     return Promise.resolve([]);
   }
-  async getMetaData(): Promise<IOperationMeta> {
-    const result: IOperationMeta = {
+  async getDisplayableData(): Promise<IDisplayableData> {
+    const result: IDisplayableData = {
       entries: this.outputData.length,
       id: this.id,
       name: await this.getType(),

@@ -1,5 +1,6 @@
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
+import { IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
 
 export default class DataOperationLoggerDecorator implements IDataOperation {
     private dataOperation: IDataOperation;
@@ -8,9 +9,9 @@ export default class DataOperationLoggerDecorator implements IDataOperation {
         this.dataOperation = dataOperation;
     }
 
-  getMetaData(): Promise<IOperationMeta> {
-    console.log((new Date()).toLocaleTimeString(), `[${this.dataOperation.constructor.name}:${this.getMetaData.name}] getting settings`)
-    return this.dataOperation.getMetaData();
+  getDisplayableData(): Promise<IDisplayableData> {
+    console.log((new Date()).toLocaleTimeString(), `[${this.dataOperation.constructor.name}:${this.getDisplayableData.name}] getting settings`)
+    return this.dataOperation.getDisplayableData();
   }
 
   getSettings(): Promise<any[]> {

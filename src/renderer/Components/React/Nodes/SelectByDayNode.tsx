@@ -32,7 +32,7 @@ export default function SelectByDayNode({ data }: IProps) {
         data.id,
         [Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD],
         (data) => {
-          operation.getMetaData().then((data) => {
+          operation.getDisplayableData().then((data) => {
             setEntriesLoaded(data.entries);
           });
         })
@@ -59,8 +59,9 @@ export default function SelectByDayNode({ data }: IProps) {
     if (!SelectedTable) return;
     if (!operation) return;
     await operation.setSettings([SelectedTable]);
+    console.log(SelectedTable)
     operation.retriggerOperationChainForward().then(async () => {
-      operation.getMetaData().then((metaData) => {
+      operation.getDisplayableData().then((metaData) => {
         setEntriesLoaded(metaData.entries);
       });
     });

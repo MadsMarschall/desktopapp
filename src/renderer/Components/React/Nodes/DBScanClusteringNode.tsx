@@ -19,9 +19,9 @@ type IProps = {
   };
 };
 
-export default function DBScanClustering({ data }: IProps) {
-  const [eps, setEps] = useState(0.075);
-  const [minPts, setMinPts] = useState(1);
+export default function DBScanClusteringNode({ data }: IProps) {
+  const [eps, setEps] = useState(5);
+  const [minPts, setMinPts] = useState(20);
   const [timeEps, setTimeEps ] = useState(2000);
   const [useTimeEps, setUseTimeEps] = useState(false);
   const [entriesLoaded, setEntriesLoaded] = useState<number>(0);
@@ -49,6 +49,14 @@ export default function DBScanClustering({ data }: IProps) {
         }
         operation.getSettings().then((settings:any[])=>{
           console.log("settings",settings);
+          if(settings.length > 0) {
+
+            setEps(settings[0]||0.075);
+            setMinPts(settings[1]||1);
+            setUseTimeEps(settings[2]||false);
+            setTimeEps(settings[3]||2000);
+
+          }
         })
       })
       setOperation(operation);
@@ -65,7 +73,7 @@ export default function DBScanClustering({ data }: IProps) {
     await operation.setSettings([eps, minPts,]);
     await operation.retriggerOperationChainForward().then(async () => {
       console.log((await operation.getData()).length)
-          setEntriesLoaded((await operation.getData()).length);
+          setEntriesLoaded((await operation.getDisplayableData()).entries);
     });
   };
 
@@ -98,25 +106,29 @@ export default function DBScanClustering({ data }: IProps) {
           <Col>
             <>
               <Form.Group>
-                <Form.Label htmlFor="inputPassword5">EPS</Form.Label>
+                <Form.Label htmlFor="inputPassword5">Epsilon </Form.Label>
                 <Form.Control
                   type="number"
                   id="PersonIdSelection"
-                  defaultValue={eps}
                   value={eps || ''}
                   onChange={(e) => {
                     setEps(parseInt(e.target.value, 10));
                   }}
                 />
+                <br/>
+                <Form.Label htmlFor="inputPassword5">Minimum Points</Form.Label>
+
                 <Form.Control
                   type="number"
                   id="PersonIdSelection"
-                  defaultValue={minPts}
                   value={minPts || ''}
                   onChange={(e) => {
                     setMinPts(parseInt(e.target.value, 10));
                   }}
                 />
+                <br/>
+
+                <Form.Label htmlFor="inputPassword5">Use Time Parameter</Form.Label>
                 <Form.Check
                   type="switch"
                   id="custom-switch"
@@ -126,11 +138,12 @@ export default function DBScanClustering({ data }: IProps) {
                     setUseTimeEps(e.target.checked);
                   }}
                 />
+                <br/>
+                <Form.Label htmlFor="inputPassword5">Time Parameter</Form.Label>
                 {useTimeEps && (
                   <Form.Control
                     type="number"
                     id="PersonIdSelection"
-                    defaultValue={timeEps}
                     value={timeEps || ''}
                     onChange={(e) => {
                       setTimeEps(parseInt(e.target.value, 10));

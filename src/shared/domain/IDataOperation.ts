@@ -1,4 +1,5 @@
 import { IDataPointMovement } from './Interfaces';
+import { IDisplayableData } from './IOperationMetaData';
 
 export default interface IDataOperation {
   getId(): Promise<string>;
@@ -21,5 +22,5 @@ export default interface IDataOperation {
 
   getTarget(): Promise<IDataOperation>;
 
-  getMetaData(): Promise<IOperationMeta>;
+  getDisplayableData(): Promise<IDisplayableData>;
 }

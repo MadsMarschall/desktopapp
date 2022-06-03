@@ -1,7 +1,7 @@
 import IDataOperationProxy from '../../shared/domain/IDataOperationProxy';
 import { IDataPointMovement } from '../../shared/domain/Interfaces';
 import IDataOperation from '../../shared/domain/IDataOperation';
-import { IOperationMeta } from '../../shared/domain/IOperationMetaData';
+import { IDisplayableData } from '../../shared/domain/IOperationMetaData';
 
 export default class DataOperationErrorObject implements IDataOperationProxy {
   getData(): Promise<IDataPointMovement[]> {
@@ -52,7 +52,7 @@ export default class DataOperationErrorObject implements IDataOperationProxy {
     return Promise.resolve([]);
   }
 
-  getMetaData(): Promise<IOperationMeta> {
+  getDisplayableData(): Promise<IDisplayableData> {
     return Promise.reject(new Error('Error'));
   }
 }

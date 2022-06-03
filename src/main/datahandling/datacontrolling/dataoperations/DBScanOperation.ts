@@ -1,28 +1,35 @@
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import IsNullObject from './IsNullObject';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
-import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
+import { IClusterPosition, IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
+import jDBSCAN from './dbscan/DBScan';
 
 export default class TimeSliderOperation implements IDataOperation {
   private inputOperation: IDataOperation;
 
   private outputData: IDataPointMovement[] = [];
 
-  private settings: any[] = [0, 9999999999999];
+  private settings: any[] = [0.075, 1, false, 2000];
+  private eps: number = 30;
+  private minPts: number = 1;
+  private useTime: boolean = false;
+  private timeEps: number = 2000;
+  private clusterPositions:IClusterPosition[] = [];
+
 
   private targetOperation: IDataOperation;
 
   private readonly id: string;
 
-  constructor(inputOperation: IDataOperation, id:string) {
+  constructor(inputOperation: IDataOperation, id: string) {
     this.id = id;
     this.targetOperation = new IsNullObject();
     this.inputOperation = inputOperation;
   }
 
   getSettings(): Promise<any[]> {
-        return Promise.resolve(this.settings);
-    }
+    return Promise.resolve(this.settings);
+  }
 
   getData(): Promise<IDataPointMovement[]> {
     return Promise.resolve(this.outputData);
@@ -54,12 +61,11 @@ export default class TimeSliderOperation implements IDataOperation {
   }
 
   setSettings(settings: any[]): Promise<boolean> {
-    const maxAndMinPresent: boolean = settings.length === 2;
-    if (!maxAndMinPresent) return Promise.resolve(false);
-    if (settings.find((e) => typeof e !== 'number'))
-      return Promise.resolve(false);
     this.settings = settings;
-    console.log('Recieved settings:', settings);
+    this.eps = this.settings[0];
+    this.minPts = this.settings[1];
+    this.useTime = this.settings[2];
+    this.timeEps = this.settings[3];
     return Promise.resolve(true);
   }
 
@@ -75,13 +81,34 @@ export default class TimeSliderOperation implements IDataOperation {
 
   triggerOperation(): Promise<void> {
     return new Promise<void>(async (resolve) => {
-      const data: IDataPointMovement[] = await this.inputOperation.getData();
-      this.outputData = data.filter((e) => {
-        const time = e.timestamp.getTime();
-        const isLargerThanLowerBound: boolean = time >= this.settings[0];
-        const isSmallerThanUpperBound: boolean = time <= this.settings[1];
-        return isLargerThanLowerBound && isSmallerThanUpperBound;
+      await this.inputOperation.getData().then((data) => {
+        let result: Function;
+        if (this.useTime) {
+          result = jDBSCAN()
+            //@ts-ignore
+            .eps(this.eps)
+            .minPts(this.minPts)
+            .distance('EUCLIDEAN')
+            .timeEps(this.timeEps)
+            .data(data);
+        } else {
+          result = jDBSCAN()
+            //@ts-ignore
+            .eps(this.eps)
+            .minPts(this.minPts)
+            .distance('EUCLIDEAN')
+            .data(data);
+        }
+        this.outputData = result().map((cluster: any) => {
+          return {
+            ...data,
+            clusterId: cluster.id,
+          }
+        })
+        // @ts-ignore
+        this.clusterPositions= result.getClusters()
       });
+
       resolve();
     });
   }
@@ -98,14 +125,16 @@ export default class TimeSliderOperation implements IDataOperation {
   getId(): Promise<string> {
     return Promise.resolve(this.id);
   }
-  async getMetaData(): Promise<IOperationMeta> {
-    const result: IOperationMeta = {
+
+  async getDisplayableData(): Promise<IDisplayableData> {
+    const result: IDisplayableData = {
       entries: this.outputData.length,
       id: this.id,
       name: await this.getType(),
       sourceOperationId: await this.inputOperation.getId(),
       targetOperationId: await this.targetOperation.getId(),
-      settings: this.settings
+      settings: this.settings,
+      clusterPositions:this.clusterPositions
     };
     return Promise.resolve(result);
   }

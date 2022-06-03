@@ -1,20 +1,20 @@
-import IsNullObject from './IsNullObject';
 import IDataOperation from '../../../../shared/domain/IDataOperation';
-import IObserver from '../../../../shared/domain/IObserver';
-import ISubject from '../../../../shared/domain/ISubject';
+import IsNullObject from './IsNullObject';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
-import { IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
+import { IClusterPosition, IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
+import jDBSCAN from './dbscan/DBScan';
+import { ChartDataset } from 'chart.js';
 
-export default class TimePlayerOperation implements IDataOperation, ISubject {
+export default class CharQueryOperation implements IDataOperation {
   private inputOperation: IDataOperation;
 
   private outputData: IDataPointMovement[] = [];
 
-  private settings: any[] = [0];
+  private settings: any[] = [0.075, 1, false, 2000];
+  private filteredData
+  private charjsData: ChartDataset[] = [];
 
   private targetOperation: IDataOperation;
-
-  private observers: IObserver[] = [];
 
   private readonly id: string;
 
@@ -24,9 +24,9 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
     this.inputOperation = inputOperation;
   }
 
-  getId(): Promise<string> {
-        return Promise.resolve(this.id);
-    }
+  getSettings(): Promise<any[]> {
+    return Promise.resolve(this.settings);
+  }
 
   getData(): Promise<IDataPointMovement[]> {
     return Promise.resolve(this.outputData);
@@ -37,7 +37,7 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
   }
 
   getType(): Promise<string> {
-    return Promise.resolve(TimePlayerOperation.name);
+    return Promise.resolve(CharQueryOperation.name);
   }
 
   retriggerOperationChainBackward(): Promise<void> {
@@ -49,36 +49,45 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
   }
 
   retriggerOperationChainForward(): Promise<void> {
-    return new Promise(async () => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve) => {
       await this.triggerOperation();
       await this.targetOperation.retriggerOperationChainForward();
+      resolve();
     });
   }
 
   setSettings(settings: any[]): Promise<boolean> {
-    const settingsPresent: boolean = settings.length === 0;
-    if (!settingsPresent) return Promise.resolve(false);
+    this.settings = settings;
     return Promise.resolve(true);
   }
 
-  async setSource(source: IDataOperation): Promise<void> {
+  setSource(source: IDataOperation): Promise<void> {
+    console.log(
+      source.getType(),
+      ' is connected to:',
+      CharQueryOperation.name
+    );
     this.inputOperation = source;
-    const data: IDataPointMovement[] = await source.getData();
-    if (data.length < 1) return Promise.resolve();
-    this.settings = [this.inputOperation.getData()[0].timestamp.getTime()];
     return Promise.resolve();
   }
 
   triggerOperation(): Promise<void> {
     return new Promise<void>(async (resolve) => {
-      const data = await this.inputOperation.getData();
-      const temp = data.filter((e) => {
-        const time = e.timestamp.getTime();
-        return time === this.settings[0];
-      });
-      if (temp.length === 0) resolve();
-      this.outputData = temp;
-      this.notifyObservers();
+      let xAxis:string = this.settings[0]
+      let yAxis:string = this.settings[1]
+      await this.inputOperation.getData().then((data) => {
+        let grouping = data.reduce( function(hash) {
+          return function(r:any[], o) {
+            if (!hash[o[xAxis]]) {
+              hash[o[xAxis]] = [];
+              r.push(hash[o[xAxis]]);
+            }
+            hash[o[xAxis]].push(o[yAxis]);
+            return r;
+          };
+        }(Object.create(null)), []);
+      })
       resolve();
     });
   }
@@ -92,17 +101,10 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
     return Promise.resolve();
   }
 
-  addObserver(obs: IObserver): void {
-    this.observers.push(obs);
+  getId(): Promise<string> {
+    return Promise.resolve(this.id);
   }
 
-  notifyObservers(): void {
-    this.observers.forEach((obs) => obs.update());
-  }
-
-  getSettings(): Promise<any[]> {
-    return Promise.resolve(this.settings);
-  }
   async getDisplayableData(): Promise<IDisplayableData> {
     const result: IDisplayableData = {
       entries: this.outputData.length,
@@ -110,7 +112,8 @@ export default class TimePlayerOperation implements IDataOperation, ISubject {
       name: await this.getType(),
       sourceOperationId: await this.inputOperation.getId(),
       targetOperationId: await this.targetOperation.getId(),
-      settings: this.settings
+      settings: this.settings,
+      clusterPositions: (await this.inputOperation.getDisplayableData()).clusterPositions || undefined
     };
     return Promise.resolve(result);
   }

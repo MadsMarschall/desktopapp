@@ -10,6 +10,10 @@ import SortDataOperation from './dataoperations/SortDataOperation';
 import TimeSliderOperation from './dataoperations/TimeSliderOperation';
 import DataOperationLoggerDecorator from './decorators/DataOperationLoggerDecorator';
 import SelectByDayOperation from './dataoperations/SelectByDayOperation';
+import DBScan from './dataoperations/dbscan/DBScan';
+import DBScanOperation from './dataoperations/DBScanOperation';
+import TimeFilteringOperation from './dataoperations/TimeFilteringOperation';
+import DataOperationErrorLogger from '../../../shared/datatools/DataOperationErrorLogger';
 
 export default class DataOperationChainController
   implements IDataOperationChainController
@@ -50,11 +54,18 @@ export default class DataOperationChainController
       case OperationIds.SELECT_BY_DAY:
         operation = new SelectByDayOperation(new IsNullObject(),id);
         break;
+      case OperationIds.DBSCAN_CLUSTERING:
+        operation = new DBScanOperation(new IsNullObject(),id);
+        break;
+      case OperationIds.TIME_FILTERING_OPERATION:
+        operation = new TimeFilteringOperation(new IsNullObject(),id);
+        break;
       default:
         operation = new IsNullObject();
     }
     const loggedOperation = new DataOperationLoggerDecorator(operation);
-    this.dataOperations.set(id, loggedOperation);
+    const errorHandler = new DataOperationErrorLogger(loggedOperation);
+    this.dataOperations.set(id, errorHandler);
     return Promise.resolve(loggedOperation);
   }
 

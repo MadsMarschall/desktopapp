@@ -2,20 +2,22 @@ import IDataOperation from '../../shared/domain/IDataOperation';
 import { IDataPointMovement } from '../../shared/domain/Interfaces';
 import IsNullObject from '../../main/datahandling/datacontrolling/dataoperations/IsNullObject';
 import IDataOperationProxy from '../../shared/domain/IDataOperationProxy';
-import { IOperationMeta } from '../../shared/domain/IOperationMetaData';
+import { IDisplayableData } from '../../shared/domain/IOperationMetaData';
 
 export default class DataOperationSpy implements IDataOperationProxy {
   public spyStorage: unknown[];
 
   public id: string = '';
+  private outputData: IDataPointMovement[];
 
   constructor(spyStorage: unknown[]) {
+    this.outputData = [];
     this.spyStorage = spyStorage;
   }
 
-  getMetaData(): Promise<IOperationMeta> {
-    this.spyStorage.push(this.getMetaData.name);
-    let meta: IOperationMeta = {
+  getDisplayableData(): Promise<IDisplayableData> {
+    this.spyStorage.push(this.getDisplayableData.name);
+    let meta: IDisplayableData = {
       entries: 0, id: '', name: '', settings: [], sourceOperationId: '', targetOperationId: ''
     }
     return Promise.resolve(meta);
@@ -24,7 +26,7 @@ export default class DataOperationSpy implements IDataOperationProxy {
 
   getData(): Promise<IDataPointMovement[]> {
     this.spyStorage.push(this.getData.name);
-    return Promise.resolve([]);
+    return Promise.resolve(this.outputData);
   }
 
   getSource(): Promise<IDataOperation> {
@@ -84,5 +86,10 @@ export default class DataOperationSpy implements IDataOperationProxy {
   getSettings(): Promise<any[]> {
     this.spyStorage.push(this.getSettings.name);
     return Promise.resolve([]);
+  }
+
+  setData(data: IDataPointMovement[]) {
+    this.outputData = data;
+
   }
 }

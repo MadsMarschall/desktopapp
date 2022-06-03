@@ -3,7 +3,7 @@ import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 import IsNullObject from './IsNullObject';
 import { SortBy, TableIndexing, TableNames } from '../../../../shared/Constants';
 import { dbController } from '../../utilities/DataBaseController';
-import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
+import { IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
 
 export default class SelectByDayOperation implements IDataOperation {
   private inputOperation: IDataOperation;
@@ -105,8 +105,8 @@ export default class SelectByDayOperation implements IDataOperation {
     if (this.settings.length < 1) return false;
     return true;
   }
-  async getMetaData(): Promise<IOperationMeta> {
-    const result: IOperationMeta = {
+  async getDisplayableData(): Promise<IDisplayableData> {
+    const result: IDisplayableData = {
       entries: this.outputData.length,
       id: this.id,
       name: await this.getType(),

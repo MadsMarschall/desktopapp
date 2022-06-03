@@ -27,14 +27,16 @@ import { OperationIds } from '../../../../shared/Constants';
 import { ChainControllerContext } from '../../../context/broker';
 import ConnectionLine from '../edges/ConnectionLine';
 import SelectByDayNode from '../Nodes/SelectByDayNode';
+import DBScanClusteringNode from '../Nodes/DBScanClusteringNode';
+import TimeFilteringNode from '../Nodes/TimeFilteringNode';
 
 const nodeTypes = {
   dataSource: DataSourceNode,
   map: MapNode,
   selector: SelectorNode,
-  timeSlider: TimeSliderNode,
-  timePlayer: TimePlayerNode,
-  selectByDay:SelectByDayNode
+  timeFiltering: TimeFilteringNode,
+  selectByDay:SelectByDayNode,
+  dbScanClustering: DBScanClusteringNode,
 };
 
 const id = 10;

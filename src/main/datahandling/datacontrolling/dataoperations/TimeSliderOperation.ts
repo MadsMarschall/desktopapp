@@ -1,7 +1,7 @@
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import IsNullObject from './IsNullObject';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
-import { IOperationMeta } from '../../../../shared/domain/IOperationMetaData';
+import { IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
 
 export default class TimeSliderOperation implements IDataOperation {
   private inputOperation: IDataOperation;
@@ -98,8 +98,8 @@ export default class TimeSliderOperation implements IDataOperation {
   getId(): Promise<string> {
     return Promise.resolve(this.id);
   }
-  async getMetaData(): Promise<IOperationMeta> {
-    const result: IOperationMeta = {
+  async getDisplayableData(): Promise<IDisplayableData> {
+    const result: IDisplayableData = {
       entries: this.outputData.length,
       id: this.id,
       name: await this.getType(),

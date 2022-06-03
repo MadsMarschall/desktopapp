@@ -8,6 +8,7 @@ export enum OperationIds {
   TIME_PLAYER = 'TIME_PLAYER',
   SELECT_BY_DAY = 'SELECT_BY_DAY',
   DBSCAN_CLUSTERING = 'DBSCAN_CLUSTERING',
+  TIME_FILTERING_OPERATION = 'TIME_FILTERING_OPERATION',
 }
 const DATAOPEARATION_PREFIX = 'DATAOPEARATION_';
 
@@ -31,10 +32,10 @@ export enum Methods {
 }
 
 export enum TableNames {
+  TEST,
   FRIDAY,
   SATURDAY,
   SUNDAY,
-  TEST,
 }
 
 export const IPCEvents = {
@@ -44,7 +45,8 @@ export const IPCEvents = {
 
 export const RemoteUrls = {
   SELECTOR_NODE:"/selector-node-controller",
-  DBSCAN_NODE: '/dbscan-node-controller',
+  DBSCAN_NODE: '/dbscan-node-controller', TIME_FILTERING: '/time-filtering-controller',
+
 }
 
 export const PHONE_CONTROLLER_BASE_URL = 'http://settings-controller.local';
