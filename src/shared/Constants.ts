@@ -7,6 +7,7 @@ export enum OperationIds {
   TIME_SLIDER = 'TIME_SLIDER',
   TIME_PLAYER = 'TIME_PLAYER',
   SELECT_BY_DAY = 'SELECT_BY_DAY',
+  DBSCAN_CLUSTERING = 'DBSCAN_CLUSTERING',
 }
 const DATAOPEARATION_PREFIX = 'DATAOPEARATION_';
 
@@ -42,7 +43,8 @@ export const IPCEvents = {
 }
 
 export const RemoteUrls = {
-  SELECTOR_NODE:"/selector-node-controller"
+  SELECTOR_NODE:"/selector-node-controller",
+  DBSCAN_NODE: '/dbscan-node-controller',
 }
 
 export const PHONE_CONTROLLER_BASE_URL = 'http://settings-controller.local';
