@@ -1,4 +1,4 @@
-import DataBaseController from '../../main/datahandling/utilities/DataBaseController';
+import DataBaseController from '../../main/datahandling/utilities/MySQLDatabaseControllerStrategy';
 import { TableNames } from '../../shared/Constants';
 
 let dataBaseController: DataBaseController;

@@ -2,7 +2,7 @@ import Trajectory from './Trajectory';
 import Cluster from './Cluster';
 import CMDPoint from './CMDPoint';
 import ClusterGen, { Parameter } from './ClusterGen';
-import DataBaseController from '../../../../utilities/DataBaseController';
+import DataBaseController from '../../../../utilities/MySQLDatabaseControllerStrategy';
 import { SortBy, TableIndexing, TableNames } from '../../../../../../shared/Constants';
 import { promises } from 'dns';
 import simplify from 'simplify-js';
