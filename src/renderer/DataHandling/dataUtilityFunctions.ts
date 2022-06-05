@@ -32,7 +32,7 @@ export const handleSourceNodeConnection = async (
       <string>connection.target
     )
   );
-  await sourceOperation.retriggerOperationChainForward();
+  //sourceOperation.retriggerOperationChainForward();
 };
 
 export const listenForMethods = (id:string,methods:Methods[], callback:(data)=>void) => {
