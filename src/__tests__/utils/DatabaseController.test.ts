@@ -12,6 +12,11 @@ test("workaround",()=>{
     expect(true).toBe(true);
 })
 
+test("can get by time interval", async () => {
+  const resut = await dataBaseController.getDataByTimeInterval(new Date("2014-06-06 18:09:34"),new Date("2014-06-06 18:14:04"),TableNames.FRIDAY);
+  expect(resut.length).toBeGreaterThan(4);
+})
+
 /*
 test('should be able to getSorted', async () => {
 

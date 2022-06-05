@@ -20,7 +20,6 @@ export interface ICSVInputObject {
 }
 
 
-
 export default class DataBaseController implements IDataBaseController {
   private readonly connectionPool: Pool;
 
@@ -30,9 +29,10 @@ export default class DataBaseController implements IDataBaseController {
       host: DATA_SOURCES.mySqlDataSource.DB_HOST,
       user: DATA_SOURCES.mySqlDataSource.DB_USER,
       database: DATA_SOURCES.mySqlDataSource.DB_DATABASE,
-      password: DATA_SOURCES.mySqlDataSource.DB_PASSWORD,
+      password: DATA_SOURCES.mySqlDataSource.DB_PASSWORD
     });
   }
+
 
   private execute = <T>(
     query: string,
@@ -74,7 +74,7 @@ export default class DataBaseController implements IDataBaseController {
         q = MovementDataQuieries.GET_ALL.test;
       if (!q) throw new Error('no query was selected');
       const result = await this.execute<{ affectedRows: number }>(q, [
-        PersonId,
+        PersonId
       ]);
       if (result == null) {
         reject('Could not get data from database');
@@ -93,7 +93,7 @@ export default class DataBaseController implements IDataBaseController {
       const config = {
         delimiter: '', // auto-detect
         header: true,
-        transformHeader: undefined,
+        transformHeader: undefined
       };
       const parseStream = Papa.parse(Papa.NODE_STREAM_INPUT, config);
       readStream.pipe(parseStream);
@@ -125,7 +125,7 @@ export default class DataBaseController implements IDataBaseController {
       object.id,
       object.type,
       object.X,
-      object.Y,
+      object.Y
     ]);
     return result.affectedRows > 0;
   }
@@ -133,8 +133,8 @@ export default class DataBaseController implements IDataBaseController {
   async getAllDataFromTable(
     SQLTableName: TableNames,
     sortBy: string[],
-    indexing:TableIndexing,
-      ...otherArgs
+    indexing: TableIndexing,
+    ...otherArgs
   ): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
       let q = '';
@@ -153,7 +153,7 @@ export default class DataBaseController implements IDataBaseController {
       otherArgs.forEach((arg) => {
         q += ` ${arg}`;
       });
-      console.log("query: ", q);
+      console.log('query: ', q);
 
       const result = (await this.execute<{ affectedRows: number }>(
         q,
@@ -166,14 +166,24 @@ export default class DataBaseController implements IDataBaseController {
       resolve(result as unknown as IDataPointMovement[]);
     });
   }
+
+  async getDataByTimeInterval(lowerBound: Date, upperBound: Date, SQLTableName: TableNames): Promise<IDataPointMovement[]> {
+    let q = `SELECT * FROM parkmovementfri where (timestamp between ? and ? )`;
+    const result = this.execute<IDataPointMovement[]>(q, [
+      lowerBound,
+      upperBound
+    ]);
+    return result;
+  }
+
   private getIndexingByRequest(
     SQLTableName: TableNames,
-    sortBy: SortBy,
+    sortBy: SortBy
   ): string {
     if (SQLTableName === TableNames.FRIDAY && sortBy === SortBy.Timestamp)
       return TableIndexing.FRIDAY_Timestamp;
     if (SQLTableName === TableNames.FRIDAY && sortBy === SortBy.PersonId)
-      return TableIndexing.FRIDAY_PersonId
+      return TableIndexing.FRIDAY_PersonId;
     if (SQLTableName === TableNames.SATURDAY && sortBy === SortBy.Timestamp)
       return TableIndexing.SATURDAY_Timestamp;
     if (SQLTableName === TableNames.SATURDAY && sortBy === SortBy.PersonId)
@@ -183,7 +193,7 @@ export default class DataBaseController implements IDataBaseController {
     if (SQLTableName === TableNames.SUNDAY && sortBy === SortBy.PersonId)
       return TableIndexing.SUNDAY_PersonId;
     else {
-      return ""
+      return '';
     }
 
   }
