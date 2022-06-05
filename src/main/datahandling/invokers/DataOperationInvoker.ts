@@ -1,9 +1,9 @@
 import IDataOperationChainController from '../../../shared/domain/IDataOperationController';
 import IInvoker from '../../../shared/domain/IInvoker';
 import IDataOperation from '../../../shared/domain/IDataOperation';
-import {ipcMain} from 'electron';
+import { ipcMain } from 'electron';
 import { IPCEvents, Methods } from '../../../shared/Constants';
-import {BrowserWindow} from 'electron';
+import { BrowserWindow } from 'electron';
 
 export default class DataOperationInvoker implements IInvoker {
   private dataOperationChainController: IDataOperationChainController;
@@ -23,10 +23,10 @@ export default class DataOperationInvoker implements IInvoker {
     let result: Promise<unknown> = Promise.resolve();
     switch (method) {
       case Methods.DATA_OPERATION_GET_DATA:
-        result = operation.getData();
+        result =  operation.getData();
         break;
       case Methods.DATAOPERATION_GET_TYPE:
-        result = operation.getType();
+        result =  operation.getType();
         break;
       case Methods.DATA_OPERATION_TRIGGER_OPERATION:
         result = operation.triggerOperation();
@@ -38,27 +38,24 @@ export default class DataOperationInvoker implements IInvoker {
         result = operation.retriggerOperationChainForward();
         break;
       case Methods.DATA_OPERATION_GET_SOURCE:
-        let sourceOperationId = operation.getSource().then(source => source.getId())
-        result = sourceOperationId;
+        result = operation.getSource().then(source => source.getId());
         break;
       case Methods.DATA_OPERATION_GET_TARGET:
-        let targetOperationId = operation.getTarget().then(target => target.getId())
-        result = targetOperationId;
+        result = operation.getTarget().then(target => target.getId());
         break;
       case Methods.DATA_OPERATION_SET_SETTINGS:
-        operation.setSettings(args);
+        result = operation.setSettings(args);
         break;
       case Methods.DATA_OPERATION_SET_TARGET:
         // eslint-disable-next-line no-case-declarations
         const targetOperation: IDataOperation =
           await this.dataOperationChainController.getOperationByNodeId(args[0]);
-        operation.setTarget(targetOperation);
+        result = operation.setTarget(targetOperation);
         break;
       case Methods.DATA_OPERATION_SET_SOURCE:
         // eslint-disable-next-line no-case-declarations
-        const sourceOperation: IDataOperation =
-          await this.dataOperationChainController.getOperationByNodeId(args[0]);
-        operation.setSource(sourceOperation);
+        const sourceOperation: IDataOperation = await this.dataOperationChainController.getOperationByNodeId(args[0]);
+        result = operation.setSource(sourceOperation);
         break;
       case Methods.DATA_OPERATION_GET_SETTINGS:
         result = operation.getSettings();
@@ -70,23 +67,23 @@ export default class DataOperationInvoker implements IInvoker {
         result = Promise.reject(new Error(`Method ${method} is not supported`));
         break;
     }
-    await result.then(()=>{
-      if(BrowserWindow){
-        console.log('sending update');
+    result.then(()=>{
+      if (BrowserWindow) {
+        console.log('sending update: '+id + method);
         BrowserWindow.getAllWindows().forEach(win => {
-          win.webContents.send(IPCEvents.UPDATE_BY_ID_AND_METHOD+id+method, id, method);
+          win.webContents.send(IPCEvents.UPDATE_BY_ID_AND_METHOD + id + method, id, method);
         });
       }
 
-      let isFowrdTriggerMethod:boolean = Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD === method
-      if(!isFowrdTriggerMethod) return;
+      let isFowrdTriggerMethod: boolean = Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD === method;
+      if (!isFowrdTriggerMethod) return;
 
-      if(BrowserWindow && BrowserWindow.getFocusedWindow()){
+      if (BrowserWindow && BrowserWindow.getFocusedWindow()) {
         console.log('sending update');
         BrowserWindow.getFocusedWindow()!.webContents.send(IPCEvents.UPDATE);
       }
     })
 
-    return result;
+    return result
   }
 }

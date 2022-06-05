@@ -10,6 +10,7 @@ import TimeFilteringController from './components/TimeFilteringController';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import momentTimezone from 'moment-timezone';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import SelectByTimeAndDayController from './components/SelectByTimeAndDayController';
 
 export default function RemoteApp() {
   const timeZoneFromServer = "CST/CDT";
@@ -35,6 +36,10 @@ export default function RemoteApp() {
               <Route
                 path={RemoteUrls.TIME_FILTERING}
                 element={<TimeFilteringController />}
+              />
+              <Route
+                path={RemoteUrls.SELECT_BY_TIME_AND_DAY}
+                element={<SelectByTimeAndDayController />}
               />
             </Routes>
           </IpcSocketContext.Provider>

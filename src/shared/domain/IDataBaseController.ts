@@ -20,4 +20,5 @@ export default interface IDataBaseController {
   ): Promise<boolean>;
 
   getAllDataFromTable(SQLTableName: TableNames,sortBy:SortBy,indexing:TableIndexing): Promise<IDataPointMovement[]>;
+  getDataByTimeInterval(lowerBound:Date, upperBound:Date, SQLTableName: TableNames): Promise<IDataPointMovement[]>;
 }

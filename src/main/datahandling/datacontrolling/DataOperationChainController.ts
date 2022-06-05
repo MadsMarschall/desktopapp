@@ -14,6 +14,9 @@ import DBScan from './dataoperations/dbscan/DBScan';
 import DBScanOperation from './dataoperations/DBScanOperation';
 import TimeFilteringOperation from './dataoperations/TimeFilteringOperation';
 import DataOperationErrorLogger from '../../../shared/datatools/DataOperationErrorLogger';
+import ClusterMapDisplayOperation from './dataoperations/ClusterMapDisplayOperation';
+import SelectByTimeAndDay from './dataoperations/SelectByDayAndTimeOperation';
+import SelectByDayAndTimeOperation from './dataoperations/SelectByDayAndTimeOperation';
 
 export default class DataOperationChainController
   implements IDataOperationChainController
@@ -46,7 +49,7 @@ export default class DataOperationChainController
         operation = new MapDisplayOperation(new IsNullObject(),id);
         break;
       case OperationIds.TIME_SLIDER:
-        operation = new TimeSliderOperation(new IsNullObject(),id);
+        operation = new IsNullObject();
         break;
       case OperationIds.TIME_PLAYER:
         operation = new TimePlayerOperation(new IsNullObject(),id);
@@ -59,6 +62,12 @@ export default class DataOperationChainController
         break;
       case OperationIds.TIME_FILTERING_OPERATION:
         operation = new TimeFilteringOperation(new IsNullObject(),id);
+        break;
+      case OperationIds.CLUSTER_MAP_DISPLAY:
+        operation = new ClusterMapDisplayOperation(new IsNullObject(),id);
+        break;
+      case OperationIds.SELECT_BY_TIME_AND_DAY:
+        operation = new SelectByDayAndTimeOperation(new IsNullObject(),id);
         break;
       default:
         operation = new IsNullObject();

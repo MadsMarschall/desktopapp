@@ -18,30 +18,31 @@ import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import DataSourceNode from '../Nodes/DataSourceNode';
 import Sidebar from '../UI/Sidebar';
-import DataOperationChainController from '../../../../shared/datatools/DataOperationChainControllerProxy';
 import MapNode from '../Nodes/MapNode';
 import SelectorNode from '../Nodes/SelectorNode';
-import TimeSliderNode from '../Nodes/TimeSliderNode';
-import TimePlayerNode from '../Nodes/TimePlayerNode';
-import { OperationIds } from '../../../../shared/Constants';
 import { ChainControllerContext } from '../../../context/broker';
 import ConnectionLine from '../edges/ConnectionLine';
 import SelectByDayNode from '../Nodes/SelectByDayNode';
 import DBScanClusteringNode from '../Nodes/DBScanClusteringNode';
 import TimeFilteringNode from '../Nodes/TimeFilteringNode';
+import ClusterMapNode from '../Nodes/ClusterMapNode';
+import QuerySpecificNode from '../Nodes/QuerySpecificNode';
+import SelectByDayAndTimeNode from '../Nodes/SelectByDayAndTimeNode';
 
 const nodeTypes = {
   dataSource: DataSourceNode,
   map: MapNode,
+  clusterMap: ClusterMapNode,
   selector: SelectorNode,
   timeFiltering: TimeFilteringNode,
   selectByDay:SelectByDayNode,
   dbScanClustering: DBScanClusteringNode,
+  querySpecific: QuerySpecificNode,
+  selectByDayAndTime: SelectByDayAndTimeNode
 };
 
 const id = 10;
 export default function VastChallengeOneView() {
-  const chainController = useContext(ChainControllerContext);
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);

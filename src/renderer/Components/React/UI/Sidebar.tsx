@@ -11,52 +11,74 @@ export default () => {
   };
 
   return (
-    <Container >
+    <Container fluid className="w-100">
       <Row>
         <Col xs={12}>
-          <div className="p-2 m-2 description">
-           <h2> Drag and drop nodes to use them</h2>
+          <div className='p-2 m-2 description'>
+            <h2> Drag and drop nodes to use them</h2>
           </div>
         </Col>
       </Row>
       <Row>
-      <Col xs={3}
-        className="bg-light p-2 m-2 node"
-        onDragStart={(event:any) => onDragStart(event, 'map')}
-        draggable
-      >
-        Map Node
-      </Col>
-      <Col xs={3}
-        className="bg-light p-2 m-2 node"
-        onDragStart={(event:any) => onDragStart(event, 'selector')}
-        draggable
-      >
-        Selector Node
-      </Col>
-      <Col xs={3}
-        className="bg-light p-2 m-2 node"
-        onDragStart={(event:any) => onDragStart(event, 'selectByDay')}
-        draggable
-      >
-        Select by Day Node
-      </Col>
-        <Col xs={3}
-             className="bg-light p-2 m-2 node"
-             onDragStart={(event:any) => onDragStart(event, 'dbScanClustering')}
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'map')}
+             draggable
+        >
+          Map Node
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'selector')}
+             draggable
+        >
+          Selector by Person Id
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'selectByDay')}
+             draggable
+        >
+          Select by Day Node
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'dbScanClustering')}
              draggable
         >
           DBScan Clustering Node
         </Col>
-        <Col xs={3}
-             className="bg-light p-2 m-2 node"
-             onDragStart={(event:any) => onDragStart(event, 'timeFiltering')}
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'timeFiltering')}
              draggable
         >
           Time Filtering Node
         </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'clusterMap')}
+             draggable
+        >
+          Cluster Map Node
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'querySpecific')}
+             draggable
+        >
+          Query Specific from DB
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'selectByDayAndTime')}
+             draggable
+        >
+          Select by Day and Time Node
+        </Col>
 
       </Row>
+
     </Container>
   );
 };

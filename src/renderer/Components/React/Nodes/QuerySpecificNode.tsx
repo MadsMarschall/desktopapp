@@ -7,6 +7,14 @@ import { handleSourceNodeConnection, listenForMethods } from '../../../DataHandl
 import { Methods, OperationIds, PHONE_CONTROLLER_BASE_URL, RemoteUrls, TableNames } from '../../../../shared/Constants';
 import { ChainControllerContext } from '../../../context/broker';
 import IDataOperation from '../../../../shared/domain/IDataOperation';
+import { formatQuery, RuleGroupType, Field, QueryBuilder } from 'react-querybuilder';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { materialControlElements } from '@react-querybuilder/material';
+import QuerySpecific from '../helperComponents/QuerySpecific';
+
+
+
+
 
 type IProps = {
   data: {
@@ -15,8 +23,8 @@ type IProps = {
   };
 };
 
-export default function SelectorNode({ data }: IProps) {
-  const [PersonId, setPersonId] = useState<number>(0);
+
+export default function QuerySpecificNode({ data }: IProps) {
   const [SelectedTable, setSelectedTable] = useState<TableNames>(
     TableNames.TEST
   );
@@ -26,47 +34,35 @@ export default function SelectorNode({ data }: IProps) {
 
   function onMount() {
     dataOperationChainControllerProxy.createOperationNode(
-      OperationIds.SELECT_FROM_DB,
+      OperationIds.SELECT_BY_DAY,
       data.id
     ).then((operation) => {
       listenForMethods(
         data.id,
         [Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD],
         (data) => {
-          operation.getData().then((data) => {
-            setEntriesLoaded(data.length);
+          operation.getDisplayableData().then((data) => {
+            setEntriesLoaded(data.entries);
           });
-        })
+        });
 
-      listenForMethods(data.id,[Methods.DATA_OPERATION_SET_SETTINGS],(data)=>{
-        if(!operation) {
-          console.log("Operation not found");
+      listenForMethods(data.id, [Methods.DATA_OPERATION_SET_SETTINGS], (data) => {
+        if (!operation) {
+          console.log('Operation not found');
           return;
         }
-        operation.getSettings().then((settings:any[])=>{
-          setPersonId(settings[1]);
+        operation.getSettings().then((settings: any[]) => {
+          console.log(settings);
+          if (!settings || settings.length === 0) {
+            console.log('No settings found');
+            return;
+          }
           setSelectedTable(settings[0]);
-          console.log("settings",settings);
-        })
-      })
+          console.log('settings', settings);
+        });
+      });
       setOperation(operation);
     });
-
-    /*
-    const settingsChannel = IPCEvents.UPDATE_BY_ID_AND_METHOD+data.id+Methods.DATA_OPERATION_SET_SETTINGS
-    window.electron.ipcRenderer.on(settingsChannel, ()=>{
-      if(!operation) {
-        console.log("Operation not found");
-        return;
-      }
-      operation.getSettings().then((settings:any[])=>{
-        setPersonId(settings[1]);
-        setSelectedTable(settings[0]);
-        console.log("settings",settings);
-      })
-    })
-
-     */
   }
 
   useEffect(onMount, []);
@@ -75,24 +71,25 @@ export default function SelectorNode({ data }: IProps) {
 
   const handleClick = async () => {
     if (!SelectedTable) return;
-    if (!PersonId) return;
     if (!operation) return;
-    await operation.setSettings([SelectedTable, PersonId]);
-    await operation.retriggerOperationChainForward().then(async () => {
-      console.log((await operation.getData()).length)
-          setEntriesLoaded((await operation.getData()).length);
+    await operation.setSettings([SelectedTable]);
+    console.log(SelectedTable);
+    operation.retriggerOperationChainForward().then(async () => {
+      operation.getDisplayableData().then((metaData) => {
+        setEntriesLoaded(metaData.entries);
+      });
     });
   };
 
 
-  const parametersAreSelected =
-    PersonId === undefined && SelectedTable === undefined;
+
+  const parametersAreSelected = SelectedTable === undefined;
   return (
-    <div className="selectorNode">
+    <div className='selectorNode'>
       <Handle
-        type="source"
+        type='source'
         position={Position.Right}
-        id="b"
+        id='b'
         onConnect={async (params) => {
           handleSourceNodeConnection(
             params,
@@ -103,32 +100,15 @@ export default function SelectorNode({ data }: IProps) {
         }}
       />
       <div>
-        <Row className="bg-info p-4 m-4">
-          <Col>
-            <div style={{ background: 'white', padding: '16px' }}>
-              {/* @ts-ignore */}
-              <QRCode
-                value={`${PHONE_CONTROLLER_BASE_URL}${RemoteUrls.SELECTOR_NODE}?nodeId=${data.id}`}
-              />
-            </div>
-          </Col>
-          <Col>
+        <Row className='bg-info p-4 m-4'>
+          <Col style={{minWidth:"20em"}}>
             <>
               <Form.Group>
-                <Form.Label htmlFor="inputPassword5">Select Person</Form.Label>
-                <Form.Control
-                  type="number"
-                  id="PersonIdSelection"
-                  placeholder="Type in PersonId"
-                  value={PersonId || ''}
-                  onChange={(e) => {
-                    setPersonId(parseInt(e.target.value, 10));
-                  }}
-                />
+                <Form.Label htmlFor='inputPassword5'>Select Day</Form.Label>
                 <Form.Select
                   required
-                  className="mt-2"
-                  aria-label="Default select example"
+                  className='mt-2'
+                  aria-label='Default select example'
                   onChange={(e) => {
                     setSelectedTable(
                       e.target.value as TableNames
@@ -142,10 +122,15 @@ export default function SelectorNode({ data }: IProps) {
                   <option value={TableNames.SUNDAY}>Sunday</option>
                 </Form.Select>
               </Form.Group>
+              <>
+
+                <br/>
+                <QuerySpecific/>
+              </>
               <br />
               <Button
-                type="submit"
-                className="w-100 mb-2"
+                type='submit'
+                className='w-100 mb-2'
                 disabled={parametersAreSelected}
                 onClick={handleClick}
               >

@@ -82,11 +82,12 @@ export default class TimeFilteringOperation implements IDataOperation {
       const filterWorker = await spawn<FilterWorker>(new Worker('./workers/timeFilterWorker'));
 
       await this.inputOperation.getData().then(async (data) => {
-        this.outputData = await filterWorker.filterByTime(data, lowerBound, upperBound);
+
+        this.outputData = await filterWorker.filterByTime(data, lowerBound, upperBound)
       });
       console.log('TimeFilteringOperation finished');
       await Thread.terminate(filterWorker)
-
+      console.log(this.outputData.length)
       resolve();
     });
   }

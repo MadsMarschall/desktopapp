@@ -1,10 +1,12 @@
 /**
  * Webpack config for production electron main process
  */
-
+//@ts-ignore
 import path from 'path';
+//@ts-ignore
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
+// @ts-ignore
 import TerserPlugin from 'terser-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import baseConfig from './webpack.config.base';
