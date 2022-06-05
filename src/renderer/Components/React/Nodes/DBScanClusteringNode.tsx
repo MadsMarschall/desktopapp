@@ -37,8 +37,8 @@ export default function DBScanClusteringNode({ data }: IProps) {
         data.id,
         [Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD],
         (data) => {
-          operation.getData().then((data) => {
-            setEntriesLoaded(data.length);
+          operation.getDisplayableData().then((data) => {
+            setEntriesLoaded(data.entries);
           });
         })
 

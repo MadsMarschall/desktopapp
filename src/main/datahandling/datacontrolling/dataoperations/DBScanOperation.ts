@@ -3,6 +3,9 @@ import IsNullObject from './IsNullObject';
 import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
 import { IClusterPosition, IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
 import jDBSCAN from './dbscan/DBScan';
+import { spawn, Thread, Worker } from 'threads';
+import { FilterWorker } from './workers/timeFilterWorker';
+import { DbScanWorker } from './workers/dbScanWorker';
 
 export default class TimeSliderOperation implements IDataOperation {
   private inputOperation: IDataOperation;
@@ -14,7 +17,7 @@ export default class TimeSliderOperation implements IDataOperation {
   private minPts: number = 1;
   private useTime: boolean = false;
   private timeEps: number = 2000;
-  private clusterPositions:IClusterPosition[] = [];
+  private clusterPositions: IClusterPosition[] = [];
 
 
   private targetOperation: IDataOperation;
@@ -80,44 +83,43 @@ export default class TimeSliderOperation implements IDataOperation {
   }
 
   triggerOperation(): Promise<void> {
+    let result;
+
     return new Promise<void>(async (resolve) => {
-      await this.inputOperation.getData().then((data) => {
-        let result: Function;
-        if (this.useTime) {
-          result = jDBSCAN()
-            //@ts-ignore
-            .eps(this.eps)
-            .minPts(this.minPts)
-            .distance('EUCLIDEAN')
-            .timeEps(this.timeEps)
-            .data(data);
-        } else {
-          result = jDBSCAN()
-            //@ts-ignore
-            .eps(this.eps)
-            .minPts(this.minPts)
-            .distance('EUCLIDEAN')
-            .data(data);
+      const dbScanWorker = await spawn<DbScanWorker>(new Worker('./workers/dbScanWorker'));
+      await this.inputOperation.getData().then(async (data) => {
+        try {
+          result = await dbScanWorker.dbscan(data, this.eps, this.minPts, this.timeEps, this.useTime);
+
         }
-        this.outputData = result().map((cluster: any) => {
+        catch (error) {
+          console.error("Counter thread errored:", error)
+        } finally {
+          await Thread.terminate(dbScanWorker)
+        }
+        this.outputData = result.dp.map((cluster: any) => {
           return {
             ...data,
-            clusterId: cluster.id,
-          }
-        })
+            clusterId: cluster.id
+          };
+        })  as unknown as IDataPointMovement[];
         // @ts-ignore
-        this.clusterPositions= result.getClusters()
+        console.log(result);
+        this.clusterPositions = result.clusters;
       });
+
 
       resolve();
     });
+
   }
+
 
   getTarget(): Promise<IDataOperation> {
     return Promise.resolve(this.targetOperation);
   }
 
-  setTarget(target: IDataOperation): Promise<void> {
+  setTarget(target: IDataOperation) : Promise<void> {
     this.targetOperation = target;
     return Promise.resolve();
   }
@@ -127,14 +129,16 @@ export default class TimeSliderOperation implements IDataOperation {
   }
 
   async getDisplayableData(): Promise<IDisplayableData> {
-    const result: IDisplayableData = {
+    const result
+      :
+      IDisplayableData = {
       entries: this.outputData.length,
       id: this.id,
       name: await this.getType(),
       sourceOperationId: await this.inputOperation.getId(),
       targetOperationId: await this.targetOperation.getId(),
       settings: this.settings,
-      clusterPositions:this.clusterPositions
+      clusterPositions: this.clusterPositions
     };
     return Promise.resolve(result);
   }

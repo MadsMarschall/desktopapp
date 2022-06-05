@@ -34,6 +34,6 @@ test('can cluster IDataMovementPoints data', async ()=>{
     spyOperation.setData(moveData);
     await dbScanDataOperation.triggerOperation()
   await dbScanDataOperation.getData().then((data) => {
-    console.log(JSON.stringify(data));
+
   })
 })
