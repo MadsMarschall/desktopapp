@@ -10,5 +10,6 @@ export const DATA_SOURCES = {
     DB_CONNECTION_LIMIT: process.env.MY_SQL_DB_CONNECTION_LIMIT
       ? parseInt(process.env.MY_SQL_DB_CONNECTION_LIMIT, 10)
       : 4,
-  },
+  }, SQLITE_DB_PATH: 'database/ElectronDatabase.db'
+
 };

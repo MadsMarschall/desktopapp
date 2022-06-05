@@ -1,6 +1,6 @@
 import { SortBy, TableIndexing, TableNames } from '../Constants';
 import { IDataPointMovement } from './Interfaces';
-import { ICSVInputObject } from '../../main/datahandling/utilities/MySQLDatabaseControllerStrategy';
+import { ICSVInputObject } from '../../main/datahandling/utilities/DBStrategies/MySQLDatabaseControllerStrategy';
 
 export default interface IDataBaseController {
   getDataByPersonId(

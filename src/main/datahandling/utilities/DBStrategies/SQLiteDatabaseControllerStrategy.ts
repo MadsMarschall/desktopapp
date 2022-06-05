@@ -3,13 +3,18 @@ import { Pool } from 'mysql2';
 import * as path from 'path';
 import * as Papa from 'papaparse';
 import * as fs from 'fs';
-import { DATA_SOURCES } from './vars.config';
+import { DATA_SOURCES } from '../vars.config';
 
 // the following lines are necessary for JEST to be able to unit test
-import { MovementDataQuieries } from './MovementDataQuieries';
-import { SortBy, TableIndexing, TableNames } from '../../../shared/Constants';
-import { IDataPointMovement } from '../../../shared/domain/Interfaces';
-import IDataBaseController from '../../../shared/domain/IDataBaseController';
+import { SortBy, TableIndexing, TableNames } from '../../../../shared/Constants';
+import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
+import IDataBaseController from '../../../../shared/domain/IDataBaseController';
+import sqlite3 from 'sqlite3';
+import { Database, open } from 'sqlite';
+import { SQLiteMovementDataQuieries } from '../SQLMovementDataQuieries';
+
+
+sqlite3.verbose();
 
 export interface ICSVInputObject {
   Timestamp: string;
@@ -20,41 +25,43 @@ export interface ICSVInputObject {
 }
 
 
-export default class MySQLDatabaseControllerStrategy implements IDataBaseController {
-  private readonly connectionPool: Pool;
+export default class SQLiteDatabaseControllerStrategy implements IDataBaseController {
+  private db: Database | undefined;
 
   constructor() {
-    this.connectionPool = mysql.createPool({
-      connectionLimit: 100,
-      host: DATA_SOURCES.mySqlDataSource.DB_HOST,
-      user: DATA_SOURCES.mySqlDataSource.DB_USER,
-      database: DATA_SOURCES.mySqlDataSource.DB_DATABASE,
-      password: DATA_SOURCES.mySqlDataSource.DB_PASSWORD
+    this.init();
+  }
+
+  public async init() {
+    await open({
+      filename: DATA_SOURCES.SQLITE_DB_PATH,
+      driver: sqlite3.cached.Database
+    }).then((db) => {
+      this.db = db;
+    }).catch((err) => {
+      throw new Error(err);
     });
   }
 
 
   private execute = <T>(
     query: string,
-    params: string[] | Object
+    params: any[]
   ): Promise<T> => {
     try {
-      if (!this.connectionPool)
-        throw new Error(
-          'Pool was not created. Ensure pool is created when running the app.'
-        );
-      return new Promise<T>((resolve, reject) => {
-        this.connectionPool.query(query, params, (error, results) => {
-          if (error) reject(error);
-          else {
-            // @ts-ignore
-            resolve(results);
-          }
-        });
+
+      return new Promise<T>(async (resolve, reject) => {
+        if (!this.db) {
+          await this.init();
+        }
+        if (!this.db) return reject('Could not connect to database. Please check if the database is running');
+        this.db.all(query, ...params).then((rows) => {
+          resolve(rows as unknown as T);
+        })
       });
+
     } catch (error) {
-      console.error('[mysql.connector][execute][Error]: ', error);
-      throw new Error('failed to execute MySQL query');
+      return Promise.reject(error);
     }
   };
 
@@ -65,13 +72,13 @@ export default class MySQLDatabaseControllerStrategy implements IDataBaseControl
     return new Promise(async (resolve, reject) => {
       let q: string | null = null;
       if (SQLTableName === TableNames.FRIDAY)
-        q = MovementDataQuieries.GET_BY_PERSON_ID.friday;
+        q = SQLiteMovementDataQuieries.GET_BY_PERSON_ID.friday;
       if (SQLTableName === TableNames.SATURDAY)
-        q = MovementDataQuieries.GET_BY_PERSON_ID.saturday;
+        q = SQLiteMovementDataQuieries.GET_BY_PERSON_ID.saturday;
       if (SQLTableName === TableNames.SUNDAY)
-        q = MovementDataQuieries.GET_BY_PERSON_ID.sunday;
+        q = SQLiteMovementDataQuieries.GET_BY_PERSON_ID.sunday;
       if (SQLTableName === TableNames.TEST)
-        q = MovementDataQuieries.GET_ALL.test;
+        q = SQLiteMovementDataQuieries.GET_ALL.test;
       if (!q) throw new Error('no query was selected');
       const result = await this.execute<{ affectedRows: number }>(q, [
         PersonId
@@ -88,46 +95,15 @@ export default class MySQLDatabaseControllerStrategy implements IDataBaseControl
     pathToCSV: string,
     SQLTableName: TableNames
   ): Promise<void> {
-    return new Promise((resolve) => {
-      const readStream = fs.createReadStream(path.resolve(pathToCSV), 'utf8');
-      const config = {
-        delimiter: '', // auto-detect
-        header: true,
-        transformHeader: undefined
-      };
-      const parseStream = Papa.parse(Papa.NODE_STREAM_INPUT, config);
-      readStream.pipe(parseStream);
-
-      parseStream.on('data', (chunk: ICSVInputObject) => {
-        this.insertInDatabase(chunk, SQLTableName);
-      });
-      parseStream.on('finish', () => {
-        resolve();
-      });
-    });
+    throw new Error('Method not implemented.');
   }
 
   async insertInDatabase(
     object: ICSVInputObject,
     SQLTableName: TableNames
   ): Promise<boolean> {
-    let q = '';
-    if (SQLTableName === TableNames.FRIDAY)
-      q = MovementDataQuieries.INSERT.friday;
-    if (SQLTableName === TableNames.SATURDAY)
-      q = MovementDataQuieries.INSERT.saturday;
-    if (SQLTableName === TableNames.SUNDAY)
-      q = MovementDataQuieries.INSERT.sunday;
-    if (SQLTableName === TableNames.TEST) q = MovementDataQuieries.INSERT.test;
+    throw new Error('Method not implemented.');
 
-    const result = await this.execute<{ affectedRows: number }>(q, [
-      object.Timestamp,
-      object.id,
-      object.type,
-      object.X,
-      object.Y
-    ]);
-    return result.affectedRows > 0;
   }
 
   async getAllDataFromTable(
@@ -139,14 +115,13 @@ export default class MySQLDatabaseControllerStrategy implements IDataBaseControl
     return new Promise(async (resolve, reject) => {
       let q = '';
       if (SQLTableName === TableNames.FRIDAY)
-        q = MovementDataQuieries.GET_ALL.friday;
+        q = SQLiteMovementDataQuieries.GET_ALL.friday;
       if (SQLTableName === TableNames.SATURDAY)
-        q = MovementDataQuieries.GET_ALL.saturday;
+        q = SQLiteMovementDataQuieries.GET_ALL.saturday;
       if (SQLTableName === TableNames.SUNDAY)
-        q = MovementDataQuieries.GET_ALL.sunday;
+        q = SQLiteMovementDataQuieries.GET_ALL.sunday;
       if (SQLTableName === TableNames.TEST)
-        q = MovementDataQuieries.GET_ALL.test;
-      q += ` use index (${indexing})`;
+        q = SQLiteMovementDataQuieries.GET_ALL.test;
 
       q += ` ORDER BY ${sortBy.join(',')}`;
 
@@ -168,10 +143,12 @@ export default class MySQLDatabaseControllerStrategy implements IDataBaseControl
   }
 
   async getDataByTimeInterval(lowerBound: Date, upperBound: Date, SQLTableName: TableNames): Promise<IDataPointMovement[]> {
-    let q = `SELECT * FROM parkmovementfri where (timestamp between ? and ? )`;
+    let q = `SELECT *
+             FROM parkmovementfri
+             where (timestamp between ? and ?)`;
     const result = this.execute<IDataPointMovement[]>(q, [
-      lowerBound,
-      upperBound
+      lowerBound.toISOString(),
+      upperBound.toISOString()
     ]);
     return result;
   }

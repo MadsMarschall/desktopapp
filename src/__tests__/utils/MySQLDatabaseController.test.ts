@@ -1,10 +1,13 @@
-import DataBaseController from '../../main/datahandling/utilities/MySQLDatabaseControllerStrategy';
+import DataBaseController from '../../main/datahandling/utilities/DBStrategies/MySQLDatabaseControllerStrategy';
 import { TableNames } from '../../shared/Constants';
+import MySQLDatabaseControllerStrategy
+  from '../../main/datahandling/utilities/DBStrategies/MySQLDatabaseControllerStrategy';
+import IDataBaseController from '../../shared/domain/IDataBaseController';
 
-let dataBaseController: DataBaseController;
+let dataBaseController: IDataBaseController;
 
 beforeEach(() => {
-    dataBaseController = new DataBaseController();
+    dataBaseController = new MySQLDatabaseControllerStrategy();
 });
 jest.setTimeout(90000)
 

@@ -1,7 +1,8 @@
 import IDataBaseController from '../../../shared/domain/IDataBaseController';
 import { SortBy, TableIndexing, TableNames } from '../../../shared/Constants';
 import { ICSVInputObject, IDataPointMovement } from '../../../shared/domain/Interfaces';
-import MySQLDatabaseControllerStrategy from './MySQLDatabaseControllerStrategy';
+import MySQLDatabaseControllerStrategy from './DBStrategies/MySQLDatabaseControllerStrategy';
+import SQLiteDatabaseControllerStrategy from './DBStrategies/SQLiteDatabaseControllerStrategy';
 
 export default class DataBaseController implements IDataBaseController {
   private DBStrategy
@@ -29,4 +30,4 @@ export default class DataBaseController implements IDataBaseController {
   }
 
 }
-export const dbController = new DataBaseController(new MySQLDatabaseControllerStrategy());
+export const dbController = new DataBaseController(new SQLiteDatabaseControllerStrategy());
