@@ -6,10 +6,11 @@ import cliProgress from 'cli-progress';
 import minimist from 'minimist';
 import fs from 'fs';
 import { stringify } from 'csv';
+import { Stringifier } from 'csv-stringify';
 
 sqlite3.verbose();
 
-interface IRideDetails {
+export interface IRideDetails {
   parkguide: number,
   realWorldType: string,
   dinofunWorldName: string,
@@ -57,19 +58,182 @@ open(config).then(async (db) => {
   let lastPersonId = 0;
   let allCheckins: IDataPointMovement[] = [];
   let pendingCheckinCandidate: IDataPointMovement[] = [];
-
+  const createTraj = new CreatePersonTrajectories();
   const parkRides = await db.all('select * from ridedetails') as IRideDetails[];
   let insertStatement = await db.prepare('insert into parkmovementCalculatedCheckin (timestamp, PersonId, type, X, Y) values (?, ?, ?, ?, ?)');
-  await db.all(`select *
-                from parkmovement
-                where PersonId between ${argv._[0]} and ${argv._[1]}
-                order by PersonId, timestamp;`).then(async (rows) => {
+  await new Promise(async (resolve) => {
+    await db.all(`select *
+            from parkmovement
+            where PersonId between ${argv._[0]} and ${argv._[1]}
+            order by PersonId, timestamp;`).then(async (rows: IDataPointMovement[]) => {
+      await progressBar.update(rows[0].PersonId);
+      await createTraj.findAndRunTroughTrajectories(rows, async (data: IDataPointMovement[]) => {
+        await progressBar.update(data[0].PersonId);
+        await createTraj.determineCheckinsFromTrajectory(data, parkRides, TIME_THRESHHOLD, DISTANCE_THRESHHOLD).then(async (checkins: IDataPointMovement[]) => {
+          await createTraj.mapToSpecifiedIntervaæl(checkins, TIME_THRESHHOLD).then(async (mappedCheckins: IDataPointMovement[]) => {
+            console.log('mappedCheckins', mappedCheckins.length);
+            await mappedCheckins.forEach((checkin: IDataPointMovement) => {
+              stringifier.write(checkin);
+            });
+          });
+        });
+      });
+    });
+    resolve(undefined);
+  });
+  await stringifier.pipe(writableStream);
+  progressBar.stop();
+  console.log('inserting data\n');
+  console.log('Finished writing data');
+  console.log(allCheckins.length);
+
+}).catch((err) => {
+  console.log(err);
+});
+
+export default class CreatePersonTrajectories {
+
+  findAndRunTroughTrajectories(data: IDataPointMovement[], callback: (data: IDataPointMovement[]) => void) {
+    let trajectory: IDataPointMovement[] = [];
+    let lastPersonId = data[0].PersonId;
+    for (const row of data) {
+
+      const isNewPerson = row.PersonId != lastPersonId;
+      if (isNewPerson) {
+        callback(trajectory);
+        trajectory = new Array();
+      }
+      trajectory.push(row);
+      lastPersonId = row.PersonId;
+    }
+    callback(trajectory);
+  }
+
+  determineCheckinsFromTrajectory(unformattedTrajecotry: IDataPointMovement[], rides: IRideDetails[], TIME_THRESHHOLD: number, DISTANCE_THRESHHOLD: number): Promise<IDataPointMovement[]> {
+    return new Promise((resolve, reject) => {
+      let formattedTrajectory: IDataPointMovement[] = [];
+      let pendingCheckinCandidate: IDataPointMovement[] = [];
+      for (const row of unformattedTrajecotry) {
+        row.timestamp = new Date(row.timestamp);
+        const firstEntryIsCheckin = formattedTrajectory.length == 0;
+        if (firstEntryIsCheckin) {
+          formattedTrajectory.push(row);
+        }
+
+        rides.forEach((ride) => {
+          let distanceToRide = Math.sqrt(Math.pow(row.X - ride.X, 2) + Math.pow(row.Y - ride.Y, 2));
+          if (distanceToRide <= DISTANCE_THRESHHOLD) {
+            row.X = ride.X;
+            row.Y = ride.Y;
+            pendingCheckinCandidate.push(row);
+          }
+        });
+        pendingCheckinCandidate = pendingCheckinCandidate.filter((checkinCandidate, index) => {
+          const isToFarAwayFromRide = Math.sqrt(Math.pow(checkinCandidate.X - row.X, 2) + Math.pow(checkinCandidate.Y - row.Y, 2)) > DISTANCE_THRESHHOLD;
+          if (isToFarAwayFromRide) {
+            return false;
+          }
+          const timeIsOverThreshold = (new Date(row.timestamp).getTime() - (new Date(checkinCandidate.timestamp).getTime()) > TIME_THRESHHOLD);
+          if (timeIsOverThreshold) {
+            checkinCandidate.type = 'check-in';
+
+            //Rounding to nearest 5 minutes
+            checkinCandidate.timestamp = this.roundTime(checkinCandidate);
+
+            const timestampIsAlreadyInList = (new Date(formattedTrajectory[formattedTrajectory.length - 1].timestamp)).getTime() == checkinCandidate.timestamp.getTime();
+            if (timestampIsAlreadyInList) return false;
+
+            formattedTrajectory.push(checkinCandidate);
+            return false;
+          }
+          return true;
+        });
+      }
+      resolve(formattedTrajectory);
+    });
+  }
+
+  private roundTime(checkinCandidate: IDataPointMovement): Date {
+    const coeff = 1000 * 60 * 5;
+    const date = new Date(checkinCandidate.timestamp);  //or use any other date
+    return new Date(Math.round(date.getTime() / coeff) * coeff);
+  }
+
+  simplifyToTimeInterval(data: IDataPointMovement[], TIME_INTERVAL: number): IDataPointMovement[] {
+    let result: IDataPointMovement[] = [];
+    result.push(data[0]);
+    for (let i = 1; i < data.length; i++) {
+      const overThreshold = ((new Date(data[i].timestamp).getTime() - (new Date(result[result.length - 1].timestamp).getTime())) >= TIME_INTERVAL);
+      if (overThreshold) {
+        result.push(data[i]);
+      }
+    }
+    return result;
+  }
+
+  mapToSpecifiedIntervaæl(trajectory: IDataPointMovement[], TIME_INTERVAL: number): Promise<IDataPointMovement[]> {
+    return new Promise((resolve, reject) => {
+      if (trajectory.length === 0) reject('No data');
+      const createOutOfParkPoint = (timestamp: number): IDataPointMovement => {
+        const point: IDataPointMovement = {
+          timestamp: new Date(timestamp.valueOf()),
+          X: -99,
+          Y: -99,
+          type: 'out-of-park',
+          PersonId: trajectory[0].PersonId,
+          affectedRows: 0,
+          id: 'calculatedEntry_' + trajectory[0].PersonId + '_' + timestamp
+        };
+        return point;
+      };
+      let currentTimeOfDay = (new Date(trajectory[0].timestamp));
+      currentTimeOfDay = (new Date(currentTimeOfDay.setHours(8, 0, 0, 0)));
+
+      let endOfDay = (new Date(trajectory[0].timestamp));
+      endOfDay = (new Date(endOfDay.setHours(24, 0, 0, 0)));
+      let result: IDataPointMovement[] = [];
+
+      let indexInTrajectory = 0;
+      let lastAddedCheckIn = createOutOfParkPoint(currentTimeOfDay.valueOf());
+
+      while (currentTimeOfDay.getTime() < endOfDay.getTime()) {
+        const reachedEndOfTrajectory = indexInTrajectory >= trajectory.length;
+        if (reachedEndOfTrajectory) {
+          result.push(createOutOfParkPoint(currentTimeOfDay.valueOf()));
+          currentTimeOfDay.setTime(currentTimeOfDay.getTime() + TIME_INTERVAL);
+          continue;
+        }
+        const reachedIndexInTrajectory = (new Date(trajectory[indexInTrajectory].timestamp)).getTime() <= currentTimeOfDay.getTime();
+        if (reachedIndexInTrajectory) {
+          trajectory[indexInTrajectory].timestamp = this.roundTime(trajectory[indexInTrajectory]);
+          lastAddedCheckIn = trajectory[indexInTrajectory];
+          result.push(trajectory[indexInTrajectory]);
+          indexInTrajectory++;
+        } else {
+
+          lastAddedCheckIn = this.createObjectCopy(lastAddedCheckIn);
+          lastAddedCheckIn.timestamp = new Date(lastAddedCheckIn.timestamp);
+          result.push(lastAddedCheckIn);
+          lastAddedCheckIn.timestamp = currentTimeOfDay;
+        }
+        currentTimeOfDay = new Date(currentTimeOfDay.valueOf() + TIME_INTERVAL);
+      }
+
+      resolve(result);
+    });
+  }
+
+  createObjectCopy(obj: any): any {
+    return JSON.parse(JSON.stringify(obj));
+  }
+};
+
+/*
     for (const row of rows) {
       row.timestamp = new Date(row.timestamp);
 
       const isCheckinType = row.type === 'check-in';
       if (isCheckinType) {
-        debugger
         lastAddedCheckIn = row;
         stringifier.write(row);
         continue;
@@ -135,14 +299,5 @@ open(config).then(async (db) => {
       });
       progressBar.update(row.PersonId);
     }
-  });
-  progressBar.stop();
-  console.log('inserting data\n');
-  stringifier.pipe(writableStream);
-  console.log('Finished writing data');
-  console.log(allCheckins.length);
-  process.exit(0);
 
-}).catch((err) => {
-  console.log(err);
-});
+ */
