@@ -5,11 +5,11 @@ import { TableIndexing, TableNames } from '../../../../shared/Constants';
 import { dbController } from '../../utilities/DataBaseController';
 import { IDisplayableData } from '../../../../shared/domain/IOperationMetaData';
 
-export default class SelectByDayAndTimeOperation implements IDataOperation {
+export default class SelectByTimeOperation implements IDataOperation {
   private inputOperation: IDataOperation;
 
   private outputData: IDataPointMovement[] = [];
-  private settings: string[] | number[] | unknown[] = [0,(new Date()).valueOf(),TableNames.TEST];
+  private settings: string[] | number[] | unknown[] = [0,(new Date()).valueOf()];
   private readonly id: string;
 
   private targetOperation: IDataOperation;
@@ -30,30 +30,13 @@ export default class SelectByDayAndTimeOperation implements IDataOperation {
   }
 
   async triggerOperation(): Promise<void> {
-    if(!this.settingsAreValid()) return Promise.reject('Invalid settings');
     return new Promise(async (resolve,reject) => {
       let lowerBound = new Date(<number>this.settings[0]);
       let upperBound = new Date(<number>this.settings[1]);
-      let tableName = this.settings[2];
-      this.outputData = await dbController.getDataByTimeInterval(lowerBound, upperBound, tableName as TableNames);
+      this.outputData = await dbController.getDataByTimeInterval(lowerBound, upperBound);
       return resolve();
       console.log("loaded data: "+this.outputData.length);
     });
-  }
-  private findOptimalIndexing(tableName: TableNames): TableIndexing {
-    switch (tableName) {
-      case TableNames.FRIDAY:
-        return TableIndexing.FRIDAY_PersonId_Timestamp;
-        break;
-      case TableNames.SATURDAY:
-        return TableIndexing.SATURDAY_PersonId_Timestamp;
-        break;
-      case TableNames.SUNDAY:
-        return TableIndexing.SUNDAY_PersonId_Timestamp;
-        break;
-      default:
-        throw new Error('No indexing found');
-    }
   }
 
   retriggerOperationChainBackward(): Promise<void> {
@@ -73,7 +56,7 @@ export default class SelectByDayAndTimeOperation implements IDataOperation {
   }
 
   getType(): Promise<string> {
-    return Promise.resolve(SelectByDayAndTimeOperation.name);
+    return Promise.resolve(SelectByTimeOperation.name);
   }
 
   getSource(): Promise<IDataOperation> {
@@ -121,7 +104,7 @@ export default class SelectByDayAndTimeOperation implements IDataOperation {
 
   private settingsAreValid() {
     if(!this.settings) return false;
-    if(this.settings.length < 3) return false;
+    if(this.settings.length < 2) return false;
     return true;
   }
 }

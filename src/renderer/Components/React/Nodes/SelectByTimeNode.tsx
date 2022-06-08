@@ -9,6 +9,7 @@ import { ChainControllerContext } from '../../../context/broker';
 import IDataOperation from '../../../../shared/domain/IDataOperation';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { TextField } from '@mui/material';
+import SelectByTimeComponent from '../helperComponents/SelectByTimeComponent';
 
 type IProps = {
   data: {
@@ -17,10 +18,8 @@ type IProps = {
   };
 };
 
-export default function SelectByDayAndTimeNode({ data }: IProps) {
-  const [SelectedTable, setSelectedTable] = useState<string>(
-    TableNames.TEST
-  );
+
+export default function SelectByTimeNode({ data }: IProps) {
   const [lowerBound, setLowerBound] = React.useState<Date>(new Date('2014-06-06 08:00:00'));
   const [upperBound, setUpperBound] = React.useState<Date>(new Date('2014-06-08 23:59:59'));
   const [entriesLoaded, setEntriesLoaded] = useState<number>(0);
@@ -34,8 +33,8 @@ export default function SelectByDayAndTimeNode({ data }: IProps) {
     ).then(async (operation) => {
       await operation.setSettings(
         [lowerBound,
-          upperBound,
-          SelectedTable]
+          upperBound
+        ]
       );
       listenForMethods(data.id, [Methods.DATA_OPERATION_RETRIGGER_OPERATION_CHAIN_FORWARD], (data) => {
         operation.getDisplayableData().then((data) => {
@@ -56,7 +55,6 @@ export default function SelectByDayAndTimeNode({ data }: IProps) {
           }
           setLowerBound(settings[0]);
           setUpperBound(settings[1]);
-          setSelectedTable(settings[2]);
 
           console.log('settings', settings);
         });
@@ -70,19 +68,16 @@ export default function SelectByDayAndTimeNode({ data }: IProps) {
   const d = data;
 
   const handleClick = async () => {
-    if (!SelectedTable) return;
     if (!operation) return;
-    await operation.setSettings([lowerBound.valueOf(), upperBound.valueOf(), SelectedTable]);
-    console.log(SelectedTable);
-    operation.retriggerOperationChainForward().then(async () => {
-      operation.getDisplayableData().then((metaData) => {
-        setEntriesLoaded(metaData.entries);
+    operation.setSettings([lowerBound.valueOf(), upperBound.valueOf()]).then(() => {
+      operation.retriggerOperationChainForward().then(() => {
+        operation.getDisplayableData().then((metaData) => {
+          setEntriesLoaded(metaData.entries);
+        });
       });
-    });
+    })
   };
 
-
-  const parametersAreSelected = SelectedTable === undefined;
   return (
     <div className='selectorNode'>
       <Handle
@@ -109,58 +104,11 @@ export default function SelectByDayAndTimeNode({ data }: IProps) {
             </div>
           </Col>
           <Col>
-            <>
-              <Form.Group>
-                <Form.Label htmlFor='inputPassword5'>Select Day</Form.Label>
-                <Form.Select
-                  required
-                  className='mt-2'
-                  aria-label='Default select example'
-                  onChange={(e) => {
-                    setSelectedTable(e.target.value as TableNames);
-                  }}
-                  value={SelectedTable}
-                >
-                  <option>Please select day</option>
-                  <option value={TableNames.FRIDAY}>Friday</option>
-                  <option value={TableNames.SATURDAY}>Saturday</option>
-                  <option value={TableNames.SUNDAY}>Sunday</option>
-                </Form.Select>
-              </Form.Group>
-              <br />
-              <div>
-                <DateTimePicker
-                  label='Upper Bound'
-                  value={upperBound}
-                  onChange={(newValue) => {
-                    if (newValue) setUpperBound(newValue);
-                  }}
-                  ampm={false}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-                <br />
-                <br />
-                <DateTimePicker
-                  label='Lower Bound'
-                  value={lowerBound}
-                  onChange={(newValue) => {
-                    if (newValue) setLowerBound(newValue);
-                  }}
-                  ampm={false}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </div>
-              <Button
-                type='submit'
-                className='w-100 mb-2'
-                disabled={parametersAreSelected}
-                onClick={handleClick}
-              >
-                Get Data
-              </Button>
-              <br />
-              <p>Entries loaded: {entriesLoaded}</p>
-            </>
+            <SelectByTimeComponent value={upperBound} onChange={(newValue) => {
+              if (newValue) setUpperBound(newValue);
+            }} renderInput={(params) => <TextField {...params} />} value1={lowerBound} onChange1={(newValue) => {
+              if (newValue) setLowerBound(newValue);
+            }} onClick={handleClick} entriesLoaded={entriesLoaded} />
           </Col>
         </Row>
       </div>

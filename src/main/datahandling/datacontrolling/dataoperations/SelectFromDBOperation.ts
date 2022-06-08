@@ -32,11 +32,9 @@ export default class SelectFromDBOperation implements IDataOperation {
 
   async triggerOperation(): Promise<void> {
     return new Promise(async (resolve,reject) => {
-
       if (!this.verifySettings()) return reject(new Error('Settings are not set correctly'));
       this.outputData = await dbController.getDataByPersonId(
-        <TableNames>this.settings[0],
-        <number>this.settings[1]
+        <number>this.settings[0],
       );
       return resolve();
     });
@@ -90,9 +88,8 @@ export default class SelectFromDBOperation implements IDataOperation {
   }
 
   private verifySettings(): boolean {
-    if (this.settings.length !== 2) return false;
-    if (typeof this.settings[0] !== typeof TableNames.TEST) return false;
-    if (typeof this.settings[1] !== 'number') return false;
+    if (this.settings.length !== 1) return false;
+    if (typeof this.settings[0] !== 'number') return false;
     return true;
   }
   async getDisplayableData(): Promise<IDisplayableData> {

@@ -17,9 +17,6 @@ type IProps = {
 
 export default function SelectorNode({ data }: IProps) {
   const [PersonId, setPersonId] = useState<number>(0);
-  const [SelectedTable, setSelectedTable] = useState<TableNames>(
-    TableNames.TEST
-  );
   const [entriesLoaded, setEntriesLoaded] = useState<number>(0);
   const [operation, setOperation] = useState<IDataOperation>();
   const dataOperationChainControllerProxy = useContext(ChainControllerContext);
@@ -45,28 +42,11 @@ export default function SelectorNode({ data }: IProps) {
         }
         operation.getSettings().then((settings:any[])=>{
           setPersonId(settings[1]);
-          setSelectedTable(settings[0]);
           console.log("settings",settings);
         })
       })
       setOperation(operation);
     });
-
-    /*
-    const settingsChannel = IPCEvents.UPDATE_BY_ID_AND_METHOD+data.id+Methods.DATA_OPERATION_SET_SETTINGS
-    window.electron.ipcRenderer.on(settingsChannel, ()=>{
-      if(!operation) {
-        console.log("Operation not found");
-        return;
-      }
-      operation.getSettings().then((settings:any[])=>{
-        setPersonId(settings[1]);
-        setSelectedTable(settings[0]);
-        console.log("settings",settings);
-      })
-    })
-
-     */
   }
 
   useEffect(onMount, []);
@@ -74,10 +54,9 @@ export default function SelectorNode({ data }: IProps) {
   const d = data;
 
   const handleClick = async () => {
-    if (!SelectedTable) return;
     if (!PersonId) return;
     if (!operation) return;
-    await operation.setSettings([SelectedTable, PersonId]);
+    await operation.setSettings([PersonId]);
     await operation.retriggerOperationChainForward().then(async () => {
       console.log((await operation.getData()).length)
           setEntriesLoaded((await operation.getData()).length);
@@ -86,7 +65,7 @@ export default function SelectorNode({ data }: IProps) {
 
 
   const parametersAreSelected =
-    PersonId === undefined && SelectedTable === undefined;
+    PersonId === undefined;
   return (
     <div className="selectorNode">
       <Handle
@@ -125,22 +104,6 @@ export default function SelectorNode({ data }: IProps) {
                     setPersonId(parseInt(e.target.value, 10));
                   }}
                 />
-                <Form.Select
-                  required
-                  className="mt-2"
-                  aria-label="Default select example"
-                  onChange={(e) => {
-                    setSelectedTable(
-                      e.target.value as TableNames
-                    );
-                  }}
-                  value={SelectedTable}
-                >
-                  <option>Please select day</option>
-                  <option value={TableNames.FRIDAY}>Friday</option>
-                  <option value={TableNames.SATURDAY}>Saturday</option>
-                  <option value={TableNames.SUNDAY}>Sunday</option>
-                </Form.Select>
               </Form.Group>
               <br />
               <Button

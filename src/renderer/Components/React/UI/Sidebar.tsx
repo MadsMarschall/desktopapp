@@ -74,7 +74,7 @@ export default () => {
              onDragStart={(event: any) => onDragStart(event, 'selectByDayAndTime')}
              draggable
         >
-          Select by Day and Time Node
+          Select by Time Node
         </Col>
 
       </Row>

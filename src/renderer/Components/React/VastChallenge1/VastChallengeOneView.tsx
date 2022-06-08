@@ -27,7 +27,7 @@ import DBScanClusteringNode from '../Nodes/DBScanClusteringNode';
 import TimeFilteringNode from '../Nodes/TimeFilteringNode';
 import ClusterMapNode from '../Nodes/ClusterMapNode';
 import QuerySpecificNode from '../Nodes/QuerySpecificNode';
-import SelectByDayAndTimeNode from '../Nodes/SelectByDayAndTimeNode';
+import SelectByTimeNode from '../Nodes/SelectByTimeNode';
 
 const nodeTypes = {
   dataSource: DataSourceNode,
@@ -38,7 +38,7 @@ const nodeTypes = {
   selectByDay:SelectByDayNode,
   dbScanClustering: DBScanClusteringNode,
   querySpecific: QuerySpecificNode,
-  selectByDayAndTime: SelectByDayAndTimeNode
+  selectByDayAndTime: SelectByTimeNode
 };
 
 const id = 10;

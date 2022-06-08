@@ -32,9 +32,7 @@ export default class SelectByDayOperation implements IDataOperation {
 
   async triggerOperation(): Promise<void> {
     return new Promise(async (resolve,reject) => {
-      if(!this.settingsAreValid()) reject(new Error('Settings are not valid'));
-      if (!this.verifySettings()) return reject(new Error('Settings are not set correctly'));
-      this.outputData = await dbController.getAllDataFromTable(this.settings[0] as TableNames, [SortBy.PersonId,SortBy.Timestamp], this.findOptimalIndexing(this.settings[0] as TableNames));
+      this.outputData = await dbController.getAllDataFromTable();
       return resolve();
       console.log("loaded data: "+this.outputData.length);
     });
