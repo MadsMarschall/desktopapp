@@ -16,7 +16,7 @@ test("workaround",()=>{
 })
 
 test("can get by time interval", async () => {
-  const resut = await dataBaseController.getDataByTimeInterval(new Date("2014-06-06 18:09:34"),new Date("2014-06-06 18:14:04"),TableNames.FRIDAY);
+  const resut = await dataBaseController.getDataByTimeInterval(new Date("2014-06-06 18:09:34"),new Date("2014-06-06 18:14:04"));
   expect(resut.length).toBeGreaterThan(4);
 })
 
@@ -31,11 +31,11 @@ test('should be able to getSorted', async () => {
 
  */
 test('should get data by PersonId: sat', async () => {
-    const result = await dataBaseController.getDataByPersonId(TableNames.SATURDAY, 340699);
+    const result = await dataBaseController.getDataByPersonId(340699);
     expect(result[0].PersonId).toBe(340699);
 });
 test('should get data by PersonId: sun', async () => {
-  const result = await dataBaseController.getDataByPersonId(TableNames.SUNDAY, 340699);
+  const result = await dataBaseController.getDataByPersonId(340699);
   expect(result[0].PersonId).toBe(340699);
 });
 

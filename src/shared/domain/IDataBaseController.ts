@@ -4,7 +4,6 @@ import { ICSVInputObject } from '../../main/datahandling/utilities/DBStrategies/
 
 export default interface IDataBaseController {
   getDataByPersonId(
-    SQLTableName: TableNames,
     PersonId: number
   ): Promise<IDataPointMovement[]>;
 
@@ -19,6 +18,6 @@ export default interface IDataBaseController {
     ...otherArgs:string[]
   ): Promise<boolean>;
 
-  getAllDataFromTable(SQLTableName: TableNames,sortBy:SortBy,indexing:TableIndexing): Promise<IDataPointMovement[]>;
-  getDataByTimeInterval(lowerBound:Date, upperBound:Date, SQLTableName: TableNames): Promise<IDataPointMovement[]>;
+  getAllDataFromTable(): Promise<IDataPointMovement[]>;
+  getDataByTimeInterval(lowerBound:Date, upperBound:Date): Promise<IDataPointMovement[]>;
 }

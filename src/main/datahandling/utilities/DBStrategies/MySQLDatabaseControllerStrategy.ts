@@ -59,20 +59,10 @@ export default class MySQLDatabaseControllerStrategy implements IDataBaseControl
   };
 
   getDataByPersonId(
-    SQLTableName: TableNames,
     PersonId: number
   ): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
-      let q: string | null = null;
-      if (SQLTableName === TableNames.FRIDAY)
-        q = SQLMovementDataQuieries.GET_BY_PERSON_ID.friday;
-      if (SQLTableName === TableNames.SATURDAY)
-        q = SQLMovementDataQuieries.GET_BY_PERSON_ID.saturday;
-      if (SQLTableName === TableNames.SUNDAY)
-        q = SQLMovementDataQuieries.GET_BY_PERSON_ID.sunday;
-      if (SQLTableName === TableNames.TEST)
-        q = SQLMovementDataQuieries.GET_ALL.test;
-      if (!q) throw new Error('no query was selected');
+      const q = "SELECT * FROM parkmovementCalculatedCheckin WHERE PersonId = ? order by timestamp";
       const result = await this.execute<{ affectedRows: number }>(q, [
         PersonId
       ]);
@@ -130,31 +120,9 @@ export default class MySQLDatabaseControllerStrategy implements IDataBaseControl
     return result.affectedRows > 0;
   }
 
-  async getAllDataFromTable(
-    SQLTableName: TableNames,
-    sortBy: string[],
-    indexing: TableIndexing,
-    ...otherArgs
-  ): Promise<IDataPointMovement[]> {
+  async getAllDataFromTable(): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
-      let q = '';
-      if (SQLTableName === TableNames.FRIDAY)
-        q = SQLMovementDataQuieries.GET_ALL.friday;
-      if (SQLTableName === TableNames.SATURDAY)
-        q = SQLMovementDataQuieries.GET_ALL.saturday;
-      if (SQLTableName === TableNames.SUNDAY)
-        q = SQLMovementDataQuieries.GET_ALL.sunday;
-      if (SQLTableName === TableNames.TEST)
-        q = SQLMovementDataQuieries.GET_ALL.test;
-      q += ` use index (${indexing})`;
-
-      q += ` ORDER BY ${sortBy.join(',')}`;
-
-      otherArgs.forEach((arg) => {
-        q += ` ${arg}`;
-      });
-      console.log('query: ', q);
-
+      const q = `SELECT * FROM parkmovementCalculatedCheckin order by PersonId, timestamp`;
       const result = (await this.execute<{ affectedRows: number }>(
         q,
         []
@@ -167,7 +135,7 @@ export default class MySQLDatabaseControllerStrategy implements IDataBaseControl
     });
   }
 
-  async getDataByTimeInterval(lowerBound: Date, upperBound: Date, SQLTableName: TableNames): Promise<IDataPointMovement[]> {
+  async getDataByTimeInterval(lowerBound: Date, upperBound: Date): Promise<IDataPointMovement[]> {
     let q = `SELECT * FROM parkmovementfri where (timestamp between ? and ? )`;
     const result = this.execute<IDataPointMovement[]>(q, [
       lowerBound,

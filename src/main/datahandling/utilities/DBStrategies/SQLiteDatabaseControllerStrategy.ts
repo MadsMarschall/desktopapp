@@ -66,20 +66,10 @@ export default class SQLiteDatabaseControllerStrategy implements IDataBaseContro
   };
 
   getDataByPersonId(
-    SQLTableName: TableNames,
     PersonId: number
   ): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
-      let q: string | null = null;
-      if (SQLTableName === TableNames.FRIDAY)
-        q = SQLiteMovementDataQuieries.GET_BY_PERSON_ID.friday;
-      if (SQLTableName === TableNames.SATURDAY)
-        q = SQLiteMovementDataQuieries.GET_BY_PERSON_ID.saturday;
-      if (SQLTableName === TableNames.SUNDAY)
-        q = SQLiteMovementDataQuieries.GET_BY_PERSON_ID.sunday;
-      if (SQLTableName === TableNames.TEST)
-        q = SQLiteMovementDataQuieries.GET_ALL.test;
-      if (!q) throw new Error('no query was selected');
+      let q = 'SELECT * FROM parkmovementCalculatedCheckin WHERE personId = ? ORDER BY timestamp';
       const result = await this.execute<{ affectedRows: number }>(q, [
         PersonId
       ]);
@@ -106,32 +96,10 @@ export default class SQLiteDatabaseControllerStrategy implements IDataBaseContro
 
   }
 
-  async getAllDataFromTable(
-    SQLTableName: TableNames,
-    sortBy: string[],
-    indexing: TableIndexing,
-    ...otherArgs
-  ): Promise<IDataPointMovement[]> {
+  async getAllDataFromTable(): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
-      let q = '';
-      if (SQLTableName === TableNames.FRIDAY)
-        q = SQLiteMovementDataQuieries.GET_ALL.friday;
-      if (SQLTableName === TableNames.SATURDAY)
-        q = SQLiteMovementDataQuieries.GET_ALL.saturday;
-      if (SQLTableName === TableNames.SUNDAY)
-        q = SQLiteMovementDataQuieries.GET_ALL.sunday;
-      if (SQLTableName === TableNames.TEST)
-        q = SQLiteMovementDataQuieries.GET_ALL.test;
-
-      q += ` ORDER BY ${sortBy.join(',')}`;
-
-      otherArgs.forEach((arg) => {
-        q += ` ${arg}`;
-      });
-      console.log('query: ', q);
-
-      const result = (await this.execute<{ affectedRows: number }>(
-        q,
+      let q = 'SELECT * FROM parkmovementCalculatedCheckin ORDER BY PersonId,timestamp';
+      const result = (await this.execute<{ affectedRows: number }>(q,
         []
       )) as IDataPointMovement;
       if (result == null) {
@@ -142,37 +110,15 @@ export default class SQLiteDatabaseControllerStrategy implements IDataBaseContro
     });
   }
 
-  async getDataByTimeInterval(lowerBound: Date, upperBound: Date, SQLTableName: TableNames): Promise<IDataPointMovement[]> {
+  async getDataByTimeInterval(lowerBound: Date, upperBound: Date): Promise<IDataPointMovement[]> {
     let q = `SELECT *
-             FROM parkmovementfri
+             FROM parkmovementCalculatedCheckin
              where (timestamp between ? and ?)`;
     const result = this.execute<IDataPointMovement[]>(q, [
-      lowerBound.toISOString(),
-      upperBound.toISOString()
+      lowerBound.valueOf(),
+      upperBound.valueOf()
     ]);
     return result;
-  }
-
-  private getIndexingByRequest(
-    SQLTableName: TableNames,
-    sortBy: SortBy
-  ): string {
-    if (SQLTableName === TableNames.FRIDAY && sortBy === SortBy.Timestamp)
-      return TableIndexing.FRIDAY_Timestamp;
-    if (SQLTableName === TableNames.FRIDAY && sortBy === SortBy.PersonId)
-      return TableIndexing.FRIDAY_PersonId;
-    if (SQLTableName === TableNames.SATURDAY && sortBy === SortBy.Timestamp)
-      return TableIndexing.SATURDAY_Timestamp;
-    if (SQLTableName === TableNames.SATURDAY && sortBy === SortBy.PersonId)
-      return TableIndexing.SATURDAY_PersonId;
-    if (SQLTableName === TableNames.SUNDAY && sortBy === SortBy.Timestamp)
-      return TableIndexing.SUNDAY_Timestamp;
-    if (SQLTableName === TableNames.SUNDAY && sortBy === SortBy.PersonId)
-      return TableIndexing.SUNDAY_PersonId;
-    else {
-      return '';
-    }
-
   }
 }
 

@@ -9,16 +9,16 @@ export default class DataBaseController implements IDataBaseController {
   constructor(dbstrategy:IDataBaseController) {
     this.DBStrategy = dbstrategy;
   }
-  getAllDataFromTable(SQLTableName: TableNames, sortBy: SortBy, indexing: TableIndexing): Promise<IDataPointMovement[]> {
-    return this.DBStrategy.getAllDataFromTable(SQLTableName, sortBy, indexing);
+  getAllDataFromTable(): Promise<IDataPointMovement[]> {
+    return this.DBStrategy.getAllDataFromTable();
   }
 
-  getDataByPersonId(SQLTableName: TableNames, PersonId: number): Promise<IDataPointMovement[]> {
-    return this.DBStrategy.getDataByPersonId(SQLTableName, PersonId);
+  getDataByPersonId(PersonId: number): Promise<IDataPointMovement[]> {
+    return this.DBStrategy.getDataByPersonId(PersonId);
   }
 
-  getDataByTimeInterval(lowerBound: Date, upperBound: Date, SQLTableName: TableNames): Promise<IDataPointMovement[]> {
-    return this.DBStrategy.getDataByTimeInterval(lowerBound, upperBound, SQLTableName);
+  getDataByTimeInterval(lowerBound: Date, upperBound: Date): Promise<IDataPointMovement[]> {
+    return this.DBStrategy.getDataByTimeInterval(lowerBound, upperBound);
   }
 
   insertInDatabase(object: ICSVInputObject, SQLTableName: TableNames, ...otherArgs: string[]): Promise<boolean> {
