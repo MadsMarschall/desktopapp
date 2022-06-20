@@ -69,7 +69,7 @@ export default class SQLiteDatabaseControllerStrategy implements IDataBaseContro
     PersonId: number
   ): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
-      let q = 'SELECT * FROM parkmovementCalculatedCheckin WHERE personId = ? ORDER BY timestamp';
+      let q = 'SELECT * FROM parkmovementFinal WHERE personId = ? ORDER BY timestamp';
       const result = await this.execute<{ affectedRows: number }>(q, [
         PersonId
       ]);
@@ -98,7 +98,34 @@ export default class SQLiteDatabaseControllerStrategy implements IDataBaseContro
 
   async getAllDataFromTable(): Promise<IDataPointMovement[]> {
     return new Promise(async (resolve, reject) => {
-      let q = 'SELECT * FROM parkmovementCalculatedCheckin ORDER BY PersonId,timestamp';
+      let q = 'SELECT * FROM parkmovementFinal ORDER BY PersonId,timestamp';
+      const result = (await this.execute<{ affectedRows: number }>(q,
+        []
+      )) as IDataPointMovement;
+      if (result == null) {
+        reject('Could not get data from database');
+        return;
+      }
+      resolve(result as unknown as IDataPointMovement[]);
+    });
+  }
+  public async getAllDataFromTableSortedByTime(): Promise<IDataPointMovement[]> {
+    return new Promise(async (resolve, reject) => {
+      let q = 'SELECT * FROM parkmovementFinal ORDER BY timestamp';
+      const result = (await this.execute<{ affectedRows: number }>(q,
+        []
+      )) as IDataPointMovement;
+      if (result == null) {
+        reject('Could not get data from database');
+        return;
+      }
+      resolve(result as unknown as IDataPointMovement[]);
+    });
+  }
+
+  async getAllCheckins(): Promise<IDataPointMovement[]> {
+    return new Promise(async (resolve, reject) => {
+      let q = "SELECT * FROM parkmovementFinal where type='check-in' ORDER BY timestamp";
       const result = (await this.execute<{ affectedRows: number }>(q,
         []
       )) as IDataPointMovement;
@@ -112,7 +139,7 @@ export default class SQLiteDatabaseControllerStrategy implements IDataBaseContro
 
   async getDataByTimeInterval(lowerBound: Date, upperBound: Date): Promise<IDataPointMovement[]> {
     let q = `SELECT *
-             FROM parkmovementCalculatedCheckin
+             FROM parkmovementFinal
              where (timestamp between ? and ?)`;
     const result = this.execute<IDataPointMovement[]>(q, [
       lowerBound.valueOf(),

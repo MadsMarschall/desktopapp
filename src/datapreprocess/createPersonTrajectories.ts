@@ -70,12 +70,18 @@ open(config).then(async (db) => {
       await createTraj.findAndRunTroughTrajectories(rows, async (data: IDataPointMovement[]) => {
         await progressBar.update(data[0].PersonId);
         await createTraj.determineCheckinsFromTrajectory(data, parkRides, TIME_THRESHHOLD, DISTANCE_THRESHHOLD).then(async (checkins: IDataPointMovement[]) => {
+          await checkins.forEach((checkin: IDataPointMovement) => {
+            stringifier.write(checkin);
+          });
+          /*
           await createTraj.mapToSpecifiedIntervaæl(checkins, TIME_THRESHHOLD).then(async (mappedCheckins: IDataPointMovement[]) => {
             console.log('mappedCheckins', mappedCheckins.length);
             await mappedCheckins.forEach((checkin: IDataPointMovement) => {
               stringifier.write(checkin);
             });
           });
+
+           */
         });
       });
     });
@@ -117,6 +123,7 @@ export default class CreatePersonTrajectories {
         row.timestamp = new Date(row.timestamp);
         const firstEntryIsCheckin = formattedTrajectory.length == 0;
         if (firstEntryIsCheckin) {
+          row.timestamp = this.roundTime(row);
           formattedTrajectory.push(row);
         }
 

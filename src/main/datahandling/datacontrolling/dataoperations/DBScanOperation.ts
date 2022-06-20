@@ -7,7 +7,7 @@ import { spawn, Thread, Worker } from 'threads';
 import { FilterWorker } from './workers/timeFilterWorker';
 import { DbScanWorker } from './workers/dbScanWorker';
 
-export default class TimeSliderOperation implements IDataOperation {
+export default class DBScanOperation implements IDataOperation {
   private inputOperation: IDataOperation;
 
   private outputData: IDataPointMovement[] = [];
@@ -43,7 +43,7 @@ export default class TimeSliderOperation implements IDataOperation {
   }
 
   getType(): Promise<string> {
-    return Promise.resolve(TimeSliderOperation.name);
+    return Promise.resolve(DBScanOperation.name);
   }
 
   retriggerOperationChainBackward(): Promise<void> {
@@ -76,7 +76,7 @@ export default class TimeSliderOperation implements IDataOperation {
     console.log(
       source.getType(),
       ' is connected to:',
-      TimeSliderOperation.name
+      DBScanOperation.name
     );
     this.inputOperation = source;
     return Promise.resolve();

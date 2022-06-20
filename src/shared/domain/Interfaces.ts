@@ -17,7 +17,8 @@ export interface IDataPointMovement {
   id: string;
   affectedRows: number;
   clusterId?: number;
-  clusterCenterPostion?: { x:number,y:number };
+  clusterCenterPostion?: { x:number,y:number }
+  rideId?: number;
 }
 
 export interface PersonDataEvent {
