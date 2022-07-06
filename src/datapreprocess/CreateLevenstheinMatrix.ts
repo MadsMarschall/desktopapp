@@ -48,7 +48,8 @@ export default class CreateLevenstheinMatrix {
         console.log("File written successfully\n");
         console.log("The written has the following contents:");
       }
-    });  }
+    });
+  }
 
   public async calculateAsyncLevesthein() {
     console.log('CALCULATE LEVESTHEIN');

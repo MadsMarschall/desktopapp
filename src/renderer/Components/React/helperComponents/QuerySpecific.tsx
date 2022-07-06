@@ -31,10 +31,7 @@ export default function QuerySpecific() {
             controlElements={materialControlElements}
           />
         </div>
-
-
-        <pre>
-  </pre>
+        
       </div>
     </ThemeProvider>
   );
