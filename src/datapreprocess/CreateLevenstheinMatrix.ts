@@ -1,14 +1,14 @@
 import { IDataPointMovement } from '../shared/domain/Interfaces';
-import levenshtein from 'js-levenshtein';
 import fs from 'fs';
 import { ProgressBar } from 'react-bootstrap';
 import cliProgress, { SingleBar } from 'cli-progress';
 import { LevenshteinWorker } from './levenshteinWorker';
 import { spawn, Thread, Worker } from 'threads';
 import * as Path from 'path';
+import levenshteinDistanceNumbers from './levensteinNumberTest';
 
 type ITrajectoryObject = {
-  trajectory: string,
+  trajectory: number[],
   PersonId: number
 }
 export default class CreateLevenstheinMatrix {
@@ -27,8 +27,8 @@ export default class CreateLevenstheinMatrix {
   public async createMatrix() {
     console.log('CREATE MATRIX');
     this.prepareData();
-    await this.calculateAsyncLevesthein();
-    //this.calculateLevesthein();
+    //await this.calculateAsyncLevesthein();
+    this.calculateLevesthein();
     await this.saveDistanceMatrixToJSON('./'+(new Date).getTime()+'distanceMatrix.json');
   }
 
@@ -56,7 +56,7 @@ export default class CreateLevenstheinMatrix {
     this.startLoadingProgress(this.preparedData.length, 0);
     const matrix = new Array<Promise<Array<number>>>();
     for (let i = 0; i < this.preparedData.length; i++) {
-      if(i%100==0){
+      if(i%15==0){
         await Promise.all(matrix);
       }
       this.updateLoadingProgress(i);
@@ -70,6 +70,7 @@ export default class CreateLevenstheinMatrix {
 
   public calculateLevesthein() {
     console.log('CALCULATE LEVESTHEIN');
+    fs.appendFileSync('./calc-storage.txt', JSON.stringify(this.preparedData.map((e=>e.PersonId)) + '\n'));
     this.startLoadingProgress(this.preparedData.length, 0);
     const matrix = new Array<Array<number>>();
     for (let i = 0; i < this.preparedData.length; i++) {
@@ -78,23 +79,21 @@ export default class CreateLevenstheinMatrix {
       for (let j = 0; j < this.preparedData.length; j++) {
         matrix[i][j] = this.calculateLevenstheinDistance(this.preparedData[i].trajectory, this.preparedData[j].trajectory);
       }
+      fs.appendFileSync('./calc-storage.txt', JSON.stringify(matrix[i]) + '\n');
     }
     this.stopLoadingProgress();
     this.distanceMatrix = matrix;
   }
 
-  async calculateLevenstheinArrayByWorker(target: string, trajectories: string[]): Promise<number[]> {
+  async calculateLevenstheinArrayByWorker(target: number[], trajectories: Array<number[]>): Promise<number[]> {
     const levenstheinWorker = await spawn<LevenshteinWorker>(new Worker('./levenshteinWorker.ts'));
-
     const result = await levenstheinWorker.calculateArray(target, trajectories);
     await Thread.terminate(levenstheinWorker);
     return result;
-
-    //return levenshtein(trajectory1, trajectory2);
   }
 
-  private calculateLevenstheinDistance(trajectory1: string, trajectory2: string): number {
-    return levenshtein(trajectory1, trajectory2);
+  private calculateLevenstheinDistance(trajectory1: number[], trajectory2: number[]): number {
+    return levenshteinDistanceNumbers(trajectory1, trajectory2);
   }
 
   public prepareData() {
@@ -105,9 +104,8 @@ export default class CreateLevenstheinMatrix {
       this.updateLoadingProgress(trajectory[0].PersonId);
       const trajectoryIsWrongLength = trajectory.length != 192;
       if (trajectoryIsWrongLength) return;
-      const string = trajectory.map((row) => row.rideId).join(';');
       const trajectoryObject: ITrajectoryObject = {
-        trajectory: string,
+        trajectory: trajectory.map((row) => row.rideId || -99),
         PersonId: trajectory[0].PersonId
       };
       result.push(trajectoryObject);
