@@ -23,3 +23,9 @@ test('should return 1 if 1 difference in length', ()=>{
   const arr2 = [1,2,3,4]
   expect(levenshteinDistanceNumbers(arr1,arr2)).toEqual(1);
 })
+
+test('if one array is offset by 2, it should add 2 edits per entry', ()=>{
+  const arr1 = [0,0,1,2,3]
+  const arr2 = [1,2,3,4,5]
+  expect(levenshteinDistanceNumbers(arr1,arr2)).toEqual(4);
+})

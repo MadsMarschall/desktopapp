@@ -31,3 +31,4 @@ npm-debug.log.*
 database/ElectronDatabase.db
 database/ElectronDatabase.db-journal
 /database/
+/distanceMatrix.json
