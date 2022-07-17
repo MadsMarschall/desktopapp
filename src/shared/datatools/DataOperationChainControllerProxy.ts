@@ -1,4 +1,3 @@
-import IDataOperationChainController from 'shared/domain/IDataOperationController';
 import DataOperationProxy from './DataOperationProxy';
 import IDataOperation from '../domain/IDataOperation';
 import { Methods, OperationIds } from '../Constants';
@@ -6,6 +5,7 @@ import { Channels } from '../../main/preload';
 import IpcRendererImpl from '../../renderer/DataHandling/IpcRendereImpl';
 import DataOperationErrorLogger from './DataOperationErrorLogger';
 import { ClientRequestor } from '../domain/ClientRequestor';
+import IDataOperationChainController from '../domain/IDataOperationController';
 
 export default class DataOperationChainControllerProxy
   implements IDataOperationChainController {

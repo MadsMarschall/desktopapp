@@ -143,7 +143,7 @@ export default class DataOperationProxy implements IDataOperationProxy {
     return this.ipc.invoke(
       this.channel,
       this.ID,
-      Methods.DATA_OPERATION_GET_META_DATA,
+      Methods.DATA_OPERATION_GET_DISPLAYABLE_DATA,
       []
     ) as Promise<IDisplayableData>;
   }

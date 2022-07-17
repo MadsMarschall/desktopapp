@@ -158,10 +158,8 @@ test('should find checkin if time is over treshhold', async () => {
     }
   ];
   const result = await createPersonTrajectories.determineCheckinsFromTrajectory(unformattedTrajecotry, [rideDetails], TIME_THRESHHOLD, DISTANCE_THRESHHOLD);
-  expect(result.length).toBe(2);
+  expect(result.length).toBe(1);
   expect(result[0].type).toBe('check-in');
-  expect(result[1].type).toBe('check-in');
-  expect(result[1].id).toBe('2');
 });
 
 test('should should not checkin if not over treshholde', async () => {

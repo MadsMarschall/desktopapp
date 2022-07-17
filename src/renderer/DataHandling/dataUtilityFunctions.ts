@@ -11,15 +11,15 @@ export const handleTargetNodeConnection = async (
   connection: Connection,
   targetOperation: IDataOperation
 ) => {
-  console.log(await dataOperationChainControllerProxy.getOperationByNodeId(
-    <string>connection.source
-  ));
   targetOperation.setSource(
 
     await dataOperationChainControllerProxy.getOperationByNodeId(
       <string>connection.source
     )
   );
+  await targetOperation.getSource().then(source => {
+    source.setTarget(targetOperation);
+  })
   targetOperation.retriggerOperationChainForward();
 };
 
@@ -32,10 +32,13 @@ export const handleSourceNodeConnection = async (
       <string>connection.target
     )
   );
+  await sourceOperation.getTarget().then(target => {
+    target.setSource(sourceOperation);
+  })
   //sourceOperation.retriggerOperationChainForward();
 };
 
-export const listenForMethods = (id:string,methods:Methods[], callback:(data)=>void) => {
+export const listenForMethods = (id:string,methods:Methods[], callback:(data:any)=>void) => {
   methods.forEach(method => {
     const settingsChannel = IPCEvents.UPDATE_BY_ID_AND_METHOD+id+method
     window.electron.ipcRenderer.on(settingsChannel,

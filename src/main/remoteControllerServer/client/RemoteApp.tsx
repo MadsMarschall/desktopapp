@@ -11,6 +11,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import momentTimezone from 'moment-timezone';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import SelectByTimeAndDayController from './components/SelectByTimeAndDayController';
+import GroupsFromMatrixController from './components/GroupsFromMatrixController';
 
 export default function RemoteApp() {
   const timeZoneFromServer = "CST/CDT";
@@ -40,6 +41,10 @@ export default function RemoteApp() {
               <Route
                 path={RemoteUrls.SELECT_BY_TIME_AND_DAY}
                 element={<SelectByTimeAndDayController />}
+              />
+              <Route
+                path={RemoteUrls.AGNES_CLUSTERING}
+                element={<GroupsFromMatrixController/>}
               />
             </Routes>
           </IpcSocketContext.Provider>

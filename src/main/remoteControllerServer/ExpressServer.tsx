@@ -126,7 +126,7 @@ export default class ExpressServer {
                 name: 'settings-controller.local',
                 type: 'A',
                 ttl: 300,
-                data: '192.168.1.140'
+                data: '192.168.1.82'
               }]
             }
           );

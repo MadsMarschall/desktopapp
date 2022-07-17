@@ -1,4 +1,4 @@
-import { IDataPointMovement } from './Interfaces';
+import { IDataPointMovement, IDistanceMatrixPoint } from './Interfaces';
 import { IDisplayableData } from './IOperationMetaData';
 
 export default interface IDataOperation {

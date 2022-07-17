@@ -27,8 +27,8 @@ body {
   width: 100vw;
 }
 .react-flow .react-flow__handle {
-  width: 3em;
-  height: 3em;
+  width: 2em;
+  height: 2em;
   border-radius: 3px;
 }
 

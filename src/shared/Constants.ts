@@ -11,6 +11,9 @@ export enum OperationIds {
   TIME_FILTERING_OPERATION = 'TIME_FILTERING_OPERATION',
   CLUSTER_MAP_DISPLAY= 'CLUSTER_MAP_DISPLAY',
   SELECT_BY_TIME_AND_DAY = 'SELECT_BY_TIME_AND_DAY',
+  GROUP_ = 'GROUP_',
+  GROUPS_FROM_MATRIX = 'GROUPS_FROM_MATRIX',
+  DISPLAY_GROUP_RIDE_STATISTICS = 'DISPLAY_GROUP_RIDE_STATISTICS',
 }
 const DATAOPEARATION_PREFIX = 'DATAOPEARATION_';
 
@@ -30,7 +33,7 @@ export class Methods {
   static readonly CHAIN_CONTROLLER_REMOVE_NODE_BY_ID = 'CHAIN_CONTROLLER_REMOVE_NODE_BY_ID'
   static readonly CHAIN_CONTROLLER_CONNECT_OPERATION_NODES = 'CHAIN_CONTROLLER_CONNECT_OPERATION_NODES'
   static readonly DATA_OPERATION_GET_SETTINGS = 'DATA_OPERATION_GET_SETTINGS'
-  static readonly DATA_OPERATION_GET_META_DATA = 'DATA_OPERATION_GET_META_DATA'
+  static readonly DATA_OPERATION_GET_DISPLAYABLE_DATA = 'DATA_OPERATION_GET_DISPLAYABLE_DATA'
 }
 
 export enum TableNames {
@@ -48,10 +51,12 @@ export const IPCEvents = {
 export const RemoteUrls = {
   SELECTOR_NODE:"/selector-node-controller",
   DBSCAN_NODE: '/dbscan-node-controller', TIME_FILTERING: '/time-filtering-controller', SELECT_BY_DAY: '/select-by-day-controller', SELECT_BY_TIME_AND_DAY: '/select-by-time-and-day-controller',
+  AGNES_CLUSTERING: '/agnes-clustering-controller',
+
 
 }
 
-export const PHONE_CONTROLLER_BASE_URL = 'http://settings-controller.local';
+export let PHONE_CONTROLLER_BASE_URL = 'http://192.168.100.100';
 
 export const SelectorSettingsEvents = [
   'selector-node-setting:create',

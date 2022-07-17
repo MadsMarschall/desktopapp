@@ -7,7 +7,7 @@ import { DATA_SOURCES } from '../vars.config';
 
 // the following lines are necessary for JEST to be able to unit test
 import { SortBy, TableIndexing, TableNames } from '../../../../shared/Constants';
-import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
+import { IDataPointMovement, IDistanceMatrixPoint } from '../../../../shared/domain/Interfaces';
 import IDataBaseController from '../../../../shared/domain/IDataBaseController';
 import sqlite3 from 'sqlite3';
 import { Database, open } from 'sqlite';
@@ -44,7 +44,7 @@ export default class SQLiteDatabaseControllerStrategy implements IDataBaseContro
   }
 
 
-  private execute = <T>(
+  public execute = <T>(
     query: string,
     params: any[]
   ): Promise<T> => {
@@ -146,6 +146,11 @@ export default class SQLiteDatabaseControllerStrategy implements IDataBaseContro
       upperBound.valueOf()
     ]);
     return result;
+  }
+
+  getMatrixByThreshold(threshold: number): Promise<IDistanceMatrixPoint[]> {
+    const q = 'SELECT *  FROM distanceMatrix where distance<= ? group by Person_2 order by Person_1, Person_2;'
+    return this.execute(q, [threshold]);
   }
 }
 

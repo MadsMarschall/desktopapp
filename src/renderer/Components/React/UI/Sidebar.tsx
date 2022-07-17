@@ -76,6 +76,56 @@ export default () => {
         >
           Select by Time Node
         </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'dummyNode1')}
+             draggable
+        >
+          d1
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'dummyNode2')}
+             draggable
+        >
+          d2
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'dummyNode3')}
+             draggable
+        >
+          d3
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'dummyNode4')}
+             draggable
+        >
+          d4
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'dummyNode5')}
+             draggable
+        >
+          d5
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'groupByThreshold')}
+             draggable
+        >
+          Group From Matrix Node
+        </Col>
+        <Col xs={6} md={3} lg={2}
+             className='text-center bg-light p-2 m-2 node'
+             onDragStart={(event: any) => onDragStart(event, 'displayGroupRideStatistics')}
+             draggable
+        >
+          Display Group Ride Statistics Node
+        </Col>
+
 
       </Row>
 

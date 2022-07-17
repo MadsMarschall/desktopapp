@@ -1,8 +1,11 @@
 import { SortBy, TableIndexing, TableNames } from '../Constants';
-import { IDataPointMovement } from './Interfaces';
+import { IDataPointMovement, IDistanceMatrixPoint } from './Interfaces';
 import { ICSVInputObject } from '../../main/datahandling/utilities/DBStrategies/MySQLDatabaseControllerStrategy';
 
+
+
 export default interface IDataBaseController {
+  execute<T>(query: string, params: any[]): Promise<T>;
   getDataByPersonId(
     PersonId: number
   ): Promise<IDataPointMovement[]>;
@@ -18,6 +21,8 @@ export default interface IDataBaseController {
     ...otherArgs:string[]
   ): Promise<boolean>;
 
+
   getAllDataFromTable(): Promise<IDataPointMovement[]>;
   getDataByTimeInterval(lowerBound:Date, upperBound:Date): Promise<IDataPointMovement[]>;
+  getMatrixByThreshold(threshold: number): Promise<IDistanceMatrixPoint[]>
 }

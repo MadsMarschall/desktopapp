@@ -1,7 +1,8 @@
 import React, { Context } from 'react';
 import io from 'socket.io-client';
+import { PHONE_CONTROLLER_BASE_URL } from '../../../../shared/Constants';
 
-export const remoteSocket = io(<string>'http://settings-controller.local', {
+export const remoteSocket = io(<string>PHONE_CONTROLLER_BASE_URL, {
   transports: ['websocket'],
 });
 // @ts-ignore

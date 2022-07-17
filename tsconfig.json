@@ -24,5 +24,8 @@
     "allowUnusedLabels": true,
     "noImplicitAny": false,
   },
-  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
+  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"],
+  "ts-node": {
+    "swc": true,
+  }
 }

@@ -7,6 +7,21 @@ export interface ICSVInputObject {
   X: string;
   Y: string;
 }
+export interface IDistanceMatrixPoint {
+  Person_1: number;
+  Person_2: number;
+  distance: number;
+}
+export interface IRow {
+  groupId:number,
+  members: string,
+  numberOfMembers: number,
+}
+
+export interface IRideDataStatistics{
+  rideId:number
+  countOfRideEntries:number
+}
 
 export interface IDataPointMovement {
   timestamp: Date;

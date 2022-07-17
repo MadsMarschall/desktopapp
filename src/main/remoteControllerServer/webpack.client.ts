@@ -12,11 +12,15 @@ const webpackConfigClient ={
     client: path.resolve(__dirname, "client/index.tsx"),
   },
   watch: false,
-  mode: "production",
+  mode: "development",
   output: {
     path: path.resolve(__dirname + "/dist/static"),
     filename: "[name].[contenthash].js",
     publicPath: "",
+  },
+  devtool: "source-map",
+  devServer: {
+    hot: true,
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],

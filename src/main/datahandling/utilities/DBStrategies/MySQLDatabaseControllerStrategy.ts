@@ -8,7 +8,7 @@ import { DATA_SOURCES } from '../vars.config';
 // the following lines are necessary for JEST to be able to unit test
 import { SQLMovementDataQuieries } from '../SQLMovementDataQuieries';
 import { SortBy, TableIndexing, TableNames } from '../../../../shared/Constants';
-import { IDataPointMovement } from '../../../../shared/domain/Interfaces';
+import { IDataPointMovement, IDistanceMatrixPoint } from '../../../../shared/domain/Interfaces';
 import IDataBaseController from '../../../../shared/domain/IDataBaseController';
 
 export interface ICSVInputObject {
@@ -33,8 +33,12 @@ export default class MySQLDatabaseControllerStrategy implements IDataBaseControl
     });
   }
 
+  getMatrixByThreshold(threshold: number): Promise<IDistanceMatrixPoint[]> {
+        throw new Error('Method not implemented.');
+    }
 
-  private execute = <T>(
+
+  public execute = <T>(
     query: string,
     params: string[] | Object
   ): Promise<T> => {

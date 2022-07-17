@@ -1,5 +1,6 @@
 import IDataOperation from './IDataOperation';
 import { Chart, ChartData, ChartDataset, ChartTypeRegistry } from 'chart.js';
+import { IDistanceMatrixPoint, IRideDataStatistics } from './Interfaces';
 
 export interface IDisplayableData {
   id: string,
@@ -9,8 +10,10 @@ export interface IDisplayableData {
   sourceOperationId: string,
   targetOperationId: string,
   clusterPositions?: IClusterPosition[],
+  rideDataStatistics?: IRideDataStatistics[],
   charjsData?: ChartData<keyof ChartTypeRegistry,ChartDataset, string[]>,
   boundaries?: number[],
+  groups?: unknown[][],
 }
 
 

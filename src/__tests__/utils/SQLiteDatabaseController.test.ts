@@ -18,6 +18,13 @@ test("workaround",()=>{
     expect(true).toBe(true);
 })
 
+test('run custom query', async () => {
+    const query = 'SELECT rideId,count(rideId) FROM parkmovementFinal where PersonId in ( 1197 ) group by rideId';
+    const result = await dataBaseController.execute(query, []) as any[];
+    console.log(result);
+    expect(result.length).toBeGreaterThan(0);
+})
+
 test("can get by time interval", async () => {
   const resut = await dataBaseController.getDataByTimeInterval(new Date("2013-06-06 18:09:34"),new Date("2015-06-06 18:14:04"));
   expect(resut.length).toBeGreaterThan(4);

@@ -17,6 +17,8 @@ import DataOperationErrorLogger from '../../../shared/datatools/DataOperationErr
 import ClusterMapDisplayOperation from './dataoperations/ClusterMapDisplayOperation';
 import SelectByTimeAndDay from './dataoperations/SelectByTimeOperation';
 import SelectByTimeOperation from './dataoperations/SelectByTimeOperation';
+import CreateGroupsFromMatrixOperation from './dataoperations/CreateGroupsFromMatrixOperation';
+import DisplayGroupRideStatisticsOperation from './dataoperations/DisplayGroupRideStatisticsOperation';
 
 export default class DataOperationChainController
   implements IDataOperationChainController
@@ -68,6 +70,12 @@ export default class DataOperationChainController
         break;
       case OperationIds.SELECT_BY_TIME_AND_DAY:
         operation = new SelectByTimeOperation(new IsNullObject(),id);
+        break;
+      case OperationIds.GROUPS_FROM_MATRIX:
+        operation = new CreateGroupsFromMatrixOperation(new IsNullObject(),id);
+        break;
+      case OperationIds.DISPLAY_GROUP_RIDE_STATISTICS:
+        operation = new DisplayGroupRideStatisticsOperation(new IsNullObject(),id);
         break;
       default:
         operation = new IsNullObject();

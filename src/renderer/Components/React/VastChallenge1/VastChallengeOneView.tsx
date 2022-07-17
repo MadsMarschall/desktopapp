@@ -28,6 +28,13 @@ import TimeFilteringNode from '../Nodes/TimeFilteringNode';
 import ClusterMapNode from '../Nodes/ClusterMapNode';
 import QuerySpecificNode from '../Nodes/QuerySpecificNode';
 import SelectByTimeNode from '../Nodes/SelectByTimeNode';
+import DummyNode1 from '../Nodes/DummyNode1';
+import DummyNode2 from '../Nodes/DummyNode2';
+import DummyNode3 from '../Nodes/DummyNode3';
+import DummyNode4 from '../Nodes/DummyNode4';
+import DummyNode5 from '../Nodes/DummyNode5';
+import GroupsFromMatrixNode from '../Nodes/GroupsFromMatrixNode';
+import DisplayGroupRideStatisticsNode from '../Nodes/DisplayGroupRideStatisticsNode';
 
 const nodeTypes = {
   dataSource: DataSourceNode,
@@ -38,7 +45,14 @@ const nodeTypes = {
   selectByDay:SelectByDayNode,
   dbScanClustering: DBScanClusteringNode,
   querySpecific: QuerySpecificNode,
-  selectByDayAndTime: SelectByTimeNode
+  selectByDayAndTime: SelectByTimeNode,
+  dummyNode1: DummyNode1,
+  dummyNode2: DummyNode2,
+  dummyNode3: DummyNode3,
+  dummyNode4: DummyNode4,
+  dummyNode5: DummyNode5,
+  groupByThreshold: GroupsFromMatrixNode,
+  displayGroupRideStatistics: DisplayGroupRideStatisticsNode,
 };
 
 const id = 10;
